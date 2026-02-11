@@ -6,57 +6,87 @@ import {
   deleteVehicle,
 } from "../services/vehicleService";
 
+
+const mapVehicleFromApi = (v) => ({
+  id: v.id,
+  asignacion: v.codigo,
+  placa: v.placa,
+  asientos: v.pasajeros,
+  tipo: v.tipog,
+  kilometraje: v.modelos && v.modelos.length > 0 ? v.modelos[0].kilometraje : "—",
+  estado: v.estado,
+  // Datos de marca
+  marca: v.marca ?? "—",
+  chasis: v.chasis ?? "—",
+  motor: v.motor ?? "—",
+  cilindrada: v.cilindrada ?? "—",
+});
+
+
+const mapVehicleToApi = (v) => ({
+  codigo: v.asignacion,
+  placa: v.placa,
+  pasajeros: v.asientos,
+  tipog: v.tipo,
+  kilometraje: v.kilometraje,
+  estado: v.estado,
+});
+
 export const useVehicleStore = create((set, get) => ({
   vehicles: [],
   loading: false,
   error: null,
-
   fetchVehicles: async () => {
     set({ loading: true, error: null });
     try {
       const data = await getVehicles();
-
-      // 🔁 MAPEO BD → UI
-      const mapped = data.map((v) => ({
-        id: v.id,
-        asignacion: v.codigo,      // BD: codigo
-        placa: v.placa,
-        asientos: v.pasajeros,     // BD: pasajeros / personas
-        tipo: v.tipog,             // BD: tipog
-        kilometraje: v.kilometraje || "—",
-        estado: v.estado,
-      }));
-
-      set({ vehicles: mapped, loading: false });
+      set({
+        vehicles: (data || []).map(mapVehicleFromApi),
+        loading: false,
+      });
     } catch (err) {
       set({ error: err.message || err, loading: false });
     }
   },
 
-  addVehicle: async (data) => {
+  
+  addVehicle: async (vehicleUI) => {
     try {
-      const newVehicle = await createVehicle(data);
-      set({ vehicles: [...get().vehicles, newVehicle] });
+      await createVehicle(mapVehicleToApi(vehicleUI));
+      set({
+        vehicles: [
+          ...get().vehicles,
+          {
+            ...vehicleUI,
+            id: Date.now(), 
+          },
+        ],
+      });
+
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err.message || err };
     }
   },
 
-  editVehicle: async (id, data) => {
+
+  editVehicle: async (id, vehicleUI) => {
     try {
-      const updated = await updateVehicle(id, data);
+      await updateVehicle(id, mapVehicleToApi(vehicleUI));
+
       set({
         vehicles: get().vehicles.map((v) =>
-          v.id === id ? updated : v
+          v.id === id ? { ...v, ...vehicleUI } : v
         ),
       });
+
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err.message || err };
     }
   },
 
+  
   removeVehicle: async (id) => {
     try {
       await deleteVehicle(id);
@@ -69,4 +99,6 @@ export const useVehicleStore = create((set, get) => ({
     }
   },
 }));
+
+
 

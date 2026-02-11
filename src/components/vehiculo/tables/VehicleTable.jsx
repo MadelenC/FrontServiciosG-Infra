@@ -9,13 +9,18 @@ import UpdateKmForm from "../form/oper/UpdateKmForm";
 import VehicleDetail from "../form/oper/VehicleDetail";
 
 export default function TableVehicle() {
-  const { vehicles, fetchVehicles, loading, error } = useVehicleStore();
+  const {
+    vehicles,
+    fetchVehicles,
+    loading,
+    error,
+    editVehicle, 
+  } = useVehicleStore();
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const limit = 5;
 
-  // Paneles y vehículo seleccionado
   const [openAddPanel, setOpenAddPanel] = useState(false);
   const [openEditPanel, setOpenEditPanel] = useState(false);
   const [openUpdateKmPanel, setOpenUpdateKmPanel] = useState(false);
@@ -30,7 +35,6 @@ export default function TableVehicle() {
     fetchVehicles();
   }, [fetchVehicles]);
 
-  // Filtrado
   const filteredVehicles = vehicles.filter(
     (v) =>
       (v.asignacion.toLowerCase().includes(search.toLowerCase()) ||
@@ -118,20 +122,13 @@ export default function TableVehicle() {
 
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
-      {/* Modal agregar vehículo */}
-      {openAddPanel && <AddVehicleForm onClose={() => setOpenAddPanel(false)} />}
-
       {/* Modal editar vehículo */}
       {openEditPanel && selectedVehicle && (
         <EditVehicleForm
           vehicleData={selectedVehicle}
           onClose={() => setOpenEditPanel(false)}
-          onUpdate={(updatedVehicle) => {
-            console.log("Vehículo actualizado:", updatedVehicle);
-            setOpenEditPanel(false);
-          }}
-          onDelete={(vehicleToDelete) => {
-            console.log("Vehículo eliminado:", vehicleToDelete);
+          onUpdate={async (vehicleUI) => {
+            await editVehicle(vehicleUI.id, vehicleUI); 
             setOpenEditPanel(false);
           }}
         />
@@ -142,14 +139,10 @@ export default function TableVehicle() {
         <UpdateKmForm
           vehicle={selectedVehicle}
           onClose={() => setOpenUpdateKmPanel(false)}
-          onUpdateKm={(updatedVehicle) => {
-            console.log("Kilometraje actualizado:", updatedVehicle);
-            setOpenUpdateKmPanel(false);
-          }}
         />
       )}
 
-      {/* Modal detalle vehículo */}
+      {/* Modal detalle */}
       {openDetailPanel && selectedDetailVehicle && (
         <VehicleDetail
           vehicle={selectedDetailVehicle}
@@ -159,6 +152,7 @@ export default function TableVehicle() {
     </div>
   );
 }
+
 
 
 

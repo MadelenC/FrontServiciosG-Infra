@@ -11,10 +11,10 @@ export default function EditVehicleForm({ vehicleData, onUpdate, onDelete, onClo
     pasajeros: vehicleData.pasajeros || "",
     kilometraje: vehicleData.kilometraje || "",
     estado: vehicleData.estado || "",
-    tipoGeneral: vehicleData.tipoGeneral || "",
+    tipog: vehicleData.tipoGeneral || "",
     marca: vehicleData.marca || "",
     modelo: vehicleData.modelo || "",
-    tipoEspecifico: vehicleData.tipoEspecifico || "",
+    tipoe: vehicleData.tipoEspecifico || "",
   });
 
   const handleChange = (e) => {
@@ -23,12 +23,14 @@ export default function EditVehicleForm({ vehicleData, onUpdate, onDelete, onClo
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    onUpdate?.(formData);
+
+ 
+    onUpdate?.({ id: vehicleData.id, ...formData });
   };
 
   const handleDelete = (e) => {
     e.preventDefault();
-    onDelete?.(formData);
+    onDelete?.(vehicleData.id); 
   };
 
   return (
@@ -63,7 +65,6 @@ export default function EditVehicleForm({ vehicleData, onUpdate, onDelete, onClo
 
           <Input label="Tipo específico" name="tipoEspecifico" value={formData.tipoEspecifico} onChange={handleChange} />
 
-          {/* Botones */}
           <div className="md:col-span-3 flex justify-end mt-2 gap-2">
             <button
               onClick={handleUpdate}
@@ -80,7 +81,6 @@ export default function EditVehicleForm({ vehicleData, onUpdate, onDelete, onClo
           </div>
         </form>
 
-        {/* Botón cerrar */}
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 font-bold text-lg"
@@ -128,3 +128,4 @@ function Select({ label, name, value, onChange, options }) {
     </div>
   );
 }
+

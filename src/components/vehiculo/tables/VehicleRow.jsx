@@ -18,6 +18,8 @@ export default function VehicleRow({ vehicle, onEdit, onUpdateKm, onView }) {
                 ? "bg-green-100 text-green-700"
                 : vehicle.estado === "Mantenimiento"
                 ? "bg-yellow-100 text-yellow-700"
+                : vehicle.estado === "Desuso"
+                ? "bg-gray-200 text-gray-700"
                 : "bg-red-100 text-red-700"
             }`}
         >
