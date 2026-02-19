@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import SearchBar from "../search/SerachBar";
 import TableDest from "./TableDestn";
 import Pagination from "./Paginations";
-import { useDestinoStore } from "../../../zustand/destinationsStore"; 
+import { useDestinoStore } from "../../../zustand/useDestinationsStore";
 
 export default function DestTable() {
   const { destinos = [], fetchDestinos, loading, error } = useDestinoStore();

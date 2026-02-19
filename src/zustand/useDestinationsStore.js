@@ -38,7 +38,7 @@ export const useDestinoStore = create((set, get) => ({
       const newDestino = await createDestino(data);
       const mapped = {
         id: newDestino.id,
-        departamentoInicio: newDestino.deb_inicio,
+        departamentoInicio: newDestino.dep_inicio, // ✅ corregido
         origen: newDestino.origen,
         ruta: newDestino.ruta,
         destino: newDestino.destino,
@@ -56,10 +56,22 @@ export const useDestinoStore = create((set, get) => ({
   // Editar un destino
   editDestino: async (id, data) => {
     try {
-      const updated = await updateDestino(id, data);
+      // Enviar payload a la API con nombres correctos
+      const payload = {
+        dep_inicio: data.departamentoInicio,
+        dep_final: data.departamentoFinal,
+        origen: data.origen,
+        destino: data.destino,
+        ruta: data.ruta,
+        kilometraje: data.distancia,
+        tiempo: data.tiempo,
+      };
+
+      const updated = await updateDestino(id, payload);
+
       const mapped = {
         id: updated.id,
-        departamentoInicio: updated.deb_inicio,
+        departamentoInicio: updated.dep_inicio,
         origen: updated.origen,
         ruta: updated.ruta,
         destino: updated.destino,
@@ -67,9 +79,11 @@ export const useDestinoStore = create((set, get) => ({
         distancia: updated.kilometraje,
         tiempo: updated.tiempo,
       };
+
       set({
-        destinos: get().destinos.map(d => d.id === id ? mapped : d)
+        destinos: get().destinos.map(d => (d.id === id ? mapped : d)),
       });
+
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err.message || err };
@@ -87,4 +101,5 @@ export const useDestinoStore = create((set, get) => ({
     }
   },
 }));
+
 

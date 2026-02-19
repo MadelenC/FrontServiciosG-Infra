@@ -122,6 +122,13 @@ export default function TableVehicle() {
 
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
+      {/* Modal agregar vehículo */}
+      {openAddPanel && (
+        <AddVehicleForm
+          onClose={() => setOpenAddPanel(false)}
+        />
+      )}
+
       {/* Modal editar vehículo */}
       {openEditPanel && selectedVehicle && (
         <EditVehicleForm

@@ -2,19 +2,20 @@ import React, { useState } from "react";
 
 export default function EditVehicleForm({ vehicleData, onUpdate, onDelete, onClose }) {
   const [formData, setFormData] = useState({
-    asignado: vehicleData.asignacion || "",
+    asignacion: vehicleData.asignacion || "",
     placa: vehicleData.placa || "",
     color: vehicleData.color || "",
+    asientos: vehicleData.asientos || "",        // frontend-friendly
+    tipog: vehicleData.tipog || "",              // tipo general
+    tipoe: vehicleData.tipoe || "",              // tipo específico
+    estado: vehicleData.estado || "",
+    combustible: vehicleData.combustible || "",
+    kilometraje: vehicleData.kilometraje || "",
+    marca: vehicleData.marca || "",
+    modelo: vehicleData.modelo || "",
     motor: vehicleData.motor || "",
     chasis: vehicleData.chasis || "",
     cilindrada: vehicleData.cilindrada || "",
-    pasajeros: vehicleData.pasajeros || "",
-    kilometraje: vehicleData.kilometraje || "",
-    estado: vehicleData.estado || "",
-    tipog: vehicleData.tipoGeneral || "",
-    marca: vehicleData.marca || "",
-    modelo: vehicleData.modelo || "",
-    tipoe: vehicleData.tipoEspecifico || "",
   });
 
   const handleChange = (e) => {
@@ -23,14 +24,12 @@ export default function EditVehicleForm({ vehicleData, onUpdate, onDelete, onClo
 
   const handleUpdate = (e) => {
     e.preventDefault();
-
- 
     onUpdate?.({ id: vehicleData.id, ...formData });
   };
 
   const handleDelete = (e) => {
     e.preventDefault();
-    onDelete?.(vehicleData.id); 
+    onDelete?.(vehicleData.id);
   };
 
   return (
@@ -41,29 +40,30 @@ export default function EditVehicleForm({ vehicleData, onUpdate, onDelete, onClo
         </h2>
 
         <form className="grid grid-cols-1 md:grid-cols-3 gap-2">
-          <Input label="Asignado a" name="asignado" value={formData.asignado} onChange={handleChange} />
+          <Input label="Asignación" name="asignacion" value={formData.asignacion} onChange={handleChange} />
           <Input label="Placa" name="placa" value={formData.placa} onChange={handleChange} />
           <Input label="Color" name="color" value={formData.color} onChange={handleChange} />
 
-          <Input label="Motor" name="motor" value={formData.motor} onChange={handleChange} />
-          <Input label="Chasis" name="chasis" value={formData.chasis} onChange={handleChange} />
-          <Input label="Cilindrada" name="cilindrada" value={formData.cilindrada} onChange={handleChange} />
-
-          <Input label="Pasajeros" name="pasajeros" value={formData.pasajeros} onChange={handleChange} />
-          <Input label="Kilometraje" name="kilometraje" value={formData.kilometraje} onChange={handleChange} />
+          <Input label="Asientos" name="asientos" value={formData.asientos} onChange={handleChange} />
+          <Input label="Tipo general" name="tipog" value={formData.tipog} onChange={handleChange} />
           <Select
             label="Estado"
             name="estado"
             value={formData.estado}
             onChange={handleChange}
-            options={["Óptimo", "Mantenimiento", "Desuso"]}
+            options={["Optimo", "Mantenimiento", "Desuso"]}
           />
 
-          <Input label="Tipo general" name="tipoGeneral" value={formData.tipoGeneral} onChange={handleChange} />
+          <Input label="Combustible" name="combustible" value={formData.combustible} onChange={handleChange} />
+          <Input label="Kilometraje" name="kilometraje" value={formData.kilometraje} onChange={handleChange} />
+
           <Input label="Marca" name="marca" value={formData.marca} onChange={handleChange} />
           <Input label="Modelo" name="modelo" value={formData.modelo} onChange={handleChange} />
+          <Input label="Tipo específico" name="tipoe" value={formData.tipoe} onChange={handleChange} />
 
-          <Input label="Tipo específico" name="tipoEspecifico" value={formData.tipoEspecifico} onChange={handleChange} />
+          <Input label="Motor" name="motor" value={formData.motor} onChange={handleChange} />
+          <Input label="Chasis" name="chasis" value={formData.chasis} onChange={handleChange} />
+          <Input label="Cilindrada" name="cilindrada" value={formData.cilindrada} onChange={handleChange} />
 
           <div className="md:col-span-3 flex justify-end mt-2 gap-2">
             <button
