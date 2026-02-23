@@ -15,6 +15,7 @@ import FormElements from "./pages/Vehiculos/VehiculoHome";
 import Combustible from "./pages/combustible/Combustible";
 import Destinations from "./pages/Destinations/destinations";
 import Maps from "./pages/Maps/Maps";
+import Reservations from "./pages/Reservations/ReservationsHome";
 import AppLayout from "./layouts/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/UserList/Home";
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="/combustible" element={<Combustible />} />
              <Route path="/destinos" element={<Destinations />} />
             <Route path="/mapas" element={<Maps/>}></Route>
+            <Route path="/reservas" element={<Reservations/>}></Route>
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/avatars" element={<Avatars />} />

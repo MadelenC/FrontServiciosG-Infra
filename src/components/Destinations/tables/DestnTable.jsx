@@ -25,7 +25,7 @@ export default function DestTable() {
 
   useEffect(() => {
     fetchDestinos();
-  }, []); // Asumiendo que fetchDestinos está estable o memoizado
+  }, []); 
 
   // Resetear página al cambiar búsqueda o filtro
   useEffect(() => {
@@ -85,17 +85,16 @@ export default function DestTable() {
             ))}
           </select>
         </div>
-
-        {/* Botón Imprimir */}
++
         <button className="px-4 py-2 bg-orange-500 text-white rounded-md text-sm">
           Imprimir
         </button>
       </div>
 
-      {/* Tabla */}
+
       <TableDest data={currentData} />
 
-      {/* Paginación */}
+    
       <div className="flex justify-center mt-4">
         <Pagination page={page} totalPages={totalPages} setPage={setPage} />
       </div>

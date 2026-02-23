@@ -38,7 +38,7 @@ export const useDestinoStore = create((set, get) => ({
       const newDestino = await createDestino(data);
       const mapped = {
         id: newDestino.id,
-        departamentoInicio: newDestino.dep_inicio, // ✅ corregido
+        departamentoInicio: newDestino.dep_inicio, 
         origen: newDestino.origen,
         ruta: newDestino.ruta,
         destino: newDestino.destino,
@@ -56,7 +56,6 @@ export const useDestinoStore = create((set, get) => ({
   // Editar un destino
   editDestino: async (id, data) => {
     try {
-      // Enviar payload a la API con nombres correctos
       const payload = {
         dep_inicio: data.departamentoInicio,
         dep_final: data.departamentoFinal,

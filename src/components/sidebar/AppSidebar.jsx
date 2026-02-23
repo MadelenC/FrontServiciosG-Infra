@@ -67,17 +67,14 @@ const navItems = [
     subItems: [{ name: "listar", path: "/mapas", pro: false }],
   },
   {
+    name: "Reservas",
+    icon: <BsCardHeading  />,
+    subItems: [{ name: "reservas", path: "/reservas", pro: false }],
+  },
+  {
     icon: <BiCalendar />,
     name: "Calendar",
     path: "/calendar",
-  },
- 
- 
-   
-    {
-    name: "Reservas",
-    icon: <BsCardHeading  />,
-    subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
   },
     {
     name: "Viajes",

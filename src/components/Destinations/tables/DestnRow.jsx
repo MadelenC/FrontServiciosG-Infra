@@ -7,8 +7,7 @@ export default function DestRow({ item, index }) {
   const [openEditPanel, setOpenEditPanel] = useState(false);
   const [openMap, setOpenMap] = useState(false);
 
-  // Aquí usamos las coordenadas del destino
-  // Asegúrate de que `item` tenga latitud y longitud desde tu store/API
+ 
   const { latitud, longitud } = item;
 
   return (
@@ -59,8 +58,8 @@ export default function DestRow({ item, index }) {
         <MapSelector
           open={openMap}
           destino={item}
-          initialLat={latitud || -17.3935} // ejemplo: valor por defecto
-          initialLng={longitud || -66.1568} // ejemplo: valor por defecto
+          initialLat={latitud || -17.3935} 
+          initialLng={longitud || -66.1568} 
           onClose={() => setOpenMap(false)}
         />
       )}

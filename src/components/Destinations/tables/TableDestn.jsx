@@ -46,7 +46,7 @@ export default function TableDest({ data }) {
                 No hay registros
               </td>
             </tr>
-          )}
+          )} 
         </tbody>
       </table>
     </div>
