@@ -30,7 +30,7 @@ export default function ReservaRow({ reserva }) {
           {reserva.entidad}
         </td>
         <td className="border border-gray-200 px-3 py-2 text-gray-700">
-          {reserva.encargado}
+          {reserva.user ? `${reserva.user.nombres} ${reserva.user.apellidos}` : "Sin encargado"}
         </td>
         <td className="border border-gray-200 px-3 py-2 text-gray-700">
           {reserva.objetivo}
@@ -66,4 +66,4 @@ export default function ReservaRow({ reserva }) {
       />
     </>
   );
-}
+} 
