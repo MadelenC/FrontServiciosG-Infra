@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router"; 
-import { BiCalendar, BiGhost, BiSolidDashboard } from "react-icons/bi"; 
+import { BiCalendar} from "react-icons/bi"; 
 import { useSidebar } from "../../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget"; 
 import { BiSpreadsheet } from "react-icons/bi";
-import { FaRegUserCircle } from "react-icons/fa";
-import { GrTable } from "react-icons/gr";
-import { SiWikibooks } from "react-icons/si"; //PAGES
 import { LuBuilding2 } from "react-icons/lu";  
 import { MdSecurityUpdate } from "react-icons/md";
 import { FiMoreHorizontal } from "react-icons/fi";
@@ -312,19 +309,19 @@ const AppSidebar = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`py-8 flex ${
+        className={`py-6 flex justify-center pl-9 ${
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
         <Link to="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              <img
-                className="dark:hidden"
-                src="/images/logo/logo.svg"
-                alt="Logo"
-                width={150}
-                height={40}
+             <img
+              src="https://upload.wikimedia.org/wikipedia/commons/8/85/Escudo_Universidad_Aut%C3%B3noma_Tom%C3%A1s_Fr%C3%ADas.png"
+              alt="Escudo Universidad Autónoma Tomás Frías"
+              width={150}
+              height={140} 
+              style={{ display: 'block' }}
               />
               <img
                 className="hidden dark:block"
@@ -334,8 +331,8 @@ const AppSidebar = () => {
                 height={50}
                
               />
-              <p>UATF</p>
-              <h1>DEPTO. DE INFRAESTRUCTURA</h1>
+                <p className="font-bold text-lg pl-9">UATF</p>
+                <h1 className="text-sm text-gray-600">DEPTO. DE INFRAESTRUCTURA</h1>
             </>
           ) : (
             <img
