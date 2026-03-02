@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReservaModal from "../form/ReservaModal";
 import { useReservaStore } from "../../../zustand/useReservationsStore";
+import { useUserStore } from "../../../zustand/userStore"; 
 
 const formatDate = (isoDate) => {
   if (!isoDate) return "-";
@@ -10,6 +11,11 @@ const formatDate = (isoDate) => {
 export default function ReservaRow({ reserva }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { editReserva } = useReservaStore();
+
+  const { users, fetchUsers } = useUserStore(); 
+  useEffect(() => {
+    fetchUsers(); 
+  }, []);
 
   const handleConcretarClick = () => {
     setIsModalOpen(true);
@@ -23,30 +29,16 @@ export default function ReservaRow({ reserva }) {
   return (
     <>
       <tr className="hover:bg-gray-50">
-        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
-          {reserva.id}
-        </td>
-        <td className="border border-gray-200 px-3 py-2 text-gray-700">
-          {reserva.entidad}
-        </td>
+        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">{reserva.id}</td>
+        <td className="border border-gray-200 px-3 py-2 text-gray-700">{reserva.entidad}</td>
         <td className="border border-gray-200 px-3 py-2 text-gray-700">
           {reserva.user ? `${reserva.user.nombres} ${reserva.user.apellidos}` : "Sin encargado"}
         </td>
-        <td className="border border-gray-200 px-3 py-2 text-gray-700">
-          {reserva.objetivo}
-        </td>
-        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
-          {reserva.pasajeros}
-        </td>
-        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
-          {formatDate(reserva.fecha_inicial)}
-        </td>
-        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
-          {formatDate(reserva.fecha_final)}
-        </td>
-        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
-          {reserva.dias}
-        </td>
+        <td className="border border-gray-200 px-3 py-2 text-gray-700">{reserva.objetivo}</td>
+        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">{reserva.pasajeros}</td>
+        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">{formatDate(reserva.fecha_inicial)}</td>
+        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">{formatDate(reserva.fecha_final)}</td>
+        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">{reserva.dias}</td>
         <td className="border border-gray-200 px-3 py-2 text-center space-y-1">
           <div className="text-blue-600 cursor-pointer hover:underline">Ninguna</div>
           <button
@@ -58,12 +50,14 @@ export default function ReservaRow({ reserva }) {
         </td>
       </tr>
 
+      {/* PASAMOS users AL MODAL */}
       <ReservaModal
         isOpen={isModalOpen}
-        reserva={reserva}
+        initialData={reserva}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSave}
+        users={users} 
       />
     </>
   );
-} 
+}
