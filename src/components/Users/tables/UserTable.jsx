@@ -7,12 +7,25 @@ export default function UserTable({ users }) {
 
   return (
     <>
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        
+        <table className="w-full border-collapse text-sm bg-white">
           <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
             <tr>
-              {["ID", "Nombres", "Apellidos", "Cédula", "Celular", "Tipo", "Cargo", "Acciones"].map(head => (
-                <th key={head} className="px-4 py-3 text-left font-semibold text-gray-700 border-b border-gray-200">
+              {[
+                "ID",
+                "Nombres",
+                "Apellidos",
+                "Cédula",
+                "Celular",
+                "Tipo",
+                "Cargo",
+                "Acciones",
+              ].map((head) => (
+                <th
+                  key={head}
+                  className="border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700"
+                >
                   {head}
                 </th>
               ))}
@@ -22,10 +35,10 @@ export default function UserTable({ users }) {
           <tbody>
             {users.length > 0 ? (
               users.map((user) => (
-                <UserRow 
-                  key={user.id} 
-                  user={user} 
-                  onEdit={(u) => setSelectedUser(u)} 
+                <UserRow
+                  key={user.id}
+                  user={user}
+                  onEdit={(u) => setSelectedUser(u)}
                 />
               ))
             ) : (
@@ -39,9 +52,9 @@ export default function UserTable({ users }) {
         </table>
       </div>
 
-      {/* Modal completamente fuera del <table> */}
+      {/* Modal fuera del <table> */}
       {selectedUser && (
-        <EditUserPanel 
+        <EditUserPanel
           open={true}
           user={selectedUser}
           onClose={() => setSelectedUser(null)}
@@ -50,4 +63,3 @@ export default function UserTable({ users }) {
     </>
   );
 }
-

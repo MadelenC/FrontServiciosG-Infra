@@ -1,3 +1,4 @@
+
 import React from "react";
 import RegisterEntityForm from "./RegisterEntitieForm";
 
@@ -47,4 +48,3 @@ export default function EntitieFormPanel({ open, onClose, entitie }) {
     </div>
   );
 }
-

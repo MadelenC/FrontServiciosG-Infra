@@ -9,23 +9,43 @@ export default function RegisterEntityForm({ onClose }) {
     carrera: "",
     materia: "",
     sigla: "",
-   
   });
 
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  const inputBase = "p-2 border rounded text-sm w-full";
+  const inputError = "border-red-500 bg-red-50";
+
+  const requiredFields = ["facultad", "carrera", "materia", "sigla"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: null }));
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (requiredFields.includes(name) && !value?.trim()) {
+      setErrors((prev) => ({ ...prev, [name]: "Este campo es obligatorio" }));
+    } else {
+      setErrors((prev) => ({ ...prev, [name]: null }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    requiredFields.forEach((field) => {
+      if (!formData[field]?.trim()) newErrors[field] = "Este campo es obligatorio";
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (Object.values(formData).some((v) => !v)) {
-      alert("Todos los campos son obligatorios");
-      return;
-    }
+    if (!validate()) return;
 
     setLoading(true);
     const result = await addEntidad(formData);
@@ -39,104 +59,56 @@ export default function RegisterEntityForm({ onClose }) {
         materia: "",
         sigla: "",
       });
-      onClose?.(); // opcional
+      onClose?.();
     } else {
       alert("Error al registrar la entidad: " + result.error);
     }
   };
 
   return (
-    <div className="w-full">
-      {/* Header */}
-      <div className="mb-2 text-center">
-        <h2 className="text-lg font-semibold text-gray-800">
-          Registrar Entidad
-        </h2>
-      </div>
+    <form
+      className="flex flex-col gap-4 w-full max-w-md mx-auto bg-white p-6 rounded-xl shadow-md"
+      onSubmit={handleSubmit}
+    >
+      <h3 className="text-center font-bold text-gray-600 mb-4">Registrar Entidad</h3>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {[
-          { name: "facultad", label: "Facultad" },
-          { name: "carrera", label: "Carrera" },
-          { name: "materia", label: "Materia" },
-          { name: "sigla", label: "Sigla" },
-        ].map(({ name, label }) => (
-          <div key={name} className="space-y-1">
-            <label
-              htmlFor={name}
-              className="text-sm font-medium text-gray-700"
-            >
-              {label}
-            </label>
-
-            <input
-              id={name}
-              name={name}
-              type="text"
-              value={formData[name]}
-              onChange={handleChange}
-              placeholder={`Ingrese ${label.toLowerCase()}`}
-              className="w-full rounded-lg border border-gray-300 bg-gray-50
-                         px-3 py-2.5 text-sm placeholder:text-gray-400
-                         focus:bg-white focus:outline-none focus:ring-2
-                         focus:ring-indigo-500 transition"
-            />
-          </div>
-        ))}
-
-        {/* Buttons */}
-        <div className="mt-6 flex justify-center gap-9">
-          {/* Cancelar */}
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-7 py-2 text-sm font-medium
-                       rounded-lg border border-gray-300
-                       text-gray-800 hover:bg-gray-300 transition "
-          >
-            Cancelar
-          </button>
-
-          {/* Guardar */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-7 py-2 text-sm font-semibold
-                       bg-indigo-700 text-white rounded-lg
-                       hover:bg-indigo-500 transition
-                       disabled:opacity-60 disabled:cursor-not-allowed
-                       flex items-center gap-2"
-          >
-            {loading && (
-              <svg
-                className="animate-spin h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8z"
-                />
-              </svg>
-            )}
-            {loading ? "Guardando..." : "Guardar"}
-          </button>
+      {/* Inputs uno debajo del otro */}
+      {["facultad", "carrera", "materia", "sigla"].map((field) => (
+        <div key={field} className="flex flex-col">
+          <label className="text-gray-600 text-xs capitalize">{field}:</label>
+          <input
+            type="text"
+            name={field}
+            value={formData[field]}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder={`Ingrese ${field}`}
+            className={`${inputBase} ${errors[field] ? inputError : ""}`}
+          />
+          {errors[field] && (
+            <span className="text-red-500 text-xs mt-1">{errors[field]}</span>
+          )}
         </div>
-      </form>
-    </div>
+      ))}
+
+      {/* Botones */}
+      <div className="flex justify-center mt-4 gap-4">
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-4 py-2 rounded border border-gray-300 text-gray-800 hover:bg-gray-100 transition"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="px-4 py-2 rounded bg-indigo-700 text-white hover:bg-indigo-600 transition disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {loading ? "Guardando..." : "Guardar"}
+        </button>
+      </div>
+    </form>
   );
 }
-
-
 

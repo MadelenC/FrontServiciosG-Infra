@@ -28,10 +28,9 @@ export default function TableUser() {
     fetchUsers();
   }, [fetchUsers]);
 
-  // Ordenar por ID ascendente
+  
   const sortedUsers = [...users].sort((a, b) => a.id - b.id);
 
-  // Filtrado y paginación
   const currentUsers = sortedUsers
     .filter((u) => {
       const term = (search || "").toLowerCase();
@@ -91,7 +90,7 @@ export default function TableUser() {
         open={openPanel}
         onClose={() => { setOpenPanel(false); setFormType(null); }}
         formType={formType}
-        setFormType={setFormType} // pasamos setter para mostrar botones
+        setFormType={setFormType} 
       />
     </div>
   );

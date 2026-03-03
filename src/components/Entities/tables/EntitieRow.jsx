@@ -1,17 +1,25 @@
 import React from "react";
 import { FaEdit } from "react-icons/fa";
-import { TableRow, TableCell } from "../../ui/table";
 
 export default function EntitieRow({ entitie, onEdit }) {
   return (
-    <TableRow className="hover:bg-gray-50 transition-colors">
-      <TableCell>{entitie.id}</TableCell>
-      <TableCell>{entitie.facultad}</TableCell>
-      <TableCell>{entitie.carrera}</TableCell>
-      <TableCell>{entitie.materia}</TableCell>
-      <TableCell>{entitie.sigla}</TableCell>
-
-      <TableCell>
+    <tr className="hover:bg-gray-50 transition-colors">
+      <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
+        {entitie.id}
+      </td>
+      <td className="border border-gray-200 px-3 py-2 text-gray-700">
+        {entitie.facultad}
+      </td>
+      <td className="border border-gray-200 px-3 py-2 text-gray-700">
+        {entitie.carrera}
+      </td>
+      <td className="border border-gray-200 px-3 py-2 text-gray-700">
+        {entitie.materia}
+      </td>
+      <td className="border border-gray-200 px-3 py-2 text-gray-700">
+        {entitie.sigla}
+      </td>
+      <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
         <button
           className="p-2 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition"
           title="Editar entidad"
@@ -19,8 +27,8 @@ export default function EntitieRow({ entitie, onEdit }) {
         >
           <FaEdit size={14} />
         </button>
-      </TableCell>
-    </TableRow>
+      </td>
+    </tr>
   );
 }
 
