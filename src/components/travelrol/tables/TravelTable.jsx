@@ -19,6 +19,7 @@ export default function TableTravel() {
 
   const drivers = getDrivers();
 
+  // Filtrado de búsqueda
   const filteredTravels = rolTravels.filter((v) => {
     const term = search.toLowerCase();
     return (
@@ -36,6 +37,34 @@ export default function TableTravel() {
     fetchRolTravels();
     fetchUsers();
   }, [fetchRolTravels, fetchUsers]);
+
+  // Función para registrar un chofer en el backend usando VITE_API_URL
+  const handleAddDriver = async (data) => {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL; // lee la variable de entorno
+      const response = await fetch(`${API_URL}/rolTravel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Error al registrar chofer");
+      }
+
+      const result = await response.json();
+      console.log("Chofer registrado:", result);
+
+      // Refrescar la tabla para mostrar el nuevo registro
+      fetchRolTravels();
+
+      setOpenPanel(false);
+    } catch (err) {
+      console.error(err);
+      alert("Error al registrar chofer: " + err.message);
+    }
+  };
 
   if (loading) return <div className="p-6 text-center">Cargando viajes...</div>;
   if (error) return <div className="p-6 text-center text-red-500">Error: {error}</div>;
@@ -110,7 +139,7 @@ export default function TableTravel() {
         {/* PAGINACIÓN */}
         <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
-        {/* MODAL */}
+        {/* MODAL DE REGISTRO */}
         {openPanel && (
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div
@@ -123,10 +152,7 @@ export default function TableTravel() {
               ) : (
                 <AddDriverForm
                   choferes={drivers}
-                  onSubmit={(data) => {
-                    console.log("Registrar chofer:", data);
-                    setOpenPanel(false);
-                  }}
+                  onSubmit={handleAddDriver} // ✅ Enviar al backend
                   onClose={() => setOpenPanel(false)}
                 />
               )}
@@ -144,19 +170,3 @@ export default function TableTravel() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

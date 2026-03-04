@@ -67,10 +67,8 @@ export default function TableEntitie() {
         </button>
       </div>
 
-      {/* Barra de búsqueda */}
+   
       <SearchBar search={search} setSearch={setSearch} />
-
-      {/* Tabla de entidades */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead className="bg-blue-50">
@@ -104,10 +102,8 @@ export default function TableEntitie() {
         </table>
       </div>
 
-      {/* Paginación */}
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
-      {/* Panel para crear nueva entidad */}
       <EntitieFormPanel
         open={openFormPanel}
         entitie={entitieToEdit}
@@ -116,8 +112,6 @@ export default function TableEntitie() {
           setEntitieToEdit(null);
         }}
       />
-
-      {/* Panel para editar entidad existente */}
       <EditEntitiePanel
         open={openEditPanel}
         entitieId={entitieToEdit?.id || null}

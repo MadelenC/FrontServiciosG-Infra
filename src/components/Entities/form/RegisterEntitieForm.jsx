@@ -71,8 +71,6 @@ export default function RegisterEntityForm({ onClose }) {
       onSubmit={handleSubmit}
     >
       <h3 className="text-center font-bold text-gray-600 mb-4">Registrar Entidad</h3>
-
-      {/* Inputs uno debajo del otro */}
       {["facultad", "carrera", "materia", "sigla"].map((field) => (
         <div key={field} className="flex flex-col">
           <label className="text-gray-600 text-xs capitalize">{field}:</label>
@@ -90,8 +88,6 @@ export default function RegisterEntityForm({ onClose }) {
           )}
         </div>
       ))}
-
-      {/* Botones */}
       <div className="flex justify-center mt-4 gap-4">
         <button
           type="button"

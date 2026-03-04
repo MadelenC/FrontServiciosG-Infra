@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function AddDriverForm({ choferes = [], onSubmit, onClose }) {
+export default function AddDriverForm({ choferes = [], choferesRegistrados = [], onSubmit, onClose }) {
   const [choferId, setChoferId] = useState("");
   const [error, setError] = useState("");
 
@@ -13,9 +13,24 @@ export default function AddDriverForm({ choferes = [], onSubmit, onClose }) {
       setError("Debe seleccionar un chofer");
       return;
     }
+    if (choferesRegistrados.some(c => c.id === parseInt(choferId))) {
+      setError("Este chofer ya está registrado");
+      return;
+    }
 
     setError("");
-    onSubmit({ chofer_id: choferId });
+
+    const payload = {
+      chofer_id: parseInt(choferId),
+      tipoa: "",
+      tipob: "",
+      tipoc: "",
+      cantidad: 1,
+      fecha: new Date().toISOString(),
+    };
+
+    onSubmit(payload);
+    setChoferId(""); 
   };
 
   return (
@@ -35,17 +50,20 @@ export default function AddDriverForm({ choferes = [], onSubmit, onClose }) {
           className={inputBase}
         >
           <option value="">Seleccione un chofer</option>
-          {choferes.map((chofer) => (
-            <option key={chofer.id} value={chofer.id}>
-              {chofer.nombres} {chofer.apellidos}
-            </option>
-          ))}
+          {choferes.map((chofer) => {
+            const yaRegistrado = choferesRegistrados.some(c => c.id === chofer.id);
+            return (
+              <option key={chofer.id} value={chofer.id} disabled={yaRegistrado}>
+                {chofer.nombres} {chofer.apellidos} {yaRegistrado ? "(Ya registrado)" : ""}
+              </option>
+            );
+          })}
         </select>
 
         {error && <span className="text-red-500 text-xs">{error}</span>}
       </div>
 
-      <div className="flex justify-center gap-3">
+      <div className="flex justify-center gap-3 mt-2">
         <button
           type="submit"
           className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -64,4 +82,3 @@ export default function AddDriverForm({ choferes = [], onSubmit, onClose }) {
     </form>
   );
 }
-

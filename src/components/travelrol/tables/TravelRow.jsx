@@ -26,31 +26,33 @@ export default function TravelRow({ entitie }) {
     setOpenExcepciones(false);
   };
 
-  const handleView = () => {
-    console.log("Ver excepción:", entitie);
-    setOpenExcepciones(false);
-  };
-
-  const handleMostrar = () => { console.log("Mostrar:", entitie); setOpenOperaciones(false); };
-  const handleInsertar = () => { console.log("Insertar:", entitie); setOpenOperaciones(false); };
-  const handleLimpiar = () => { console.log("Limpiar:", entitie); setOpenOperaciones(false); };
-  const handleEliminar = () => { console.log("Eliminar:", entitie); setOpenOperaciones(false); };
-
   return (
     <>
-      <tr className="transition-colors hover:bg-gray-100">
-        <td className="px-3 py-2">{entitie.id}</td>
-        <td className="px-3 py-2">{entitie.chofer}</td>
-        <td className="px-3 py-2">{entitie.tipoA}</td>
-        <td className="px-3 py-2">{entitie.tipoB}</td>
-        <td className="px-3 py-2">{entitie.tipoC}</td>
-        <td className="px-3 py-2">{entitie.cantidad}</td>
+      <tr className="hover:bg-gray-50 transition-colors">
+        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
+          {entitie.id}
+        </td>
+        <td className="border border-gray-200 px-3 py-2 text-gray-700">
+          {entitie.chofer}
+        </td>
+        <td className="border border-gray-200 px-3 py-2 text-gray-700">
+          {entitie.tipoA}
+        </td>
+        <td className="border border-gray-200 px-3 py-2 text-gray-700">
+          {entitie.tipoB}
+        </td>
+        <td className="border border-gray-200 px-3 py-2 text-gray-700">
+          {entitie.tipoC}
+        </td>
+        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
+          {entitie.cantidad}
+        </td>
 
         {/* Excepciones */}
-        <td className="text-center relative" ref={refExcepciones}>
+        <td className="border border-gray-200 px-3 py-2 text-center relative" ref={refExcepciones}>
           <button
             onClick={() => setOpenExcepciones(!openExcepciones)}
-            className="bg-sky-500 text-white text-xs px-2 py-0.5 rounded hover:bg-sky-600"
+            className="p-2 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition text-xs"
           >
             Añadir
           </button>
@@ -63,7 +65,7 @@ export default function TravelRow({ entitie }) {
                 <FaPlus size={12} /> Añadir
               </button>
               <button
-                onClick={handleView}
+                onClick={() => console.log("Ver excepción:", entitie)}
                 className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-1"
               >
                 <FaEye size={12} /> Ver
@@ -72,39 +74,40 @@ export default function TravelRow({ entitie }) {
           )}
         </td>
 
-        <td className="px-3 py-2">{entitie.fecha}</td>
+        <td className="border border-gray-200 px-3 py-2 text-gray-700 text-center">
+          {entitie.fecha}
+        </td>
 
         {/* Operaciones */}
-        <td className="text-center relative" ref={refOperaciones}>
+        <td className="border border-gray-200 px-3 py-2 text-center relative" ref={refOperaciones}>
           <button
             onClick={() => setOpenOperaciones(!openOperaciones)}
-            className="bg-green-500 text-white px-3 py-1 text-sm rounded hover:bg-green-600 flex items-center gap-1"
+            className="p-2 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition text-xs flex items-center gap-1 justify-center"
           >
             Opciones <FaEllipsisV size={12} />
           </button>
-
           {openOperaciones && (
             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-36 bg-white border rounded-md shadow-lg z-50">
               <button
-                onClick={handleMostrar}
+                onClick={() => console.log("Mostrar:", entitie)}
                 className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2"
               >
                 <FaEye /> Mostrar
               </button>
               <button
-                onClick={handleInsertar}
+                onClick={() => console.log("Insertar:", entitie)}
                 className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2"
               >
                 <FaPlus /> Insertar
               </button>
               <button
-                onClick={handleLimpiar}
+                onClick={() => console.log("Limpiar:", entitie)}
                 className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2"
               >
                 <FaBroom /> Limpiar
               </button>
               <button
-                onClick={handleEliminar}
+                onClick={() => console.log("Eliminar:", entitie)}
                 className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2 text-red-600"
               >
                 <FaTrash /> Eliminar
@@ -114,7 +117,6 @@ export default function TravelRow({ entitie }) {
         </td>
       </tr>
 
-      {/* Modal de Insertar Excepción */}
       {openAddExceptionForm && (
         <AddExceptionForm
           travel={entitie}
@@ -125,7 +127,6 @@ export default function TravelRow({ entitie }) {
     </>
   );
 }
-
 
 
 
