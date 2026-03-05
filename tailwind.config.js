@@ -1,20 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: "class",
+  darkMode: "class", // Soporte para modo oscuro
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     fontFamily: {
       outfit: ["Outfit", "sans-serif"],
     },
     extend: {
-      fontFamily: {
-        outfit: ["Outfit", "sans-serif"], // 👈 esta línea crea la clase `font-outfit`
-      },
       screens: {
         '2xsm': '375px',
         'xsm': '425px',
         '3xl': '2000px',
       },
+
       colors: {
         brand: {
           25: "#f2f7ff",
@@ -28,8 +26,9 @@ export default {
           700: "#2a31d8",
           800: "#252dae",
           900: "#262e89",
-          950: "#161950",
+          950: "#161950", // Azul oscuro que quieres usar
         },
+
         gray: {
           25: "#fcfcfd",
           50: "#f9fafb",
@@ -45,65 +44,28 @@ export default {
           950: "#0c111d",
           dark: "#1a2231",
         },
-        orange: {
-          25: "#fffaf5",
-          50: "#fff6ed",
-          100: "#ffead5",
-          200: "#fddcab",
-          300: "#feb273",
-          400: "#fd853a",
-          500: "#fb6514",
-          600: "#ec4a0a",
-          700: "#c4320a",
-          800: "#9c2a10",
-          900: "#7e2410",
-          950: "#511c10",
+
+        system: {
+          bg: "#F3F4F6",
+          card: "#FFFFFF",
+          tableHeader: "#E5E7EB",
+          rowAlt: "#F9FAFB",
+          rowHover: "#DBEAFE",
         },
-        success: {
-          25: "#f6fef9",
-          50: "#ecfdf3",
-          100: "#d1fadf",
-          200: "#a6f4c5",
-          300: "#6ce9a6",
-          400: "#32d583",
-          500: "#12b76a",
-          600: "#039855",
-          700: "#027a48",
-          800: "#05603a",
-          900: "#054f31",
-          950: "#053321",
-        },
-        error: {
-          25: "#fffbfa",
-          50: "#fef3f2",
-          100: "#fee4e2",
-          200: "#fecdca",
-          300: "#fda29b",
-          400: "#f97066",
-          500: "#f04438",
-          600: "#d92d20",
-          700: "#b42318",
-          800: "#912018",
-          900: "#7a271a",
-          950: "#55160c",
-        },
-        warning: {
-          25: "#fffcf5",
-          50: "#fffaeb",
-          100: "#fef0c7",
-          200: "#fedf89",
-          300: "#fec84b",
-          400: "#fdb022",
-          500: "#f79009",
-          600: "#dc6803",
-          700: "#b54708",
-          800: "#93370d",
-          900: "#7a2e0e",
-          950: "#4e1d09",
-        },
-        "theme-pink": { 500: "#ee46bc" },
-        "theme-purple": { 500: "#7a5af8" },
+
+        primary: "#2563EB",
+        primaryHover: "#1D4ED8",
+
+        info: "#0EA5E9",
+        infoHover: "#0284C7",
+
+        danger: "#DC2626",
+        dangerHover: "#B91C1C",
+
+        print: "#9333EA",
+        printHover: "#7E22CE",
       },
+
       boxShadow: {
         "theme-xs": "0px 1px 2px 0px rgba(16,24,40,0.05)",
         "theme-sm": "0px 1px 3px 0px rgba(16,24,40,0.1), 0px 1px 2px 0px rgba(16,24,40,0.06)",
@@ -111,6 +73,7 @@ export default {
         "theme-lg": "0px 12px 16px -4px rgba(16,24,40,0.08), 0px 4px 6px -2px rgba(16,24,40,0.03)",
         "theme-xl": "0px 20px 24px -4px rgba(16,24,40,0.08), 0px 8px 8px -4px rgba(16,24,40,0.03)",
       },
+
       zIndex: {
         1: "1",
         9: "9",
@@ -122,6 +85,7 @@ export default {
       },
     },
   },
+
   plugins: [
     function ({ addUtilities }) {
       addUtilities({
@@ -130,15 +94,14 @@ export default {
             {},
         },
         ".menu-item-active": {
-          "@apply bg-brand-50 text-brand-500 dark:bg-brand-500/10 dark:text-brand-400":
-            {},
+          // Fondo activo con brand-950, texto blanco
+          "@apply bg-brand-950 text-white dark:bg-brand-950 dark:text-white": {},
         },
         ".menu-item-inactive": {
-          "@apply text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5":
+          "@apply text-gray-700 hover:bg-system-rowHover dark:text-gray-300 dark:hover:bg-gray-800":
             {},
         },
       });
     },
   ],
 };
-

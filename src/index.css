@@ -29,6 +29,32 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  /* Colores del sistema */
+  .bg-system-bg { background-color: theme('colors.system.bg'); }
+  .bg-system-card { background-color: theme('colors.system.card'); }
+  .bg-system-tableHeader { background-color: theme('colors.system.tableHeader'); }
+  .bg-system-rowAlt { background-color: theme('colors.system.rowAlt'); }
+  .bg-system-rowHover { background-color: theme('colors.system.rowHover'); }
+
+  /* Colores primarios y de estado */
+  .text-primary { color: theme('colors.primary'); }
+  .text-primaryHover { color: theme('colors.primaryHover'); }
+  .text-info { color: theme('colors.info'); }
+  .text-infoHover { color: theme('colors.infoHover'); }
+  .text-danger { color: theme('colors.danger'); }
+  .text-dangerHover { color: theme('colors.dangerHover'); }
+  .text-print { color: theme('colors.print'); }
+  .text-printHover { color: theme('colors.printHover'); }
+
+  /* Puedes agregar más si necesitas bg-* de estados */
+  .bg-primary { background-color: theme('colors.primary'); }
+  .bg-primaryHover { background-color: theme('colors.primaryHover'); }
+  .bg-info { background-color: theme('colors.info'); }
+  .bg-infoHover { background-color: theme('colors.infoHover'); }
+  .bg-danger { background-color: theme('colors.danger'); }
+  .bg-dangerHover { background-color: theme('colors.dangerHover'); }
+  .bg-print { background-color: theme('colors.print'); }
+  .bg-printHover { background-color: theme('colors.printHover'); }
 }
 
 
