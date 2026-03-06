@@ -12,8 +12,9 @@ const Header = ({ onClick, onToggle }) => {
   };
 
   return (
-    <header className="sticky top-0 flex w-full bg-brand-950 text-white z-99999">
+    <header className="sticky top-0 flex w-full bg-[#1e1f4b] text-white z-99999">
       <div className="flex flex-col items-center justify-between grow lg:flex-row lg:px-6">
+        
         <div className="flex items-center justify-between w-full gap-2 px-3 py-3 sm:gap-4 lg:justify-normal lg:px-0 lg:py-4">
           
           {/* Hamburger button */}
@@ -22,12 +23,10 @@ const Header = ({ onClick, onToggle }) => {
             onClick={onToggle}
           >
             <svg
-              className="block"
               width="16"
               height="12"
               viewBox="0 0 16 12"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
             >
               <path
                 fillRule="evenodd"
@@ -43,12 +42,11 @@ const Header = ({ onClick, onToggle }) => {
             onClick={onClick}
             className="items-center justify-center hidden w-10 h-10 text-white rounded-lg lg:flex lg:h-11 lg:w-11 lg:border border-white/20"
           >
-            {/* Icon inside if needed */}
           </button>
 
           {/* Logo */}
           <Link to="/" className="lg:hidden">
-            <img className="" src="./images/logo/logo.svg" alt="Logo" />
+            <img src="./images/logo/logo.svg" alt="Logo" />
           </Link>
 
           {/* Application menu button */}
@@ -72,12 +70,13 @@ const Header = ({ onClick, onToggle }) => {
         <div
           className={`${
             isApplicationMenuOpen ? "flex" : "hidden"
-          } items-center justify-between w-full gap-4 px-5 py-4 lg:flex lg:justify-end lg:px-0 lg:shadow-none`}
+          } items-center justify-between w-full gap-4 px-5 py-4 lg:flex lg:justify-end lg:px-0`}
         >
           <div className="flex items-center gap-2 2xsm:gap-3">
             <ThemeToggleButton />
             <NotificationDropdown />
           </div>
+
           <UserDropdown />
         </div>
       </div>

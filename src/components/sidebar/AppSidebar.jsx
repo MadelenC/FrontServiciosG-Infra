@@ -226,15 +226,18 @@ const AppSidebar = () => {
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/8/85/Escudo_Universidad_Aut%C3%B3noma_Tom%C3%A1s_Fr%C3%ADas.png"
                 alt="Escudo Universidad Autónoma Tomás Frías"
-                width={150}
-                height={140}
+                width={100}
+                height={100}
                 style={{ display: "block" }}
               />
-              <p className="font-bold text-lg text-white mt-2 text-center">UATF</p>
+              <p className="font-bold text-lg text-white mt-2 text-center">U.A.T.F.</p>
               <h1 className="text-sm text-white/80 text-center">DEPTO. DE INFRAESTRUCTURA</h1>
             </div>
           ) : (
-            <img src="/images/logo/logo-icon.svg" alt="Logo" width={32} height={32} />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/85/Escudo_Universidad_Aut%C3%B3noma_Tom%C3%A1s_Fr%C3%ADas.png"
+            alt="Escudo Universidad Autónoma Tomás Frías"
+             width={32} 
+             height={32} />
           )}
         </Link>
       </div>

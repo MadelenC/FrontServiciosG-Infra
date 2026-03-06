@@ -1,66 +1,51 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../../zustand/AuthUsers";
-
+import { SlLogin } from "react-icons/sl";
 
 export default function UserDropdown() {
   const navigate = useNavigate();
-  const { user, logout } = useUserStore(); // obtenemos user y logout del store
+  const { user, logout } = useUserStore(); 
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+  // Tomar la primera letra del nombre
+  const userInitial = user?.nombres?.[0]?.toUpperCase() || "U";
+
   return (
-    <div style={{ position: "relative", display: "inline-block" }}>
+    <div className="relative inline-block">
+      {/* Botón del usuario sin fondo */}
       <button
         onClick={toggleDropdown}
-        style={{
-          padding: "8px 12px",
-          cursor: "pointer",
-          borderRadius: "4px",
-          border: "1px solid #ccc",
-          backgroundColor: "#fff",
-        }}
+        className="px-0 py-0 cursor-pointer flex items-center gap-2 transition-colors"
       >
-        {/* Mostramos  nombre si existen, sino un placeholder */}
-        <span>{user ? `${user.nombres || "Usuario"} ${user.apellidos}` : "Usuario"}</span>
+        {/* Círculo con inicial */}
+        <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+          {userInitial}
+        </div>
+        {/* Nombre completo */}
+        <span className="text-white dark:text-white">
+          {user ? `${user.nombres || "Usuario"} ${user.apellidos}` : "Usuario"}
+        </span>
       </button>
 
+      {/* Dropdown */}
       {isOpen && (
         <div
-          className="dropdown-menu"
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            backgroundColor: "#fff",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-            padding: "8px 0",
-            marginTop: "4px",
-            minWidth: "150px",
-            zIndex: 1000,
-          }}
+          className="absolute top-full left-0 mt-1 min-w-[150px] rounded-lg shadow-md border border-gray-300 bg-white dark:border-[#151735] dark:bg-[#151627] dark:text-white z-50"
         >
-          <p style={{ padding: "8px 12px", margin: 0, cursor: "default" }}>
-            Perfil
-          </p>
           <p
-            style={{
-              padding: "8px 12px",
-              margin: 0,
-              cursor: "pointer",
-              color: "red",
-            }}
+            className="px-3 py-2 m-0 cursor-pointer text-red-600 dark:text-white hover:bg-gray-100 dark:hover:bg-[#151735] transition-colors flex items-center gap-2"
             onClick={() => {
               logout(); // limpiar sesión
               setIsOpen(false); // cerrar dropdown
               navigate("/signin"); // redirigir a signin
             }}
           >
+            <SlLogin className="w-5 h-5" />
             Cerrar sesión
           </p>
         </div>
