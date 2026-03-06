@@ -14,7 +14,7 @@ export default function TableTravel() {
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [limit] = useState(5);
+  const [limit] = useState(8);
   const [openPanel, setOpenPanel] = useState(false);
 
   const drivers = getDrivers();

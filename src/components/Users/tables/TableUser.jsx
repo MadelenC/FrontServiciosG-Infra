@@ -22,7 +22,7 @@ export default function TableUser() {
   } = useUserStore();
 
   const [openPanel, setOpenPanel] = useState(false);
-  const [formType, setFormType] = useState(null); // inicializamos null
+  const [formType, setFormType] = useState(null); 
 
   useEffect(() => {
     fetchUsers();
@@ -60,14 +60,14 @@ export default function TableUser() {
     );
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition-all p-4">
+    <div className=" overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition-all p-4">
       {/* Botón principal */}
       <div className="flex justify-end mb-4">
         <button
           onClick={() => { setOpenPanel(true); setFormType(null); }}
-          className="flex items-center gap-2 border border-blue-500 text-blue-600 px-4 py-2 rounded-md hover:bg-blue-50 transition-all duration-200 font-medium"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg shadow-lg font-medium focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2 transition mb-4"
         >
-          <span className="text-lg font-bold">＋</span> Agregar Usuario
+          <span className="text-lg font-bold text-white">＋</span> Agregar Usuario
         </button>
       </div>
 

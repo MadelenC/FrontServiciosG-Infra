@@ -26,7 +26,7 @@ export default {
           700: "#2a31d8",
           800: "#252dae",
           900: "#262e89",
-          950: "#161950", // Azul oscuro que quieres usar
+          950: "#161950", 
         },
 
         gray: {

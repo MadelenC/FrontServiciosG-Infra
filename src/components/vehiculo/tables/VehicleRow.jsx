@@ -1,56 +1,50 @@
 import React from "react";
 import { FaEdit, FaTachometerAlt, FaEye } from "react-icons/fa";
+import Badge from "../../ui/badge/Badge";
 
 export default function VehicleRow({ vehicle, onEdit, onUpdateKm, onView }) {
+  const badgeColor =
+    vehicle.estado === "Óptimo"
+      ? "success"
+      : vehicle.estado === "Mantenimiento"
+      ? "warning"
+      : vehicle.estado === "Desuso"
+      ? "gray"
+      : "danger";
+
   return (
-    <tr className="transition-colors hover:bg-gray-50">
-      <td className="px-4 py-3 border-b border-gray-200 whitespace-nowrap">{vehicle.id}</td>
-      <td className="px-4 py-3 border-b border-gray-200 truncate max-w-[160px]">{vehicle.asignacion}</td>
-      <td className="px-4 py-3 border-b border-gray-200 whitespace-nowrap">{vehicle.placa}</td>
-      <td className="px-4 py-3 border-b border-gray-200 text-center">{vehicle.asientos}</td>
-      <td className="px-4 py-3 border-b border-gray-200 whitespace-nowrap">{vehicle.tipo}</td>
-      <td className="px-4 py-3 border-b border-gray-200 whitespace-nowrap">{vehicle.kilometraje}</td>
-      <td className="px-4 py-3 border-b border-gray-200">
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium
-            ${
-              vehicle.estado === "Óptimo"
-                ? "bg-green-100 text-green-700"
-                : vehicle.estado === "Mantenimiento"
-                ? "bg-yellow-100 text-yellow-700"
-                : vehicle.estado === "Desuso"
-                ? "bg-gray-200 text-gray-700"
-                : "bg-red-100 text-red-700"
-            }`}
-        >
+    <tr className="border border-gray-200 hover:bg-gray-50 transition-colors">
+      <td className="border border-gray-200 px-3 py-2 font-medium text-gray-700">{vehicle.id}</td>
+      <td className="border border-gray-200 px-3 py-2 text-gray-700 truncate max-w-[160px]">{vehicle.asignacion}</td>
+      <td className="border border-gray-200 px-3 py-2 text-gray-700">{vehicle.placa}</td>
+      <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">{vehicle.asientos}</td>
+      <td className="border border-gray-200 px-3 py-2 text-gray-700">{vehicle.tipo}</td>
+      <td className="border border-gray-200 px-3 py-2 text-gray-700">{vehicle.kilometraje}</td>
+      <td className="border border-gray-200 px-3 py-2">
+        <Badge size="sm" color={badgeColor} className="px-2 py-1 text-xs">
           {vehicle.estado}
-        </span>
+        </Badge>
       </td>
-      <td className="px-4 py-3 border-b border-gray-200">
+      <td className="border border-gray-200 px-3 py-2">
         <div className="flex items-center justify-center gap-2">
-          {/* Editar */}
           <button
             onClick={onEdit}
             title="Editar"
-            className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+            className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
           >
             <FaEdit size={14} />
           </button>
-
-          {/* Actualizar Kilometraje */}
           <button
             onClick={onUpdateKm}
             title="Actualizar Kilometraje"
-            className="w-9 h-9 flex items-center justify-center rounded-full bg-green-50 text-green-600 hover:bg-green-100 transition"
+            className="p-2 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition"
           >
             <FaTachometerAlt size={14} />
           </button>
-
-          {/* Ver detalle */}
           <button
             onClick={onView}
             title="Ver Detalle"
-            className="w-9 h-9 flex items-center justify-center rounded-full bg-red-50 text-red-900 hover:bg-red-100 transition"
+            className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition"
           >
             <FaEye size={14} />
           </button>

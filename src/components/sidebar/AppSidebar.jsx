@@ -14,7 +14,7 @@ import { GiHorizonRoad } from "react-icons/gi";
 import { SiOrganicmaps } from "react-icons/si";
 
 const navItems = [
-  { icon: <FaUsersLine className="text-white" />, name: "Usuarios", subItems: [{ name: " Ver Lista de Usuarios", path: "/", pro: false }] },
+  { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", subItems: [{ name: " Ver Lista de Usuarios", path: "/", pro: false }] },
   { icon: <MdDomainAdd className="text-white" />, name: "Entidades", subItems: [{ name: " Lista de Entidades", path: "/entidades", pro: false }] },
   { name: "Rol de Viajes", icon: <FaUsersGear className="text-white" />, subItems: [{ name: "Motrar", path: "/travel-rol", pro: false }] },
   { name: "Vehiculos ", icon: <BiSpreadsheet className="text-white" />, subItems: [{ name: "Mostrar", path: "/vehiculos", pro: false }] },
@@ -214,7 +214,7 @@ const AppSidebar = () => {
         dark:bg-[#11121f] dark:border-[#1a1a2c]
         h-screen transition-all duration-300 ease-in-out z-50
         ${isExpanded || isMobileOpen ? "w-[290px]" : isHovered ? "w-[290px]" : "w-[90px]"}
-        ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
+        ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 font-sans
       `}
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -230,7 +230,7 @@ const AppSidebar = () => {
                 height={100}
                 style={{ display: "block" }}
               />
-              <p className="font-bold text-lg text-white mt-2 text-center">U.A.T.F.</p>
+              <p className="font-bold text-lg text-white mt-2 text-center font-sans">U.A.T.F.</p>
               <h1 className="text-sm text-white/80 text-center">DEPTO. DE INFRAESTRUCTURA</h1>
             </div>
           ) : (

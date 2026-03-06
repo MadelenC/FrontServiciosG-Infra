@@ -19,7 +19,7 @@ export default function TableVehicle() {
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const limit = 5;
+  const limit = 8;
 
   const [openAddPanel, setOpenAddPanel] = useState(false);
   const [openEditPanel, setOpenEditPanel] = useState(false);
@@ -52,8 +52,7 @@ export default function TableVehicle() {
   if (error) return <div className="p-6 text-center text-red-500">Error: {error}</div>;
 
   return (
-    <div className="max-w-full rounded-xl bg-white shadow-md p-4">
-      {/* Barra superior */}
+    <div className="max-w-full rounded-xl bg-white shadow-md p-4 pt-14">
       <div className="flex items-center justify-between mb-4">
         <div className="flex gap-3">
           <div className="w-64">
@@ -65,9 +64,9 @@ export default function TableVehicle() {
             className="h-10 border border-gray-300 rounded-md px-3"
           >
             <option value="">Estado</option>
-            <option value="Óptimo">Óptimo</option>
-            <option value="Mantenimiento">Mantenimiento</option>
-            <option value="Desuso">Desuso</option>
+            <option value="optimo">optimo</option>
+            <option value="mantenimiento">mantenimiento</option>
+            <option value="Desuso">desuso</option>
           </select>
         </div>
 
@@ -159,6 +158,8 @@ export default function TableVehicle() {
     </div>
   );
 }
+
+
 
 
 
