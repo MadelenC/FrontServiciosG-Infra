@@ -17,43 +17,79 @@ export default function AddVehicleForm({ onSubmit, onClose }) {
     tipoEspecifico: "",
   });
 
+  const [errors, setErrors] = useState({});
+
+  // Maneja cambios en inputs
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: false }));
   };
 
+  // Validación al perder foco
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (!value.trim()) setErrors((prev) => ({ ...prev, [name]: "Campo obligatorio" }));
+    else setErrors((prev) => ({ ...prev, [name]: false }));
+  };
+
+  // Validación y envío
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Nuevo vehículo:", formData);
-    onSubmit?.(formData);
+    const newErrors = {};
+
+    Object.keys(formData).forEach((key) => {
+      if (!formData[key].trim()) newErrors[key] = "Campo obligatorio";
+    });
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return; // si hay errores no envía
+
+    // Llamada a onSubmit del padre (que enviará con Axios)
+    onSubmit(formData);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/20  pt-9">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/20 pt-9">
       <div className="bg-white rounded-lg shadow-md w-full max-w-2xl p-4 overflow-y-auto max-h-[75vh] relative">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Nuevo Vehículo</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 pt-2 pl-10">Nuevo Vehículo</h2>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-2 ">
-          <Input label="Asignado a" name="asignadoA" placeholder="Ejm. nombre del chofer" onChange={handleChange} />
-          <Input label="Placa" name="placa" placeholder="Ejm. 3027-TRL" onChange={handleChange} />
-          <Input label="Color" name="color" placeholder="Ejm. Blanco" onChange={handleChange} />
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-2 p-5">
+          {[
+            { label: "Asignado a", name: "asignadoA" },
+            { label: "Placa", name: "placa" },
+            { label: "Color", name: "color" },
+            { label: "Motor", name: "motor" },
+            { label: "Chasis", name: "chasis" },
+            { label: "Cilindrada", name: "cilindrada" },
+            { label: "Pasajeros", name: "pasajeros" },
+            { label: "Kilometraje", name: "kilometraje" },
+            { label: "Tipo general", name: "tipoGeneral" },
+            { label: "Marca", name: "marca" },
+            { label: "Modelo", name: "modelo" },
+            { label: "Tipo específico", name: "tipoEspecifico" },
+          ].map((field) => (
+            <Input
+              key={field.name}
+              label={field.label}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={errors[field.name]}
+            />
+          ))}
 
-          <Input label="Motor" name="motor" placeholder="Serie del motor" onChange={handleChange} />
-          <Input label="Chasis" name="chasis" placeholder="Serie del Chasis" onChange={handleChange} />
-          <Input label="Cilindrada" name="cilindrada" placeholder="Ejm. 3000" onChange={handleChange} />
+          <Select
+            label="Estado"
+            name="estado"
+            value={formData.estado}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            options={["", "optimo", "mantenimiento", "desuso"]}
+            error={errors.estado}
+          />
 
-          <Input label="Pasajeros" name="pasajeros" placeholder="Ejm. 50" onChange={handleChange} />
-          <Input label="Kilometraje" name="kilometraje" placeholder="Ejm. 22015" onChange={handleChange} />
-          <Select label="Estado" name="estado" onChange={handleChange} options={["", "Óptimo", "Mantenimiento", "Desuso"]} />
-
-          <Input label="Tipo general" name="tipoGeneral" placeholder="Ejm. Vagoneta" onChange={handleChange} />
-          <Input label="Marca" name="marca" placeholder="Ejm. Toyota" onChange={handleChange} />
-          <Input label="Modelo" name="modelo" placeholder="Ejm. 2002" onChange={handleChange} />
-
-          <Input label="Tipo específico" name="tipoEspecifico" placeholder="Ejm. Patrol" onChange={handleChange} />
-          <div></div>
-          <div></div>
-
-          {/* Botón */}
           <div className="md:col-span-3 flex justify-end mt-2">
             <button
               type="submit"
@@ -64,10 +100,9 @@ export default function AddVehicleForm({ onSubmit, onClose }) {
           </div>
         </form>
 
-        {/* Botón cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 font-bold text-lg"
+          className="absolute top-3 right-4 text-gray-600 hover:text-gray-900 text-[2.5rem] leading-none p-2"
         >
           ×
         </button>
@@ -76,29 +111,40 @@ export default function AddVehicleForm({ onSubmit, onClose }) {
   );
 }
 
-function Input({ label, name, placeholder, onChange }) {
+// Input con error
+function Input({ label, name, value, onChange, onBlur, error }) {
   return (
     <div className="flex flex-col w-full">
       <label className="text-sm font-medium text-gray-700 mb-1">{label}</label>
       <input
         type="text"
         name={name}
-        placeholder={placeholder}
+        value={value}
         onChange={onChange}
-        className="h-9 px-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 w-full"
+        onBlur={onBlur}
+        className={`h-9 px-2 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 w-full ${
+          error ? "border-red-500 bg-red-50" : "border-gray-300"
+        }`}
+        placeholder={`Ingrese ${label}`}
       />
+      {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
     </div>
   );
 }
 
-function Select({ label, name, onChange, options }) {
+// Select con error
+function Select({ label, name, value, onChange, onBlur, options, error }) {
   return (
     <div className="flex flex-col w-full">
       <label className="text-sm font-medium text-gray-700 mb-1">{label}</label>
       <select
         name={name}
+        value={value}
         onChange={onChange}
-        className="h-9 px-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 w-full"
+        onBlur={onBlur}
+        className={`h-9 px-2 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 w-full ${
+          error ? "border-red-500 bg-red-50" : "border-gray-300"
+        }`}
       >
         {options.map((opt) => (
           <option key={opt} value={opt}>
@@ -106,8 +152,7 @@ function Select({ label, name, onChange, options }) {
           </option>
         ))}
       </select>
+      {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
     </div>
   );
 }
-
-

@@ -11,25 +11,38 @@ const mapVehicleFromApi = (v) => ({
   id: v.id,
   asignacion: v.codigo,
   placa: v.placa,
+  color:v.color,
   asientos: v.pasajeros,
-  tipo: v.tipog,
-  kilometraje: v.modelos && v.modelos.length > 0 ? v.modelos[0].kilometraje : "—",
+  tipog: v.tipog,
   estado: v.estado,
+  combustible: v.combustible ??"",
+
+  modelo:v.modelos?.[0]?.modelo ??"",
+  tipoe: v.modelos?.[0]?.tipoe ??"",
+  kilometraje: v.modelos && v.modelos.length > 0 ? v.modelos[0].kilometraje : "—",
+  
   // Datos de marca
-  marca: v.marca ?? "—",
-  chasis: v.chasis ?? "—",
-  motor: v.motor ?? "—",
-  cilindrada: v.cilindrada ?? "—",
+  marca: v.modelos?.[0]?.marcas?.[0]?.marca ?? "",
+  chasis: v.modelos?.[0]?.marcas?.[0]?.chasis ?? "",
+  motor: v.modelos?.[0]?.marcas?.[0]?.motor ?? "",
+  cilindrada: v.modelos?.[0]?.marcas?.[0]?.cilindrada ?? "",
 });
 
 
 const mapVehicleToApi = (v) => ({
-  codigo: v.asignacion,
+  codigo: v.asignadoA,
   placa: v.placa,
-  pasajeros: v.asientos,
-  tipog: v.tipo,
+  pasajeros: v.pasajeros,
+  tipog: v.tipoGeneral,
   kilometraje: v.kilometraje,
   estado: v.estado,
+  color: v.color,
+  motor: v.motor,
+  chasis: v.chasis,
+  cilindrada: v.cilindrada,
+  marca: v.marca,
+  modelo: v.modelo,
+  tipoe: v.tipoEspecifico,
 });
 
 export const useVehicleStore = create((set, get) => ({

@@ -18,7 +18,7 @@ export default function VehicleRow({ vehicle, onEdit, onUpdateKm, onView }) {
       <td className="border border-gray-200 px-3 py-2 text-gray-700 truncate max-w-[160px]">{vehicle.asignacion}</td>
       <td className="border border-gray-200 px-3 py-2 text-gray-700">{vehicle.placa}</td>
       <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">{vehicle.asientos}</td>
-      <td className="border border-gray-200 px-3 py-2 text-gray-700">{vehicle.tipo}</td>
+      <td className="border border-gray-200 px-3 py-2 text-gray-700">{vehicle.tipog}</td>
       <td className="border border-gray-200 px-3 py-2 text-gray-700">{vehicle.kilometraje}</td>
       <td className="border border-gray-200 px-3 py-2">
         <Badge size="sm" color={badgeColor} className="px-2 py-1 text-xs">

@@ -31,10 +31,10 @@ export default function VehicleDetail({ vehicle, onClose }) {
           <div><span className="font-medium">Nro. Asientos:</span> {vehicle.asientos}</div>
           <div><span className="font-medium">Kilometraje:</span> {vehicle.kilometraje} km</div>
 
-          <div><span className="font-medium">Tipo General:</span> {vehicle.tipo}</div>
+          <div><span className="font-medium">Tipo General:</span> {vehicle.tipog}</div>
           <div><span className="font-medium">Estado:</span> {vehicle.estado}</div>
           <div><span className="font-medium">Modelo:</span> {vehicle.modelo}</div>
-          <div><span className="font-medium">Tipo Específico:</span> {vehicle.tipoEspecifico}</div>
+          <div><span className="font-medium">Tipo Específico:</span> {vehicle.tipoe}</div>
 
           <div><span className="font-medium">Marca:</span> {vehicle.marca}</div>
           <div><span className="font-medium">Chasís:</span> {vehicle.chasis}</div>

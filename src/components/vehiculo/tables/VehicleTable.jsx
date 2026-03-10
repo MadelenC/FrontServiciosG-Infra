@@ -9,13 +9,7 @@ import UpdateKmForm from "../form/oper/UpdateKmForm";
 import VehicleDetail from "../form/oper/VehicleDetail";
 
 export default function TableVehicle() {
-  const {
-    vehicles,
-    fetchVehicles,
-    loading,
-    error,
-    editVehicle, 
-  } = useVehicleStore();
+  const { vehicles, fetchVehicles, loading, error, addVehicle, editVehicle } = useVehicleStore();
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -43,10 +37,18 @@ export default function TableVehicle() {
   );
 
   const totalPages = Math.ceil(filteredVehicles.length / limit);
-  const currentVehicles = filteredVehicles.slice(
-    (page - 1) * limit,
-    page * limit
-  );
+  const currentVehicles = filteredVehicles.slice((page - 1) * limit, page * limit);
+
+  //NUEVA FUNCIÓN PARA AGREGAR VEHÍCULO
+  const handleAddVehicle = async (vehicleData) => {
+    const result = await addVehicle(vehicleData);
+    if (result.ok) {
+      alert("Vehículo registrado correctamente");
+      setOpenAddPanel(false);
+    } else {
+      alert("Error al registrar vehículo: " + result.error);
+    }
+  };
 
   if (loading) return <div className="p-6 text-center">Cargando vehículos...</div>;
   if (error) return <div className="p-6 text-center text-red-500">Error: {error}</div>;
@@ -66,7 +68,7 @@ export default function TableVehicle() {
             <option value="">Estado</option>
             <option value="optimo">optimo</option>
             <option value="mantenimiento">mantenimiento</option>
-            <option value="Desuso">desuso</option>
+            <option value="desuso">desuso</option>
           </select>
         </div>
 
@@ -124,6 +126,7 @@ export default function TableVehicle() {
       {/* Modal agregar vehículo */}
       {openAddPanel && (
         <AddVehicleForm
+          onSubmit={handleAddVehicle} // ✅ PASAR FUNCION
           onClose={() => setOpenAddPanel(false)}
         />
       )}
@@ -134,7 +137,7 @@ export default function TableVehicle() {
           vehicleData={selectedVehicle}
           onClose={() => setOpenEditPanel(false)}
           onUpdate={async (vehicleUI) => {
-            await editVehicle(vehicleUI.id, vehicleUI); 
+            await editVehicle(vehicleUI.id, vehicleUI);
             setOpenEditPanel(false);
           }}
         />
@@ -158,8 +161,6 @@ export default function TableVehicle() {
     </div>
   );
 }
-
-
 
 
 

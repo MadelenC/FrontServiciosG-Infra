@@ -35,11 +35,11 @@ export default function EditVehicleForm({ vehicleData, onUpdate, onDelete, onClo
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
       <div className="bg-white rounded-lg shadow-md w-full max-w-2xl p-4 overflow-y-auto max-h-[75vh] relative">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 pt-7 pl-2">
           Actualización de datos del Vehículo
         </h2>
 
-        <form className="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <form className="grid grid-cols-1 md:grid-cols-3 gap-2 pl-5 pr-5 pb-5">
           <Input label="Asignación" name="asignacion" value={formData.asignacion} onChange={handleChange} />
           <Input label="Placa" name="placa" value={formData.placa} onChange={handleChange} />
           <Input label="Color" name="color" value={formData.color} onChange={handleChange} />
@@ -51,7 +51,7 @@ export default function EditVehicleForm({ vehicleData, onUpdate, onDelete, onClo
             name="estado"
             value={formData.estado}
             onChange={handleChange}
-            options={["Optimo", "Mantenimiento", "Desuso"]}
+            options={["optimo", "mantenimiento", "desuso"]}
           />
 
           <Input label="Combustible" name="combustible" value={formData.combustible} onChange={handleChange} />
@@ -83,16 +83,16 @@ export default function EditVehicleForm({ vehicleData, onUpdate, onDelete, onClo
 
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 font-bold text-lg"
+          className="absolute top-3 right-4 text-gray-600 hover:text-gray-900  text-[2.5rem] leading-none p-2"
         >
-          ×
+         ×
         </button>
       </div>
     </div>
   );
 }
 
-// Componente Input reutilizable
+
 function Input({ label, name, value, onChange }) {
   return (
     <div className="flex flex-col w-full">
@@ -108,7 +108,7 @@ function Input({ label, name, value, onChange }) {
   );
 }
 
-// Componente Select reutilizable
+
 function Select({ label, name, value, onChange, options }) {
   return (
     <div className="flex flex-col w-full">
