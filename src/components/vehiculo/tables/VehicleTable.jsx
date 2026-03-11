@@ -9,7 +9,13 @@ import UpdateKmForm from "../form/oper/UpdateKmForm";
 import VehicleDetail from "../form/oper/VehicleDetail";
 
 export default function TableVehicle() {
-  const { vehicles, fetchVehicles, loading, error, addVehicle, editVehicle } = useVehicleStore();
+  // ✅ Uso correcto de Zustand (selectores individuales)
+  const vehicles = useVehicleStore((state) => state.vehicles);
+  const fetchVehicles = useVehicleStore((state) => state.fetchVehicles);
+  const loading = useVehicleStore((state) => state.loading);
+  const error = useVehicleStore((state) => state.error);
+  const addVehicle = useVehicleStore((state) => state.addVehicle);
+  const editVehicle = useVehicleStore((state) => state.editVehicle);
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -25,21 +31,27 @@ export default function TableVehicle() {
 
   const [estadoFilter, setEstadoFilter] = useState("");
 
+  // ✅ Ejecutar fetch solo una vez
   useEffect(() => {
     fetchVehicles();
-  }, [fetchVehicles]);
+  }, []);
 
+  // ✅ Filtrado simple sin useMemo
   const filteredVehicles = vehicles.filter(
     (v) =>
-      (v.asignacion.toLowerCase().includes(search.toLowerCase()) ||
-        v.placa.toLowerCase().includes(search.toLowerCase())) &&
+      ((v.asignacion || "").toLowerCase().includes(search.toLowerCase()) ||
+        (v.placa || "").toLowerCase().includes(search.toLowerCase())) &&
       (estadoFilter === "" || v.estado === estadoFilter)
   );
 
-  const totalPages = Math.ceil(filteredVehicles.length / limit);
-  const currentVehicles = filteredVehicles.slice((page - 1) * limit, page * limit);
+  // ✅ Orden descendente
+  const sortedVehicles = [...filteredVehicles].sort((a, b) => b.id - a.id);
 
-  //NUEVA FUNCIÓN PARA AGREGAR VEHÍCULO
+  // ✅ Paginación
+  const totalPages = Math.ceil(sortedVehicles.length / limit);
+  const currentVehicles = sortedVehicles.slice((page - 1) * limit, page * limit);
+
+  // ✅ Agregar vehículo
   const handleAddVehicle = async (vehicleData) => {
     const result = await addVehicle(vehicleData);
     if (result.ok) {
@@ -91,6 +103,7 @@ export default function TableVehicle() {
             )}
           </tr>
         </thead>
+
         <tbody>
           {currentVehicles.length > 0 ? (
             currentVehicles.map((v) => (
@@ -123,15 +136,15 @@ export default function TableVehicle() {
 
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
-      {/* Modal agregar vehículo */}
+      {/* Modal agregar */}
       {openAddPanel && (
         <AddVehicleForm
-          onSubmit={handleAddVehicle} // ✅ PASAR FUNCION
+          onSubmit={handleAddVehicle}
           onClose={() => setOpenAddPanel(false)}
         />
       )}
 
-      {/* Modal editar vehículo */}
+      {/* Modal editar */}
       {openEditPanel && selectedVehicle && (
         <EditVehicleForm
           vehicleData={selectedVehicle}
@@ -143,7 +156,7 @@ export default function TableVehicle() {
         />
       )}
 
-      {/* Modal actualizar KM */}
+      {/* Modal actualizar km */}
       {openUpdateKmPanel && selectedVehicle && (
         <UpdateKmForm
           vehicle={selectedVehicle}
