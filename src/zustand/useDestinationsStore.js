@@ -25,6 +25,7 @@ export const useDestinoStore = create((set, get) => ({
         departamentoFinal: d.dep_final,
         distancia: d.kilometraje,
         tiempo: d.tiempo,
+        mapa: d.mapa ? { ...d.mapa } : { lat: -17.3935, lng: -66.1568, titulo: "" },
       }));
       set({ destinos: mapped, loading: false });
     } catch (err) {
@@ -45,6 +46,7 @@ export const useDestinoStore = create((set, get) => ({
         departamentoFinal: newDestino.dep_final,
         distancia: newDestino.kilometraje,
         tiempo: newDestino.tiempo,
+        mapa: newDestino.mapa ? { ...newDestino.mapa } : { lat: -17.3935, lng: -66.1568, titulo: "" },
       };
       set({ destinos: [...get().destinos, mapped] });
       return { ok: true };
@@ -77,6 +79,7 @@ export const useDestinoStore = create((set, get) => ({
         departamentoFinal: updated.dep_final,
         distancia: updated.kilometraje,
         tiempo: updated.tiempo,
+        mapa: updated.mapa ? { ...updated.mapa } : { lat: -17.3935, lng: -66.1568, titulo: "" },
       };
 
       set({
@@ -94,6 +97,25 @@ export const useDestinoStore = create((set, get) => ({
     try {
       await deleteDestino(id);
       set({ destinos: get().destinos.filter(d => d.id !== id) });
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: err.message || err };
+    }
+  },
+
+  // Actualizar solo la ubicación (mapa) de un destino
+  updateDestinoMapa: async (id, newMapa) => {
+    try {
+      // Aquí puedes llamar a la API si quieres guardar cambios
+      // await updateDestino(id, { mapa: newMapa });
+
+      set({
+        destinos: get().destinos.map(d =>
+          d.id === id
+            ? { ...d, mapa: { ...d.mapa, ...newMapa } }
+            : d
+        ),
+      });
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err.message || err };

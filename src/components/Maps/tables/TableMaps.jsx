@@ -2,44 +2,37 @@ import React from "react";
 import MapsRow from "./MapsRow";
 
 export default function TableMaps({ data }) {
-  const headers = [
-    "#",
-    "Destino",
-    "Título",
-    "Latitud",
-    "Longitud",
-    "Operación",
-  ];
+  const headers = ["#", "Destino", "Título", "Latitud", "Longitud", "Operación"];
 
   return (
-    <div className="overflow-x-auto border border-gray-200 rounded-md">
-      <table className="w-full table-fixed text-sm border-collapse">
-        <thead className="bg-blue-100">
+    <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+      <table className="w-full border-collapse text-sm bg-white">
+        <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
           <tr>
-            {headers.map((h, idx) => (
+            {headers.map((head, idx) => (
               <th
-                key={h}
-                className={`px-3 py-2 font-semibold border-b border-gray-300
+                key={head}
+                className={`border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700
                   ${idx === 0 ? "w-10 text-center" : ""}
-                  ${h === "Latitud" || h === "Longitud" ? "w-35 text-center" : ""}
-                  ${h === "Operación" ? "w-28 text-center" : ""}
+                  ${head === "Latitud" || head === "Longitud" ? "w-36 text-center" : ""}
+                  ${head === "Operación" ? "w-28 text-center" : ""}
                 `}
               >
-                {h}
+                {head}
               </th>
             ))}
           </tr>
         </thead>
 
         <tbody>
-          {data.length ? (
+          {data.length > 0 ? (
             data.map((item, index) => (
               <MapsRow key={item.id} item={item} index={index} />
             ))
           ) : (
             <tr>
               <td colSpan={headers.length} className="py-6 text-center text-gray-500">
-                No hay registros
+                No hay registros.
               </td>
             </tr>
           )}

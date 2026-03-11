@@ -3,10 +3,10 @@ import "leaflet/dist/leaflet.css";
 
 export default function ModalMap({ lat, lng, onClose, destino }) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-4 w-96 h-96 relative">
+    <div className=" fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className=" bg-white rounded-lg p-4 w-96 h-96 relative">
         <button
-          className="absolute top-2 right-2 text-red-500 font-bold"
+          className="absolute top-2 right-2 text-gray-500 font-bold"
           onClick={onClose}
         >
           X

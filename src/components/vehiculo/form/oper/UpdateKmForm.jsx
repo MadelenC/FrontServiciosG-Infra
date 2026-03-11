@@ -15,9 +15,9 @@ export default function UpdateKmForm({ vehicle, onUpdateKm, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+    <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
       <div className="bg-white rounded-lg shadow-md w-full max-w-md p-6 relative">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+        <h2 className="pt-5 text-lg font-semibold text-gray-800 mb-4">
           Actualizar Kilometraje
         </h2>
 
@@ -52,7 +52,7 @@ export default function UpdateKmForm({ vehicle, onUpdateKm, onClose }) {
           <div className="flex justify-end gap-2 mt-4">
             <button
               onClick={handleUpdate}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-900 text-sm"
             >
               Actualizar
             </button>
@@ -69,7 +69,7 @@ export default function UpdateKmForm({ vehicle, onUpdateKm, onClose }) {
         {/* Botón cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 font-bold text-lg"
+          className="absolute top-3 right-4 text-gray-600 hover:text-gray-900 text-[2.5rem] leading-none p-2"
         >
           ×
         </button>

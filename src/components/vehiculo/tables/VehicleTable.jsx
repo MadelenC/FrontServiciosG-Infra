@@ -9,7 +9,8 @@ import UpdateKmForm from "../form/oper/UpdateKmForm";
 import VehicleDetail from "../form/oper/VehicleDetail";
 
 export default function TableVehicle() {
-  // ✅ Uso correcto de Zustand (selectores individuales)
+  //Uso correcto de Zustand (selectores individuales)
+  const removeVehicle = useVehicleStore((state) => state.removeVehicle);
   const vehicles = useVehicleStore((state) => state.vehicles);
   const fetchVehicles = useVehicleStore((state) => state.fetchVehicles);
   const loading = useVehicleStore((state) => state.loading);
@@ -44,14 +45,12 @@ export default function TableVehicle() {
       (estadoFilter === "" || v.estado === estadoFilter)
   );
 
-  // ✅ Orden descendente
-  const sortedVehicles = [...filteredVehicles].sort((a, b) => b.id - a.id);
-
-  // ✅ Paginación
-  const totalPages = Math.ceil(sortedVehicles.length / limit);
+  // Orden descendente
+  const sortedVehicles = [...filteredVehicles].sort((a, b) => b.id - a.id); 
+  const totalPages = Math.ceil(sortedVehicles.length / limit);//Paginación
   const currentVehicles = sortedVehicles.slice((page - 1) * limit, page * limit);
 
-  // ✅ Agregar vehículo
+  // Agregar vehículo
   const handleAddVehicle = async (vehicleData) => {
     const result = await addVehicle(vehicleData);
     if (result.ok) {
@@ -146,24 +145,48 @@ export default function TableVehicle() {
 
       {/* Modal editar */}
       {openEditPanel && selectedVehicle && (
-        <EditVehicleForm
-          vehicleData={selectedVehicle}
-          onClose={() => setOpenEditPanel(false)}
-          onUpdate={async (vehicleUI) => {
-            await editVehicle(vehicleUI.id, vehicleUI);
+      <EditVehicleForm
+      vehicleData={selectedVehicle}
+      onClose={() => setOpenEditPanel(false)}
+      onUpdate={async (vehicleUI) => {
+      await editVehicle(vehicleUI.id, vehicleUI);
+      setOpenEditPanel(false);
+       }}
+       onDelete={async (id) => {
+      const confirmDelete = window.confirm(
+        "¿Seguro que deseas eliminar este vehículo?"
+      );
+
+      if (!confirmDelete) return;
+
+      const result = await removeVehicle(id);
+
+          if (result.ok) {
+            alert("Vehículo eliminado correctamente");
             setOpenEditPanel(false);
+          } else {
+            alert("Error al eliminar: " + result.error);
+          }
           }}
-        />
-      )}
+       />
+    )}
 
-      {/* Modal actualizar km */}
-      {openUpdateKmPanel && selectedVehicle && (
-        <UpdateKmForm
-          vehicle={selectedVehicle}
-          onClose={() => setOpenUpdateKmPanel(false)}
-        />
-      )}
-
+     {/* Modal actualizar km */}
+    {openUpdateKmPanel && selectedVehicle && (
+      <UpdateKmForm
+        vehicle={selectedVehicle}
+        onClose={() => setOpenUpdateKmPanel(false)}
+        onUpdateKm={async (updatedVehicle) => {
+          const result = await editVehicle(updatedVehicle.id, updatedVehicle);
+          if (result.ok) {
+            alert("Kilometraje actualizado correctamente");
+            setOpenUpdateKmPanel(false);
+          } else {
+            alert("Error al actualizar: " + result.error);
+          }
+        }}
+      />
+    )}
       {/* Modal detalle */}
       {openDetailPanel && selectedDetailVehicle && (
         <VehicleDetail

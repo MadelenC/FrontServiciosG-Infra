@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaPlus, FaSave, FaPrint, FaSyncAlt } from "react-icons/fa";
 import SearchBar from "../search/SearchBar";
 import TableFuel from "./TableFuel";
 import Pagination from "./Pagination";
@@ -41,22 +42,27 @@ export default function FuelTable() {
 
   return (
     <div className="bg-white rounded-xl shadow-md p-4">
-
       {/* CABECERA */}
       <div className="flex justify-between items-center mb-4">
-
         {/* BOTONES */}
         <div className="flex gap-2">
-          <button className="px-3 py-2 rounded-md bg-green-600 text-white text-sm">
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm shadow-md font-sans">
+            <FaSyncAlt className="w-4 h-4" />
             Actualizar Capital
           </button>
-          <button className="px-3 py-2 rounded-md bg-blue-600 text-white text-sm">
+
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm shadow-md font-sans">
+            <FaPlus className="w-4 h-4" />
             Agregar
           </button>
-          <button className="px-3 py-2 rounded-md bg-gray-600 text-white text-sm">
+
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-800 text-white text-sm shadow-md font-sans">
+            <FaPrint className="w-4 h-4" />
             Imprimir
           </button>
-          <button className="px-3 py-2 rounded-md bg-red-500 text-white text-sm">
+
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm shadow-md font-sans">
+            <FaSave className="w-4 h-4" />
             Guardar
           </button>
         </div>
@@ -72,11 +78,7 @@ export default function FuelTable() {
 
       {/* PAGINACIÓN */}
       <div className="flex justify-center mt-4">
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          setPage={setPage}
-        />
+        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { TableRow, TableCell } from "../../ui/table";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import ModalMap from "./ModalMap";
 
@@ -10,14 +11,23 @@ export default function MapsRow({ item, index }) {
 
   return (
     <>
-      <tr className="hover:bg-gray-50 transition-colors">
-        <td className="px-3 py-2 border-b text-center">{index + 1}</td>
-        <td className="px-3 py-2 border-b">{item.destino}</td>
-        <td className="px-3 py-2 border-b">{item.titulo}</td>
-        <td className="px-3 py-2 border-b text-center">{item.lat}</td>
-        <td className="px-3 py-2 border-b text-center">{item.lng}</td>
-
-        <td className="px-3 py-2 border-b text-center">
+      <TableRow className="border border-gray-200 hover:bg-gray-50 transition-colors">
+        <TableCell className="border border-gray-200 px-3 py-2 text-center font-medium text-gray-700">
+          {index + 1}
+        </TableCell>
+        <TableCell className="border border-gray-200 px-3 py-2 text-gray-700">
+          {item.destino}
+        </TableCell>
+        <TableCell className="border border-gray-200 px-3 py-2 text-gray-700">
+          {item.titulo}
+        </TableCell>
+        <TableCell className="border border-gray-200 px-3 py-2 text-center text-gray-700">
+          {item.lat}
+        </TableCell>
+        <TableCell className="border border-gray-200 px-3 py-2 text-center text-gray-700">
+          {item.lng}
+        </TableCell>
+        <TableCell className="border border-gray-200 px-3 py-2 text-center">
           <button
             onClick={handleViewMap}
             title="Ver mapa"
@@ -27,8 +37,8 @@ export default function MapsRow({ item, index }) {
           >
             <FaMapMarkedAlt size={14} />
           </button>
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
       {showMap && (
         <ModalMap

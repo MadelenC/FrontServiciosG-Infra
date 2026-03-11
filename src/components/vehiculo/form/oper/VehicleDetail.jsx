@@ -13,7 +13,7 @@ export default function VehicleDetail({ vehicle, onClose }) {
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-700 text-2xl font-bold transition"
+            className="absolute top-3 right-4 text-gray-600 hover:text-gray-900 text-[2.5rem] leading-none p-2"
           >
             ×
           </button>

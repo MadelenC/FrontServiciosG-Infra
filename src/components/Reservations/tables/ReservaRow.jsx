@@ -17,6 +17,10 @@ export default function ReservaRow({ reserva }) {
     fetchUsers(); 
   }, []);
 
+  // Filtrar choferes y encargados
+  const choferes = users?.filter(u => u.tipo === "chofer") || [];
+  const encargados = users?.filter(u => u.tipo === "encargado") || [];
+
   const handleConcretarClick = () => {
     setIsModalOpen(true);
   };
@@ -50,13 +54,13 @@ export default function ReservaRow({ reserva }) {
         </td>
       </tr>
 
-      {/* PASAMOS users AL MODAL */}
       <ReservaModal
         isOpen={isModalOpen}
         initialData={reserva}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSave}
-        users={users} 
+        choferes={choferes} 
+        encargados={encargados}
       />
     </>
   );
