@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function ReservaModal({ initialData, isOpen, onClose, onSave, choferes, encargados }) {
+export default function ReservaModal({ initialData, isOpen, onClose, onSave, choferes, encargados,vehiculos }) {
   const [formData, setFormData] = useState({
     destinos: [{ nombre: "", km: "" }],
     kmAdicional: "",
@@ -155,11 +155,18 @@ export default function ReservaModal({ initialData, isOpen, onClose, onSave, cho
 
             <div>
               <label className="block mb-1 text-gray-900 text-sm font-semibold">Vehículos</label>
-              <select name="vehiculo" value={formData.vehiculo} onChange={handleChange} className="w-full border px-3 py-1.5 rounded-md text-sm">
+              <select
+                name="vehiculo"
+                value={formData.vehiculo}
+                onChange={handleChange}
+                className="w-full border px-3 py-1.5 rounded-md text-sm"
+              >
                 <option value="">Seleccione vehículo</option>
-                <option>Automovil 855-XEA</option>
-                <option>Buss MKB210 3981-RBN</option>
-                <option>Camioneta 1343-LPY</option>
+                {vehiculos?.map(v => (
+                  <option key={v.id} value={v.id}>
+                    {v.tipog} {v.placa}
+                  </option>
+                ))}
               </select>
             </div>
 

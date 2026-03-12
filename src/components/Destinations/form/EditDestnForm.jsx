@@ -46,7 +46,7 @@ export default function EditDestForm({ destino, onClose }) {
     <div className="fixed inset-0 z-50 flex justify-center overflow-auto bg-black/30 p-6">
       <form
         onSubmit={handleSubmit}
-        className="relative mt-16 mb-16 bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[70vh] overflow-y-auto p-6 sm:p-8"
+        className="relative mt-16 mb-16 bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[45vh] overflow-y-auto p-6 sm:p-8"
       >
         {/* Botón cerrar */}
         <button

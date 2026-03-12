@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ReservaModal from "../form/ReservaModal";
 import { useReservaStore } from "../../../zustand/useReservationsStore";
-import { useUserStore } from "../../../zustand/userStore"; 
+import { useUserStore } from "../../../zustand/userStore";
+import { useVehicleStore } from "../../../zustand/useVehicleStore"; 
 
 const formatDate = (isoDate) => {
   if (!isoDate) return "-";
@@ -20,6 +21,11 @@ export default function ReservaRow({ reserva }) {
   // Filtrar choferes y encargados
   const choferes = users?.filter(u => u.tipo === "chofer") || [];
   const encargados = users?.filter(u => u.tipo === "encargado") || [];
+  // Vehículos
+  const { vehicles, fetchVehicles } = useVehicleStore();
+  useEffect(() => {
+    fetchVehicles();
+  }, []);
 
   const handleConcretarClick = () => {
     setIsModalOpen(true);
@@ -61,6 +67,7 @@ export default function ReservaRow({ reserva }) {
         onSave={handleSave}
         choferes={choferes} 
         encargados={encargados}
+        vehiculos={vehicles} 
       />
     </>
   );

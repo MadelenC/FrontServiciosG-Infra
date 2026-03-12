@@ -17,13 +17,13 @@ export default function TableDest({ data }) {
   return (
     <>
       <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-        <table className="w-full table-fixed text-sm border-collapse bg-white">
+        <table className="w-full min-w-[900px]  table-fixed text-sm border-collapse bg-white">
           <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
             <tr>
               {headers.map((h, idx) => (
                 <th
                   key={h}
-                  className={`border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700
+                  className={`border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700 whitespace-nowrap overflow-hidden text-ellipsis
                     ${idx === 0 ? "w-8 text-center" : ""}
                     ${h === "Ruta" ? "w-64 truncate" : ""}
                     ${h === "Operaciones" ? "w-36 text-center" : ""}
