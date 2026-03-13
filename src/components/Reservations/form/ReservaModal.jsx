@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function ReservaModal({ initialData, isOpen, onClose, onSave, choferes, encargados,vehiculos }) {
+export default function ReservaModal({ initialData, isOpen, onClose, onSave, choferes, encargados, vehiculos, destinos }) {
   const [formData, setFormData] = useState({
     destinos: [{ nombre: "", km: "" }],
     kmAdicional: "",
@@ -14,6 +14,9 @@ export default function ReservaModal({ initialData, isOpen, onClose, onSave, cho
     entidad: "",
     objetivo: "",
   });
+
+  // Control para mostrar todos los destinos al hacer focus
+  const [showAllDestinos, setShowAllDestinos] = useState([]);
 
   useEffect(() => {
     if (initialData) {
@@ -55,10 +58,24 @@ export default function ReservaModal({ initialData, isOpen, onClose, onSave, cho
     setFormData((f) => ({ ...f, [name]: value }));
   };
 
-  const handleDestinoChange = (index, field, value) => {
+  const handleDestinoChange = (index, value) => {
     const nuevosDestinos = [...formData.destinos];
-    nuevosDestinos[index][field] = value;
+    nuevosDestinos[index].nombre = value;
     setFormData((f) => ({ ...f, destinos: nuevosDestinos }));
+  };
+
+  const seleccionarDestino = (index, dest) => {
+    const nuevosDestinos = [...formData.destinos];
+    nuevosDestinos[index] = {
+      nombre: `(${dest.departamentoInicio}) ${dest.origen} → (${dest.departamentoFinal}) ${dest.destino}`,
+      km: dest.distancia || "",
+    };
+    setFormData((f) => ({ ...f, destinos: nuevosDestinos }));
+    setShowAllDestinos((prev) => {
+      const newShowAll = [...prev];
+      newShowAll[index] = false;
+      return newShowAll;
+    });
   };
 
   const agregarDestino = () => setFormData((f) => ({ ...f, destinos: [...f.destinos, { nombre: "", km: "" }] }));
@@ -86,30 +103,61 @@ export default function ReservaModal({ initialData, isOpen, onClose, onSave, cho
         </h2>
 
         <form onSubmit={handleSubmit} className="overflow-y-auto flex-grow pr-3 space-y-6">
+
           {/* Destinos dinámicos */}
           <div className="bg-white p-4 rounded-lg shadow-sm border">
             <h3 className="text-md font-semibold mb-3 text-gray-900 border-b pb-1">Destinos</h3>
-            {formData.destinos.map((d, i) => (
-              <div key={i} className="flex gap-2 items-center mb-2">
-                <input
-                  type="text"
-                  placeholder="Destino"
-                  value={d.nombre}
-                  onChange={(e) => handleDestinoChange(i, "nombre", e.target.value)}
-                  className="flex-1 border px-3 py-1.5 rounded-md text-sm"
-                />
-                <input
-                  type="number"
-                  placeholder="Km."
-                  value={d.km}
-                  onChange={(e) => handleDestinoChange(i, "km", e.target.value)}
-                  className="w-20 border px-3 py-1.5 rounded-md text-sm"
-                />
-                {formData.destinos.length > 1 && (
-                  <button type="button" onClick={() => eliminarDestino(i)} className="text-red-500 font-bold text-lg">×</button>
-                )}
-              </div>
-            ))}
+            {formData.destinos.map((d, i) => {
+              const filteredDestinos = destinos?.filter(dest =>
+                d.nombre
+                  ? dest.origen.toLowerCase().includes(d.nombre.toLowerCase()) || dest.destino.toLowerCase().includes(d.nombre.toLowerCase())
+                  : true
+              );
+
+              return (
+                <div key={i} className="flex gap-2 items-start mb-2 relative">
+                  <input
+                    type="text"
+                    placeholder="Destino"
+                    value={d.nombre}
+                    onChange={(e) => handleDestinoChange(i, e.target.value)}
+                    onFocus={() => setShowAllDestinos(prev => { const newShow = [...prev]; newShow[i] = true; return newShow; })}
+                    onBlur={() => setTimeout(() => setShowAllDestinos(prev => { const newShow = [...prev]; newShow[i] = false; return newShow; }), 200)}
+                    className="flex-1 border px-3 py-1.5 rounded-md text-sm bg-white"
+                  />
+
+                  {(showAllDestinos[i] || d.nombre) && filteredDestinos?.length > 0 && (
+                    <ul className="absolute top-10 left-0 right-0 max-h-60 overflow-y-auto bg-white border rounded-md z-50 text-sm">
+                      {filteredDestinos.map((dest) => (
+                        <li
+                          key={dest.id}
+                          className="px-2 py-1 hover:bg-blue-100 cursor-pointer"
+                          onClick={() => seleccionarDestino(i, dest)}
+                        >
+                          {`(${dest.departamentoInicio}) ${dest.origen} → (${dest.departamentoFinal}) ${dest.destino}`}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <input
+                    type="number"
+                    placeholder="Km."
+                    value={d.km}
+                    onChange={(e) => {
+                      const nuevos = [...formData.destinos];
+                      nuevos[i].km = e.target.value;
+                      setFormData(f => ({ ...f, destinos: nuevos }));
+                    }}
+                    className="w-20 border px-3 py-1.5 rounded-md text-sm"
+                  />
+
+                  {formData.destinos.length > 1 && (
+                    <button type="button" onClick={() => eliminarDestino(i)} className="text-red-500 font-bold text-lg">×</button>
+                  )}
+                </div>
+              );
+            })}
             <button type="button" onClick={agregarDestino} className="mt-2 text-gray-600 font-bold text-sm flex items-center gap-1">+ Agregar destino</button>
             <div className="flex gap-2 mt-4 items-center">
               <input type="number" name="kmAdicional" placeholder="Km adicional" value={formData.kmAdicional} onChange={handleChange} className="w-36 border px-3 py-1.5 rounded-md text-sm"/>

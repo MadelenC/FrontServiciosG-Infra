@@ -3,6 +3,8 @@ import ReservaModal from "../form/ReservaModal";
 import { useReservaStore } from "../../../zustand/useReservationsStore";
 import { useUserStore } from "../../../zustand/userStore";
 import { useVehicleStore } from "../../../zustand/useVehicleStore"; 
+import { useDestinoStore } from "../../../zustand/useDestinationsStore";
+import { createPortal } from "react-dom";
 
 const formatDate = (isoDate) => {
   if (!isoDate) return "-";
@@ -13,23 +15,21 @@ export default function ReservaRow({ reserva }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { editReserva } = useReservaStore();
 
+  // Usuarios
   const { users, fetchUsers } = useUserStore(); 
-  useEffect(() => {
-    fetchUsers(); 
-  }, []);
-
-  // Filtrar choferes y encargados
+  useEffect(() => { fetchUsers(); }, []);
   const choferes = users?.filter(u => u.tipo === "chofer") || [];
   const encargados = users?.filter(u => u.tipo === "encargado") || [];
+
   // Vehículos
   const { vehicles, fetchVehicles } = useVehicleStore();
-  useEffect(() => {
-    fetchVehicles();
-  }, []);
+  useEffect(() => { fetchVehicles(); }, []);
 
-  const handleConcretarClick = () => {
-    setIsModalOpen(true);
-  };
+  // Destinos
+  const { destinos, fetchDestinos } = useDestinoStore();
+  useEffect(() => { fetchDestinos(); }, []);
+
+  const handleConcretarClick = () => setIsModalOpen(true);
 
   const handleSave = async (updatedData) => {
     await editReserva(reserva.id, updatedData);
@@ -60,15 +60,19 @@ export default function ReservaRow({ reserva }) {
         </td>
       </tr>
 
-      <ReservaModal
-        isOpen={isModalOpen}
-        initialData={reserva}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSave}
-        choferes={choferes} 
-        encargados={encargados}
-        vehiculos={vehicles} 
-      />
+      {isModalOpen && createPortal(
+        <ReservaModal
+          isOpen={true}
+          initialData={reserva}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSave}
+          choferes={choferes}
+          encargados={encargados}
+          vehiculos={vehicles}
+          destinos={destinos}
+        />,
+        document.body
+      )}
     </>
   );
 }
