@@ -9,13 +9,14 @@ import Alerts from "./pages/UiElements/Alerts";
 import Badges from "./pages/UiElements/Badges";
 import Avatars from "./pages/UiElements/Avatars";
 import Buttons from "./pages/UiElements/Buttons";
-import Calendar from "./pages/Calendar";
+import Calendar from "./pages/Trips/Calendar";
 import Travelrol from "./pages/Travelrol/travelTables";
 import FormElements from "./pages/Vehiculos/VehiculoHome";
 import Combustible from "./pages/combustible/Combustible";
 import Destinations from "./pages/Destinations/destinations";
 import Maps from "./pages/Maps/Maps";
 import Reservations from "./pages/Reservations/ReservationsHome";
+import TripsHome from "./pages/Trips/TripsHome";
 import AppLayout from "./layouts/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/UserList/Home";
@@ -41,17 +42,16 @@ export default function App() {
            
             <Route path="/entidades" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />
-           
-
-            {/* Forms */}
             <Route path="/vehiculos" element={<FormElements />} />
-
-            {/* Tables para rol de viajes */}
             <Route path="/travel-rol" element={<Travelrol />} />
             <Route path="/combustible" element={<Combustible />} />
              <Route path="/destinos" element={<Destinations />} />
             <Route path="/mapas" element={<Maps/>}></Route>
             <Route path="/reservas" element={<Reservations/>}></Route>
+            <Route path="/viajes">
+                <Route index element={<TripsHome />} />        {/* /viajes → listar */}
+                <Route path="calendar" element={<Calendar />} />  {/* /viajes/calendar → calendario */}
+            </Route>
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/avatars" element={<Avatars />} />

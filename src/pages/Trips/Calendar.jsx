@@ -3,9 +3,9 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Modal } from "../components/ui/modal";
-import { useModal } from "../hooks/useModal";
-import PageMeta from "../components/common/PageMeta";
+import { Modal } from "../../components/ui/modal";
+import { useModal } from "../../hooks/useModal";
+import PageMeta from "../../components/common/PageMeta";
 
 const Calendar = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -112,6 +112,12 @@ const Calendar = () => {
         title="React.js Calendar Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Calendar Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
+        {/* Título centrado */}
+      <div className="text-center my-6">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+          Calendario de Viajes
+        </h1>
+      </div>
       <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div className="custom-calendar">
           <FullCalendar

@@ -22,9 +22,18 @@ const navItems = [
   { name: "Destinos", icon: <GiHorizonRoad className="text-white" />, subItems: [{ name: "Lista de Destinos", path: "/destinos", pro: false }] },
   { name: "Mapas", icon: <SiOrganicmaps className="text-white" />, subItems: [{ name: "listar", path: "/mapas", pro: false }] },
   { name: "Reservas", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "reservas", path: "/reservas", pro: false }] },
-  { icon: <BiCalendar className="text-white" />, name: "Calendar", path: "/calendar" },
-  { name: "Viajes", icon: <MdTravelExplore className="text-white" />, subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }] },
-  { name: "Presupuestos de Viaje", icon: <FaMoneyBillTrendUp className="text-white" />, subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }] },
+  //{ icon: <BiCalendar className="text-white" />, name: "Calendar", path: "/calendar" },
+  {name: "Viajes", 
+    icon: <MdTravelExplore className="text-white" />, 
+    subItems: [
+      { name: "Listar", path: "/viajes", pro: false },
+      { name: "Calendario", path: "/viajes/calendar", pro: false } 
+    ] 
+  },
+  { name: "Presupuestos de Viaje", icon: <FaMoneyBillTrendUp className="text-white" />,
+     subItems: [{ name: "Tipo A (cheque)", path: "/presupuestos", pro: false },
+                { name: "Tipo B (caja)", path: "/presupuestos/caja", pro: false }
+              ] },
 ];
 
 const othersItems = [

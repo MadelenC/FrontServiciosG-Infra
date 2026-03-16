@@ -162,7 +162,7 @@ export default function TableTravel() {
 
       </div>
 
-      {/* ================= SOLO IMPRESIÓN ================= */}
+      
       <div className="hidden print:block">
         <PrintTravel travels={filteredTravels} />
       </div>
