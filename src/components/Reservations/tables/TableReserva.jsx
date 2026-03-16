@@ -4,9 +4,13 @@ import ReservaTable from "./ReservaTable";
 import Pagination from "./Paginations";
 import AddReservaModal from "./../form/AddRerservaForm";
 import { useReservaStore } from "../../../zustand/useReservationsStore";
+import { useUserStore } from "../../../zustand/userStore"; // Para obtener los usuarios
 
 export default function TableReserva() {
   const { reservas, fetchReservas, loading, error, addReserva } = useReservaStore();
+
+  // Usuarios
+  const { users, fetchUsers } = useUserStore();
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -15,14 +19,22 @@ export default function TableReserva() {
 
   const limit = 5;
 
+  // Traer reservas
   useEffect(() => {
     fetchReservas();
   }, []);
 
+  // Traer usuarios
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  // Reiniciar página cuando cambia la búsqueda
   useEffect(() => {
     setPage(1);
   }, [search]);
 
+  // Filtrado de reservas según búsqueda
   const filtered = reservas.filter((r) =>
     r.entidad?.toLowerCase().includes(search.toLowerCase())
   );
@@ -30,12 +42,13 @@ export default function TableReserva() {
   const totalPages = Math.ceil(filtered.length / limit);
   const currentData = filtered.slice((page - 1) * limit, page * limit);
 
+  // Filtrar solo los encargados
+  const encargados = users?.filter(u => u.tipo === "encargado") || [];
+
   // Guardar reserva en backend
   const handleSaveReserva = async (data) => {
     setSaving(true);
-
     const response = await addReserva(data);
-
     setSaving(false);
 
     if (response.ok) {
@@ -53,7 +66,6 @@ export default function TableReserva() {
 
   return (
     <div className="bg-white rounded-xl shadow p-4">
-
       <div className="flex justify-between items-center mb-4 gap-4">
         <SearchBar search={search} setSearch={setSearch} />
 
@@ -71,7 +83,6 @@ export default function TableReserva() {
         </div>
       </div>
 
-    
       <ReservaTable reservas={currentData} />
 
       <div className="flex justify-center mt-4">
@@ -82,7 +93,7 @@ export default function TableReserva() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveReserva}
-        
+        encargados={encargados} 
       />
     </div>
   );

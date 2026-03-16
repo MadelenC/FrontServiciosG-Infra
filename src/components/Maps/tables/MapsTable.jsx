@@ -3,13 +3,15 @@ import SearchBar from "../search/SearchBar";
 import TableMaps from "./TableMaps";
 import Pagination from "./Paginations";
 import { useMapsStore } from "../../../zustand/useMapsStore";
+import ModalMap from "./ModalMap";
 
 export default function MapsTable() {
   const { maps, fetchMaps, loading, error } = useMapsStore();
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const limit = 5;
+  const [modalItem, setModalItem] = useState(null); 
+  const limit = 8;
 
   useEffect(() => {
     fetchMaps();
@@ -39,11 +41,23 @@ export default function MapsTable() {
         </div>
       </div>
 
-      <TableMaps data={currentData} />
+      {/* Tabla con filas */}
+      <TableMaps data={currentData} openModal={setModalItem} />
 
+      {/* Paginación */}
       <div className="flex justify-center mt-4">
         <Pagination page={page} totalPages={totalPages} setPage={setPage} />
       </div>
+
+      {/* Modal fuera de la tabla */}
+      {modalItem && (
+        <ModalMap
+          lat={modalItem.lat}
+          lng={modalItem.lng}
+          destino={modalItem.destino}
+          onClose={() => setModalItem(null)}
+        />
+      )}
     </div>
   );
 }

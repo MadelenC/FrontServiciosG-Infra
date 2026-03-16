@@ -1,7 +1,7 @@
 import React from "react";
 import MapsRow from "./MapsRow";
 
-export default function TableMaps({ data }) {
+export default function TableMaps({ data, openModal }) {
   const headers = ["#", "Destino", "Título", "Latitud", "Longitud", "Operación"];
 
   return (
@@ -15,8 +15,7 @@ export default function TableMaps({ data }) {
                 className={`border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700
                   ${idx === 0 ? "w-10 text-center" : ""}
                   ${head === "Latitud" || head === "Longitud" ? "w-36 text-center" : ""}
-                  ${head === "Operación" ? "w-28 text-center" : ""}
-                `}
+                  ${head === "Operación" ? "w-28 text-center" : ""}`}
               >
                 {head}
               </th>
@@ -27,7 +26,7 @@ export default function TableMaps({ data }) {
         <tbody>
           {data.length > 0 ? (
             data.map((item, index) => (
-              <MapsRow key={item.id} item={item} index={index} />
+              <MapsRow key={item.id} item={item} index={index} openModal={openModal} />
             ))
           ) : (
             <tr>

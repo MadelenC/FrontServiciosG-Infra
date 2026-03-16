@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function ReservaModal({ isOpen, onClose, onSave, initialData = null, encargados = [] }) {
+export default function AddReservaModal({ isOpen, onClose, onSave, encargados = [] }) {
   const [formData, setFormData] = useState({
     encargado: "",
     fechaInicial: "",
@@ -12,19 +12,17 @@ export default function ReservaModal({ isOpen, onClose, onSave, initialData = nu
 
   const [saving, setSaving] = useState(false);
 
-  // Cada vez que cambia initialData o encargados, inicializamos correctamente
   useEffect(() => {
     if (!isOpen) return;
-
     setFormData({
-      encargado: initialData?.user?.id || "",
-      fechaInicial: initialData?.fecha_inicial?.slice(0, 16) || "",
-      fechaFinal: initialData?.fecha_final?.slice(0, 16) || "",
-      entidad: initialData?.entidad || "",
-      objetivo: initialData?.objetivo || "",
-      pasajeros: initialData?.pasajeros || "",
+      encargado: "",
+      fechaInicial: "",
+      fechaFinal: "",
+      entidad: "",
+      objetivo: "",
+      pasajeros: "",
     });
-  }, [isOpen, initialData, encargados]);
+  }, [isOpen]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,12 +31,10 @@ export default function ReservaModal({ isOpen, onClose, onSave, initialData = nu
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.encargado) {
       alert("Seleccione un encargado");
       return;
     }
-
     const payload = {
       user_id: formData.encargado,
       fecha_inicial: formData.fechaInicial,
@@ -65,29 +61,29 @@ export default function ReservaModal({ isOpen, onClose, onSave, initialData = nu
     <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-5">
       <div className="bg-white w-full max-w-3xl p-6 rounded-xl shadow-2xl">
         <h2 className="text-2xl font-bold text-center text-blue-700 mb-6">
-          {initialData ? "Editar Reserva" : "Nueva Reserva"}
+          Nueva Reserva
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Encargados */}
-          <div>
-            <label className="block mb-1 text-gray-900 text-sm font-semibold">Encargados</label>
-            <select
-              name="encargado"
-              value={formData.encargado}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md text-sm"
-            >
-              <option value="">Seleccione encargado</option>
-              {encargados?.map((u) => (
-                <option key={u.id} value={u.id}>
-                  {u.nombres} {u.apellidos}
-                </option>
-              ))}
-            </select>
-          </div>
+              <div>
+        <label className="block mb-1 text-gray-900 text-sm font-semibold">
+          Encargado
+        </label>
+        <select
+          name="encargado"
+          value={formData.encargado}
+          onChange={handleChange}
+          className="w-full border px-3 py-2 rounded-md"
+        >
+          <option value="">Seleccione encargado</option>
+          {encargados?.map((u) => (
+            <option key={u.id} value={u.id}>
+              {u.nombres} {u.apellidos}
+            </option>
+          ))}
+        </select>
+      </div>
 
-          {/* Fechas */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label>Fecha Inicial</label>
@@ -96,7 +92,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, initialData = nu
                 name="fechaInicial"
                 value={formData.fechaInicial}
                 onChange={handleChange}
-                className="w-full border px-3 py-2 rounded-md border-gray-300"
+                className="w-full border px-3 py-2 rounded-md"
               />
             </div>
             <div>
@@ -106,12 +102,11 @@ export default function ReservaModal({ isOpen, onClose, onSave, initialData = nu
                 name="fechaFinal"
                 value={formData.fechaFinal}
                 onChange={handleChange}
-                className="w-full border px-3 py-2 rounded-md border-gray-300"
+                className="w-full border px-3 py-2 rounded-md"
               />
             </div>
           </div>
 
-          {/* Otros campos */}
           <div className="grid grid-cols-3 gap-4">
             <input
               type="text"
@@ -119,7 +114,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, initialData = nu
               placeholder="Entidad"
               value={formData.entidad}
               onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md border-gray-300"
+              className="w-full border px-3 py-2 rounded-md"
             />
             <input
               type="text"
@@ -127,7 +122,7 @@ export default function ReservaModal({ isOpen, onClose, onSave, initialData = nu
               placeholder="Objetivo"
               value={formData.objetivo}
               onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md border-gray-300"
+              className="w-full border px-3 py-2 rounded-md"
             />
             <input
               type="number"
@@ -135,11 +130,10 @@ export default function ReservaModal({ isOpen, onClose, onSave, initialData = nu
               placeholder="Pasajeros"
               value={formData.pasajeros}
               onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md border-gray-300"
+              className="w-full border px-3 py-2 rounded-md"
             />
           </div>
 
-          {/* Botones */}
           <div className="flex justify-end gap-3 pt-4 border-t">
             <button
               type="button"
