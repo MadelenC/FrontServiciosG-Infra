@@ -17,6 +17,8 @@ import Destinations from "./pages/Destinations/destinations";
 import Maps from "./pages/Maps/Maps";
 import Reservations from "./pages/Reservations/ReservationsHome";
 import TripsHome from "./pages/Trips/TripsHome";
+import CheckBudgetHome from "./pages/TravelBudget/CheckBudgetHome";
+import CashBudgetHome from "./pages/TravelBudget/CashBudgetHome";
 import AppLayout from "./layouts/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/UserList/Home";
@@ -49,8 +51,13 @@ export default function App() {
             <Route path="/mapas" element={<Maps/>}></Route>
             <Route path="/reservas" element={<Reservations/>}></Route>
             <Route path="/viajes">
-                <Route index element={<TripsHome />} />        {/* /viajes → listar */}
-                <Route path="calendar" element={<Calendar />} />  {/* /viajes/calendar → calendario */}
+                <Route index element={<TripsHome />} />       
+                <Route path="calendar" element={<Calendar />} />  
+            </Route>
+            <Route path="/presupuestos">
+            <Route index element={<CheckBudgetHome />} />
+            <Route path="cheque" element={<CheckBudgetHome />} />
+            <Route path="caja" element={<CashBudgetHome />} />
             </Route>
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
