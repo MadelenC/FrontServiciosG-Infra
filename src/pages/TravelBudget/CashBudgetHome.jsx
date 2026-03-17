@@ -11,7 +11,7 @@ export default function CashBudgetPage() {
         description="Gestión de presupuestos de viaje en efectivo"
       />
 
-      <PageBreadcrumb pageTitle="Presupuestos en Caja" />
+      <PageBreadcrumb pageTitle="" />
 
       <div className="space-y-6">
         <ComponentCard title="Lista de Presupuestos en Caja">

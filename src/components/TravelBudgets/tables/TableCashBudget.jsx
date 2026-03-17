@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+// TableCashBudget.js
+import React, { useState, useEffect } from "react";
 import CashBudgetTable from "./CashBudgetTable";
 import CashBudgetSearch from "../search/SearchBar";
 import Pagination from "./Pagination";
+import CashBudgetForm from "../form/CashBudgetForm";
 
 const dummyBudgets = [
   { id: 1, type: "cash", numPre: "001", chofer: "Juan", vehiculo: "Camion 1", entidad: "Interno" },
@@ -15,10 +17,15 @@ const dummyBudgets = [
 export default function TableCashBudget() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const limit = 3; // elementos por página
-  const [openPanel, setOpenPanel] = useState(false);
+  const [budgets, setBudgets] = useState(dummyBudgets);
+  const [activeBudget, setActiveBudget] = useState(null); // fila seleccionada para editar
+  const limit = 3;
 
-  const filteredBudgets = dummyBudgets
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
+
+  const filteredBudgets = budgets
     .filter((b) => b.type === "cash")
     .filter((b) => {
       const term = search.toLowerCase();
@@ -32,41 +39,43 @@ export default function TableCashBudget() {
   const totalPages = Math.ceil(filteredBudgets.length / limit);
   const paginated = filteredBudgets.slice((page - 1) * limit, page * limit);
 
+  const handleEdit = (budget) => setActiveBudget(budget);
+  const handleCloseForm = () => setActiveBudget(null);
+
+  const handleSave = (updatedBudget) => {
+    setBudgets(prev =>
+      prev.map(b => b.id === updatedBudget.id ? updatedBudget : b)
+    );
+    setActiveBudget(null);
+  };
+
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md p-4">
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={() => setOpenPanel(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg shadow-lg"
-        >
-          <span className="text-lg font-bold">＋</span>
-          Agregar Presupuesto
-        </button>
-      </div>
 
+      {/* Buscador */}
       <CashBudgetSearch search={search} setSearch={setSearch} />
 
-      <CashBudgetTable budgets={paginated} />
+      {/* Tabla */}
+      <CashBudgetTable budgets={paginated} onEdit={handleEdit} />
 
-      <div className="flex justify-center gap-3 mt-4">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-          className="px-3 py-1 border rounded disabled:opacity-50"
-        >
-          Prev
-        </button>
-        <span className="px-3 py-1">
-          {page} / {totalPages}
-        </span>
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage(page + 1)}
-          className="px-3 py-1 border rounded disabled:opacity-50"
-        >
-          Next
-        </button>
+      {/* Paginación */}
+      <div className="mt-4">
+        <Pagination 
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
       </div>
+
+      {/* Formulario de edición */}
+      {activeBudget && (
+        <CashBudgetForm 
+          data={activeBudget} 
+          onClose={handleCloseForm} 
+          onSave={handleSave}
+        />
+      )}
+
     </div>
   );
 }

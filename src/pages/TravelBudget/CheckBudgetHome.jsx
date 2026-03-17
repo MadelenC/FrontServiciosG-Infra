@@ -11,7 +11,7 @@ export default function CheckBudgetPage() {
         description="Gestión de presupuestos de viaje con cheque"
       />
 
-      <PageBreadcrumb pageTitle="Presupuestos con Cheque" />
+      <PageBreadcrumb pageTitle="" />
 
       <div className="space-y-6">
         <ComponentCard title="Lista de Presupuestos con Cheque">

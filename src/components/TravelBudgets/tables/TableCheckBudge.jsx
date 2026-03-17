@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CheckBudgetTable from "./CheckBudgetTable";
 import CheckBudgetSearch from "../search/SearchBar";
 import Pagination from "./Pagination";
-
+import CheckBudgetForm from "../form/CheckBudgetForm"; 
 // Datos de prueba
 const dummyBudgets = [
   { id: 1, numPre: "001", chofer: "Juan", vehiculo: "Camion 1", entidad: "Interno" },
@@ -16,9 +16,18 @@ const dummyBudgets = [
 export default function TableCheckBudget() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const limit = 3; // elementos por página
+  const limit = 3;
 
-  // Filtrado por búsqueda
+  // Estado para abrir formulario
+  const [openForm, setOpenForm] = useState(false);
+  const [selectedBudget, setSelectedBudget] = useState(null);
+
+  // Resetear página al buscar
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
+
+  // Filtrado
   const filteredBudgets = dummyBudgets.filter((b) => {
     const term = search.toLowerCase();
     return (
@@ -34,43 +43,35 @@ export default function TableCheckBudget() {
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md p-4">
-      {/* Botón Agregar */}
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={() => alert("Abrir formulario de agregar")}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg shadow-lg font-medium"
-        >
-          <span className="text-lg font-bold">＋</span>
-          Agregar Presupuesto
-        </button>
-      </div>
-
+      
       {/* Buscador */}
       <CheckBudgetSearch search={search} setSearch={setSearch} />
 
       {/* Tabla */}
-      <CheckBudgetTable budgets={paginated} />
+      <CheckBudgetTable 
+        budgets={paginated} 
+        onEdit={(budget) => {
+          setSelectedBudget(budget); 
+          setOpenForm(true);         
+        }}
+      />
 
       {/* Paginación */}
-      <div className="flex justify-center gap-3 mt-4">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-          className="px-3 py-1 border rounded disabled:opacity-50"
-        >
-          Prev
-        </button>
-        <span className="px-3 py-1">
-          {page} / {totalPages}
-        </span>
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage(page + 1)}
-          className="px-3 py-1 border rounded disabled:opacity-50"
-        >
-          Next
-        </button>
+      <div className="mt-4">
+        <Pagination 
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
       </div>
+
+      {/* Formulario de edición */}
+      {openForm && (
+        <CheckBudgetForm 
+          data={selectedBudget} 
+          onClose={() => setOpenForm(false)}
+        />
+      )}
     </div>
   );
 }
