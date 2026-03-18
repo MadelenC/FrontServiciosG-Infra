@@ -19,17 +19,17 @@ export default function CheckBudgetForm({ data, onClose }) {
 
     // 3ra Casilla: Peajes, viáticos y mantenimiento
     peajes: [{ nro: 0, precio: 0 }],
-    viaticosProvincia: [{ dias: 0, precio: 0 }],
-    viaticosFrontera: [{ dias: 0, precio: 0 }],
-    mantenimiento: [{ cantidad: 0, precio: 0 }],
-    garaje: [{ cantidad: 0, precio: 0 }],
+    viaticosProvincia: [{ _v: 0, _p: 0 }],
+    viaticosFrontera: [{ _v: 0, _p: 0 }],
+    viaticosCiudad: [{ dias: 0, precio: 0 }],
+    mantenimiento: [{ _v: 0, _p: 0 }],
+    garaje: [{ _v: 0, _p: 0 }],
 
     // 4ta Casilla: Transporte público y flete
     transporte: [{ ruta: "", personas: 0, costo: 0 }],
     flete: [{ vueltas: 0, costo: 0 }],
   });
 
-  // Todas las casillas cerradas por defecto
   const [collapsed, setCollapsed] = useState({
     casilla1: true,
     casilla2: true,
@@ -37,112 +37,284 @@ export default function CheckBudgetForm({ data, onClose }) {
     casilla4: true,
   });
 
-  // Funciones
-  const handleChange = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
+  const handleChange = (field, value) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
+
   const handleArrayChange = (field, index, key, value) => {
     const arr = [...form[field]];
     arr[index][key] = Number(value);
-    setForm(prev => ({ ...prev, [field]: arr }));
-  };
-  const addArrayItem = (field, template) => {
-    setForm(prev => ({ ...prev, [field]: [...prev[field], template] }));
+    setForm((prev) => ({ ...prev, [field]: arr }));
   };
 
-  // Cálculos Casilla 2
+  const addArrayItem = (field, template) => {
+    setForm((prev) => ({ ...prev, [field]: [...prev[field], template] }));
+  };
+
+  // Casilla 2
   const combustible = (form.litros * form.precioLitro).toFixed(2);
   const combustibleTotal = Math.round(form.litros);
 
-  // Cálculos Casilla 3
-  const peajesTotal = form.peajes.reduce((sum, p) => sum + p.nro * p.precio, 0);
-  const viaticosProvinciaTotal = form.viaticosProvincia.reduce((sum, v) => sum + v.dias * v.precio, 0);
-  const viaticosFronteraTotal = form.viaticosFrontera.reduce((sum, v) => sum + v.dias * v.precio, 0);
-  const mantenimientoTotal = form.mantenimiento.reduce((sum, m) => sum + m.cantidad * m.precio, 0);
-  const garajeTotal = form.garaje.reduce((sum, g) => sum + g.cantidad * g.precio, 0);
-  const totalA = Number(combustible) + peajesTotal + viaticosProvinciaTotal + viaticosFronteraTotal + mantenimientoTotal + garajeTotal;
+  // Casilla 3
+  const peajesTotal = form.peajes.reduce(
+    (sum, p) => sum + (p.nro || 0) * (p.precio || 0),
+    0
+  );
+  const viaticosCiudadTotal = form.viaticosCiudad.reduce(
+    (sum, v) => sum + (v.dias || 0) * (v.precio || 0),
+    0
+  );
+  const totalA = Number(combustible) + peajesTotal + viaticosCiudadTotal;
 
-  // Cálculos Casilla 4
-  const transporteTotal = form.transporte.reduce((sum, t) => sum + t.personas * t.costo, 0);
-  const fleteTotal = form.flete.reduce((sum, f) => sum + f.vueltas * f.costo, 0);
+  // Casilla 4
+  const transporteTotal = form.transporte.reduce(
+    (sum, t) => sum + t.personas * t.costo,
+    0
+  );
+  const fleteTotal = form.flete.reduce(
+    (sum, f) => sum + f.vueltas * f.costo,
+    0
+  );
   const totalB = transporteTotal + fleteTotal;
   const diferencia = totalA - totalB;
 
+  const formatBs = (value) => `${value.toFixed(2)} Bs.`;
+
+  // Funciones de acción
+  const handleDelete = () => {
+    console.log("El presupuesto ha sido eliminado");
+    onClose(); // Cierra el modal
+  };
+
+  const handleUpdate = () => {
+    console.log("Datos actualizados:", form);
+    if (typeof data?.onUpdate === "function") {
+      data.onUpdate(form);
+    }
+    onClose(); // Cierra el modal después de actualizar
+  };
+
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-start pt-10 z-50 overflow-y-auto">
-      <div className="bg-white w-[95%] sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] max-w-[1200px] p-6 rounded-xl shadow-lg space-y-6">
+      <div className="bg-white w-[95%] sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] max-w-[1200px] p-6 rounded-xl shadow-lg space-y-6 relative">
+
+        {/* Botón de cierre X */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray font-bold bg-white-600 px-3 py-1 rounded hover:bg-gray-200"
+        >
+          X
+        </button>
 
         <h2 className="text-2xl font-bold">
           Presupuesto del viaje de ({data?.entidad || "Entidad"})
         </h2>
 
         {/* 1ra Casilla */}
-        <Section title="1️⃣ Datos generales" collapsed={collapsed.casilla1} toggle={() => setCollapsed(prev => ({ ...prev, casilla1: !prev.casilla1 }))}>
+        <Section
+          title="1️⃣ Datos generales"
+          collapsed={collapsed.casilla1}
+          toggle={() =>
+            setCollapsed((prev) => ({ ...prev, casilla1: !prev.casilla1 }))
+          }
+        >
           <div className="grid grid-cols-2 gap-4 mt-2">
-            <Input label="Vehículo" value={form.vehiculo} onChange={v => handleChange("vehiculo", v)} />
-            <Input label="Chofer" value={form.chofer} onChange={v => handleChange("chofer", v)} />
-            <Input label="Encargado del viaje" value={form.encargado} onChange={v => handleChange("encargado", v)} />
-            <Input label="Fecha de solicitud" type="date" value={form.fecha} onChange={v => handleChange("fecha", v)} />
+            <Input
+              label="Vehículo"
+              value={form.vehiculo}
+              onChange={(v) => handleChange("vehiculo", v)}
+            />
+            <Input
+              label="Chofer"
+              value={form.chofer}
+              onChange={(v) => handleChange("chofer", v)}
+            />
+            <Input
+              label="Encargado del viaje"
+              value={form.encargado}
+              onChange={(v) => handleChange("encargado", v)}
+            />
+            <Input
+              label="Fecha de solicitud"
+              type="date"
+              value={form.fecha}
+              onChange={(v) => handleChange("fecha", v)}
+            />
           </div>
         </Section>
 
         {/* 2da Casilla */}
-        <Section title="2️⃣ Combustible y viaje" collapsed={collapsed.casilla2} toggle={() => setCollapsed(prev => ({ ...prev, casilla2: !prev.casilla2 }))}>
+        <Section
+          title="2️⃣ Combustible y viaje"
+          collapsed={collapsed.casilla2}
+          toggle={() =>
+            setCollapsed((prev) => ({ ...prev, casilla2: !prev.casilla2 }))
+          }
+        >
           <div className="grid grid-cols-3 gap-4 mt-2">
-            <Input label="Gasolina/Diesel (L)" type="number" value={form.litros} onChange={v => handleChange("litros", Number(v))} />
+            <Input
+              label="Gasolina/Diesel (L)"
+              type="number"
+              value={form.litros}
+              onChange={(v) => handleChange("litros", Number(v))}
+            />
             <Input label="Combustible (Bs.)" value={combustible} readOnly />
             <Input label="Combustible Total (L)" value={combustibleTotal} />
-            <Input label="Precio (L.) Bs" type="number" value={form.precioLitro} onChange={v => handleChange("precioLitro", Number(v))} />
+            <Input
+              label="Precio (L.) Bs"
+              type="number"
+              value={form.precioLitro}
+              onChange={(v) => handleChange("precioLitro", Number(v))}
+            />
             <Input label="Costo Total" value={combustible} readOnly />
-            <Input label="Hora de salida" type="time" value={form.horaSalida} onChange={v => handleChange("horaSalida", v)} />
-            <Input label="Hora de llegada" type="time" value={form.horaLlegada} onChange={v => handleChange("horaLlegada", v)} />
-            <Input label="Materia" value={form.materia} onChange={v => handleChange("materia", v)} />
-            <Input label="Docentes" value={form.docentes} onChange={v => handleChange("docentes", v)} />
-            <Input label="Sigla" value={form.sigla} onChange={v => handleChange("sigla", v)} />
-            <Input label="Nota" value={form.nota} onChange={v => handleChange("nota", v)} colSpan={3} />
+            <Input
+              label="Hora de salida"
+              type="time"
+              value={form.horaSalida}
+              onChange={(v) => handleChange("horaSalida", v)}
+            />
+            <Input
+              label="Hora de llegada"
+              type="time"
+              value={form.horaLlegada}
+              onChange={(v) => handleChange("horaLlegada", v)}
+            />
+            <Input
+              label="Materia"
+              value={form.materia}
+              onChange={(v) => handleChange("materia", v)}
+            />
+            <Input
+              label="Docentes"
+              value={form.docentes}
+              onChange={(v) => handleChange("docentes", v)}
+            />
+            <Input
+              label="Sigla"
+              value={form.sigla}
+              onChange={(v) => handleChange("sigla", v)}
+            />
+            <Input
+              label="Nota"
+              value={form.nota}
+              onChange={(v) => handleChange("nota", v)}
+              colSpan={3}
+            />
           </div>
         </Section>
 
         {/* 3ra Casilla */}
-        <Section title="3️⃣ Peajes y viáticos" collapsed={collapsed.casilla3} toggle={() => setCollapsed(prev => ({ ...prev, casilla3: !prev.casilla3 }))}>
+        <Section
+          title="3️⃣ Peajes y viáticos"
+          collapsed={collapsed.casilla3}
+          toggle={() =>
+            setCollapsed((prev) => ({ ...prev, casilla3: !prev.casilla3 }))
+          }
+        >
           <div className="grid grid-cols-2 gap-4 mt-2">
-            <ArrayInput title="Peajes ida y vuelta" array={form.peajes} onChange={(i, k, v) => handleArrayChange("peajes", i, k, v)} addItem={() => addArrayItem("peajes", { nro: 0, precio: 0 })} total={peajesTotal} />
-            <ArrayInput title="Viáticos provincia" array={form.viaticosProvincia} onChange={(i, k, v) => handleArrayChange("viaticosProvincia", i, k, v)} total={viaticosProvinciaTotal} />
-            <ArrayInput title="Viáticos frontera" array={form.viaticosFrontera} onChange={(i, k, v) => handleArrayChange("viaticosFrontera", i, k, v)} total={viaticosFronteraTotal} />
-            <ArrayInput title="Mantenimiento vehicular" array={form.mantenimiento} onChange={(i, k, v) => handleArrayChange("mantenimiento", i, k, v)} total={mantenimientoTotal} />
-            <ArrayInput title="Garaje del vehículo" array={form.garaje} onChange={(i, k, v) => handleArrayChange("garaje", i, k, v)} total={garajeTotal} />
+            <ArrayInput
+              title="Peajes ida y vuelta"
+              array={form.peajes}
+              onChange={(i, k, v) => handleArrayChange("peajes", i, k, v)}
+              total={formatBs(peajesTotal)}
+            />
+            <ArrayInput
+              title="Viáticos provincia"
+              array={form.viaticosProvincia}
+              onChange={(i, k, v) => handleArrayChange("viaticosProvincia", i, k, v)}
+              total={formatBs(0)}
+            />
+            <ArrayInput
+              title="Viáticos frontera"
+              array={form.viaticosFrontera}
+              onChange={(i, k, v) => handleArrayChange("viaticosFrontera", i, k, v)}
+              total={formatBs(0)}
+            />
+            <ArrayInput
+              title="Viáticos ciudad"
+              array={form.viaticosCiudad}
+              onChange={(i, k, v) => handleArrayChange("viaticosCiudad", i, k, v)}
+              total={formatBs(viaticosCiudadTotal)}
+            />
+            <ArrayInput
+              title="Mantenimiento vehicular"
+              array={form.mantenimiento}
+              onChange={(i, k, v) => handleArrayChange("mantenimiento", i, k, v)}
+              total={formatBs(0)}
+            />
+            <ArrayInput
+              title="Garaje del vehículo"
+              array={form.garaje}
+              onChange={(i, k, v) => handleArrayChange("garaje", i, k, v)}
+              total={formatBs(0)}
+            />
+
             <div className="col-span-2">
               <label className="font-semibold">Total (A)</label>
-              <input readOnly value={totalA} className="border p-2 rounded w-full bg-yellow-100" />
+              <input
+                readOnly
+                value={formatBs(totalA)}
+                className="border p-2 rounded w-full text-right bg-yellow-100"
+              />
             </div>
           </div>
         </Section>
 
         {/* 4ta Casilla */}
-        <Section title="4️⃣ Transporte público y flete" collapsed={collapsed.casilla4} toggle={() => setCollapsed(prev => ({ ...prev, casilla4: !prev.casilla4 }))}>
+        <Section
+          title="4️⃣ Transporte público y flete"
+          collapsed={collapsed.casilla4}
+          toggle={() =>
+            setCollapsed((prev) => ({ ...prev, casilla4: !prev.casilla4 }))
+          }
+        >
           <div className="grid grid-cols-2 gap-4 mt-2">
             {form.transporte.map((t, i) => (
               <div key={i} className="border p-2 rounded space-y-2 relative">
-                {/* Botón X para eliminar */}
-                <button 
+                <button
                   onClick={() => {
                     const arr = [...form.transporte];
                     arr.splice(i, 1);
-                    setForm(prev => ({ ...prev, transporte: arr }));
-                  }} 
+                    setForm((prev) => ({ ...prev, transporte: arr }));
+                  }}
                   className="absolute top-1 right-1 text-red-600 font-bold px-2 py-0.5 rounded hover:bg-red-100"
                 >
                   X
                 </button>
-
-                <Input label="Ruta" value={t.ruta} onChange={v => { const arr = [...form.transporte]; arr[i].ruta = v; setForm(prev => ({ ...prev, transporte: arr })); }} />
-                <Input label="Personas" type="number" value={t.personas} onChange={v => { const arr = [...form.transporte]; arr[i].personas = Number(v); setForm(prev => ({ ...prev, transporte: arr })); }} />
-                <Input label="Costo" type="number" value={t.costo} onChange={v => { const arr = [...form.transporte]; arr[i].costo = Number(v); setForm(prev => ({ ...prev, transporte: arr })); }} />
-                <Input label="Total" type="number" value={t.costo} onChange={v => { const arr = [...form.transporte]; arr[i].costo = Number(v); setForm(prev => ({ ...prev, transporte: arr })); }} />
+                <Input
+                  label="Ruta"
+                  value={t.ruta}
+                  onChange={(v) => {
+                    const arr = [...form.transporte];
+                    arr[i].ruta = v;
+                    setForm((prev) => ({ ...prev, transporte: arr }));
+                  }}
+                />
+                <Input
+                  label="Personas"
+                  type="number"
+                  value={t.personas}
+                  onChange={(v) => {
+                    const arr = [...form.transporte];
+                    arr[i].personas = Number(v);
+                    setForm((prev) => ({ ...prev, transporte: arr }));
+                  }}
+                />
+                <Input
+                  label="Costo"
+                  type="number"
+                  value={t.costo}
+                  onChange={(v) => {
+                    const arr = [...form.transporte];
+                    arr[i].costo = Number(v);
+                    setForm((prev) => ({ ...prev, transporte: arr }));
+                  }}
+                />
+                <Input label="Total" type="text" readOnly value={formatBs(t.personas * t.costo)} />
               </div>
             ))}
 
-            {/* Botón + pequeño */}
-            <button 
-              onClick={() => addArrayItem("transporte", { ruta: "", personas: 0, costo: 0 })} 
+            <button
+              onClick={() => addArrayItem("transporte", { ruta: "", personas: 0, costo: 0 })}
               className="px-2 py-1 text-green-600 font-bold rounded border hover:bg-green-50 w-10 h-10 flex justify-center items-center"
               title="Agregar ruta"
             >
@@ -153,36 +325,76 @@ export default function CheckBudgetForm({ data, onClose }) {
               <h4 className="font-semibold">Uso del flete por el camión</h4>
               {form.flete.map((f, i) => (
                 <div key={i} className="flex gap-2 mt-2">
-                  <Input label="Vueltas" type="number" value={f.vueltas} onChange={v => { const arr = [...form.flete]; arr[i].vueltas = Number(v); setForm(prev => ({ ...prev, flete: arr })); }} />
-                  <Input label="Costo" type="number" value={f.costo} onChange={v => { const arr = [...form.flete]; arr[i].costo = Number(v); setForm(prev => ({ ...prev, flete: arr })); }} />
-                  <Input label="Total" type="number" />
+                  <Input
+                    label="Vueltas"
+                    type="number"
+                    value={f.vueltas}
+                    onChange={(v) => {
+                      const arr = [...form.flete];
+                      arr[i].vueltas = Number(v);
+                      setForm((prev) => ({ ...prev, flete: arr }));
+                    }}
+                  />
+                  <Input
+                    label="Costo"
+                    type="number"
+                    value={f.costo}
+                    onChange={(v) => {
+                      const arr = [...form.flete];
+                      arr[i].costo = Number(v);
+                      setForm((prev) => ({ ...prev, flete: arr }));
+                    }}
+                  />
+                  <Input label="Total" type="text" readOnly value={formatBs(f.vueltas * f.costo)} />
                 </div>
               ))}
             </div>
 
             <div className="col-span-2 mt-2">
               <label className="font-semibold">Total (B)</label>
-              <input readOnly value={totalB} className="border p-2 rounded w-full bg-yellow-100" />
+              <input
+                readOnly
+                value={formatBs(totalB)}
+                className="border p-2 rounded w-full text-right bg-yellow-100"
+              />
             </div>
 
             <div className="col-span-2 mt-2">
               <label className="font-semibold">Diferencia (A - B)</label>
-              <input readOnly value={diferencia} className="border p-2 rounded w-full bg-yellow-100" />
+              <input
+                readOnly
+                value={formatBs(diferencia)}
+                className="border p-2 rounded w-full text-right bg-yellow-100"
+              />
             </div>
           </div>
         </Section>
 
-        {/* Botones */}
+        {/* Botones acción */}
         <div className="flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 border rounded">Cancelar</button>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded">Guardar</button>
+          <button
+            onClick={() => {
+              if (confirm("¿Seguro que deseas eliminar este presupuesto?")) {
+                handleDelete();
+              }
+            }}
+            className="px-4 py-2 border rounded bg-red-600 text-white hover:bg-red-700"
+          >
+            Eliminar
+          </button>
+          <button
+            onClick={() => handleUpdate()}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Actualizar
+          </button>
         </div>
       </div>
     </div>
   );
 }
 
-// Componentes reutilizables
+// Componentes auxiliares
 const Section = ({ title, children, collapsed, toggle }) => (
   <div className="border rounded p-4">
     <div className="flex justify-between items-center cursor-pointer" onClick={toggle}>
@@ -196,29 +408,50 @@ const Section = ({ title, children, collapsed, toggle }) => (
 const Input = ({ label, type = "text", value, onChange, readOnly, colSpan = 1 }) => (
   <div className={`col-span-${colSpan}`}>
     <label className="block text-sm font-medium">{label}</label>
-    <input 
-      type={type} 
-      value={value} 
-      onChange={e => onChange(e.target.value)} 
-      readOnly={readOnly} 
-      className={`border p-2 rounded w-full ${readOnly ? "bg-gray-100" : ""}`} 
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      readOnly={readOnly}
+      className={`border p-2 rounded w-full ${readOnly ? "bg-gray-100" : ""} text-right`}
     />
   </div>
 );
 
-const ArrayInput = ({ title, array, onChange, addItem, total }) => (
+const ArrayInput = ({ title, array, onChange, total }) => (
   <div className="border p-2 rounded space-y-2">
-    <h4 className="font-semibold">{title} {addItem && <button onClick={addItem} className="ml-2 text-green-600 font-bold">+</button>}</h4>
+    <h4 className="font-semibold">{title}</h4>
     {array.map((item, i) => (
       <div key={i} className="flex gap-2">
-        {Object.keys(item).map(key => (
-          <Input key={key} label={key} type="number" value={item[key]} onChange={v => onChange(i, key, v)} />
-        ))}
+        {Object.keys(item).map((key) => {
+          let label = "";
+          if (title.includes("Peajes")) {
+            if (key === "nro") label = "Nro. Peajes";
+            if (key === "precio") label = "Precio (c/u)";
+          }
+          if (title.includes("ciudad")) {
+            if (key === "dias") label = "Nro. de Días";
+            if (key === "precio") label = "Precio por Día";
+          }
+          return (
+            <Input
+              key={key}
+              label={label}
+              type="number"
+              value={item[key] || 0}
+              onChange={(v) => onChange(i, key, v)}
+            />
+          );
+        })}
       </div>
     ))}
     <div>
       <label className="font-semibold">Total</label>
-      <input readOnly value={total} className="border p-2 rounded w-full bg-yellow-100" />
+      <input
+        readOnly
+        value={total}
+        className="border p-2 rounded w-full text-right bg-yellow-100"
+      />
     </div>
   </div>
 );

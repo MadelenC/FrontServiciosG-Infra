@@ -22,7 +22,7 @@ export default function CheckBudgetRow({ budget, index, onEdit }) {
 
       {/* # */}
       <TableCell className="border border-gray-200 px-3 py-2 font-medium text-gray-700"> {index}</TableCell>
-      <TableCell className="border border-gray-200 px-3 py-2 text-gray-700">{budget.numPre} </TableCell>
+      <TableCell className="border border-gray-200 px-3 py-2 text-gray-700">{budget.id} </TableCell>
       <TableCell className="border border-gray-200 px-3 py-2 text-gray-700"> {budget.chofer}</TableCell>
       <TableCell className="border border-gray-200 px-3 py-2 text-gray-700">{budget.vehiculo}</TableCell>
       <TableCell className="border border-gray-200 px-3 py-2"><Badge size="sm" color={badgeColor} className="px-2 py-1 text-xs">{budget.entidad}</Badge></TableCell>
