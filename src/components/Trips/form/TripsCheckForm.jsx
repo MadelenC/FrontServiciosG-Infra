@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function CheckBudgetForm({ data, onClose, choferes, encargados, vehiculos }) {
+export default function CheckTripForm({ data, onClose, choferes, encargados, vehiculos }) {
   const [form, setForm] = useState({
     vehiculo: data?.vehiculo || "",
     chofer: data?.chofer || "",
@@ -55,20 +55,24 @@ export default function CheckBudgetForm({ data, onClose, choferes, encargados, v
     (sum, p) => sum + (p.nro || 0) * (p.precio || 0),
     0
   );
+
   const viaticosCiudadTotal = form.viaticosCiudad.reduce(
     (sum, v) => sum + (v.dias || 0) * (v.precio || 0),
     0
   );
+
   const totalA = Number(combustible) + peajesTotal + viaticosCiudadTotal;
 
   const transporteTotal = form.transporte.reduce(
     (sum, t) => sum + t.personas * t.costo,
     0
   );
+
   const fleteTotal = form.flete.reduce(
     (sum, f) => sum + f.vueltas * f.costo,
     0
   );
+
   const totalB = transporteTotal + fleteTotal;
   const diferencia = totalA - totalB;
 
@@ -89,31 +93,70 @@ export default function CheckBudgetForm({ data, onClose, choferes, encargados, v
     onClose();
   };
 
-  // Componente para inputs editables con lista
-  const ComboInput = ({ label, value, onChange, options }) => (
-    <div>
-      <label className="block mb-1 text-gray-900 text-sm font-semibold">{label}</label>
-      <input
-        type="text"
-        list={`${label}-options`}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full border px-3 py-1.5 rounded-md text-sm"
-      />
-      <datalist id={`${label}-options`}>
-        {options?.map((opt) => (
-          <option
-            key={opt.id}
-            value={opt.nombres ? `${opt.nombres} ${opt.apellidos}` : `${opt.tipog} ${opt.placa}`}
-          />
-        ))}
-      </datalist>
-    </div>
-  );
+  const ComboInput = ({ label, value, onChange, options }) => {
+    const [open, setOpen] = useState(false);
+    const [search, setSearch] = useState(value || "");
+
+    const getLabel = (opt) =>
+      opt?.nombres
+        ? `${opt.nombres} ${opt.apellidos}`
+        : opt?.tipog
+        ? `${opt.tipog} ${opt.placa}`
+        : "";
+
+    const filtered =
+      options?.filter((opt) =>
+        getLabel(opt).toLowerCase().includes(search.toLowerCase())
+      ) || [];
+
+    return (
+      <div className="relative">
+        <label className="block mb-1 text-gray-900 text-sm font-semibold">
+          {label}
+        </label>
+
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            onChange(e.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          className="w-full border px-3 py-1.5 rounded-md text-sm"
+        />
+
+        {open && (
+          <div className="absolute z-50 w-full bg-white border rounded shadow max-h-40 overflow-auto">
+            {filtered.length > 0 ? (
+              filtered.map((opt, i) => (
+                <div
+                  key={i}
+                  className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    const val = getLabel(opt);
+                    setSearch(val);
+                    onChange(val);
+                    setOpen(false);
+                  }}
+                >
+                  {getLabel(opt)}
+                </div>
+              ))
+            ) : (
+              <div className="px-3 py-2 text-gray-400">Sin resultados</div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-start pt-10 z-50 overflow-y-auto">
       <div className="bg-white w-[95%] sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] max-w-[1200px] p-6 rounded-xl shadow-lg space-y-6 relative">
+
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray font-bold bg-white-600 px-3 py-1 rounded hover:bg-gray-200"
@@ -122,7 +165,7 @@ export default function CheckBudgetForm({ data, onClose, choferes, encargados, v
         </button>
 
         <h2 className="text-2xl font-bold">
-          Presupuesto del viaje ({data?.entidad || "Entidad"})
+          Presupuesto del viaje ({data?.entidad || "Entidad"}) con km 
         </h2>
 
         {/* 1ra Casilla */}
@@ -161,7 +204,7 @@ export default function CheckBudgetForm({ data, onClose, choferes, encargados, v
           </div>
         </Section>
 
-        {/* 2da Casilla: Combustible y viaje */}
+        {/* 2da Casilla */}
         <Section
           title="2️⃣ Combustible y viaje"
           collapsed={collapsed.casilla2}
@@ -183,7 +226,7 @@ export default function CheckBudgetForm({ data, onClose, choferes, encargados, v
           </div>
         </Section>
 
-        {/* 3ra Casilla: Peajes y viáticos */}
+        {/* 3ra Casilla */}
         <Section
           title="3️⃣ Peajes y viáticos"
           collapsed={collapsed.casilla3}
@@ -206,7 +249,7 @@ export default function CheckBudgetForm({ data, onClose, choferes, encargados, v
           </div>
         </Section>
 
-        {/* 4ta Casilla: Transporte público y flete */}
+        {/* 4ta Casilla */}
         <Section
           title="4️⃣ Transporte público y flete"
           collapsed={collapsed.casilla4}
@@ -227,13 +270,20 @@ export default function CheckBudgetForm({ data, onClose, choferes, encargados, v
                 >
                   X
                 </button>
+
                 <Input label="Ruta" value={t.ruta} onChange={(v) => { const arr = [...form.transporte]; arr[i].ruta = v; setForm(prev => ({ ...prev, transporte: arr })); }} />
                 <Input label="Personas" type="number" value={t.personas} onChange={(v) => { const arr = [...form.transporte]; arr[i].personas = Number(v); setForm(prev => ({ ...prev, transporte: arr })); }} />
                 <Input label="Costo" type="number" value={t.costo} onChange={(v) => { const arr = [...form.transporte]; arr[i].costo = Number(v); setForm(prev => ({ ...prev, transporte: arr })); }} />
                 <Input label="Total" type="text" readOnly value={formatBs(t.personas * t.costo)} />
               </div>
             ))}
-            <button onClick={() => addArrayItem("transporte", { ruta: "", personas: 0, costo: 0 })} className="px-2 py-1 text-green-600 font-bold rounded border hover:bg-green-50 w-10 h-10 flex justify-center items-center">+</button>
+
+            <button
+              onClick={() => addArrayItem("transporte", { ruta: "", personas: 0, costo: 0 })}
+              className="px-2 py-1 text-green-600 font-bold rounded border hover:bg-green-50 w-10 h-10 flex justify-center items-center"
+            >
+              +
+            </button>
 
             <div className="mt-4 col-span-2">
               <h4 className="font-semibold">Uso del flete por el camión</h4>
@@ -258,7 +308,7 @@ export default function CheckBudgetForm({ data, onClose, choferes, encargados, v
           </div>
         </Section>
 
-        {/* Botones acción */}
+        {/* Botones */}
         <div className="flex justify-end gap-3">
           <button onClick={handleDelete} className="px-4 py-2 border rounded bg-red-600 text-white hover:bg-red-700">
             Eliminar
@@ -272,7 +322,7 @@ export default function CheckBudgetForm({ data, onClose, choferes, encargados, v
   );
 }
 
-// Componentes auxiliares
+// auxiliares
 const Section = ({ title, children, collapsed, toggle }) => (
   <div className="border rounded p-4">
     <div className="flex justify-between items-center cursor-pointer" onClick={toggle}>

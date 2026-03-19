@@ -3,28 +3,33 @@ import SearchBarTrips from "../search/SearchBar";
 import TripsRow from "./TripsRow";
 import Pagination from "./Paginations";
 import AddTripsFrom from "../form/AddTripsFrom";
+import CheckTripForm from "../form/TripsCheckForm";
+import TripsCajaForm from "../form/TripsCajaForm";
+
 import { useTripsStore } from "../../../zustand/useTripsStore";
 import { useUserStore } from "../../../zustand/userStore";
 import { useVehicleStore } from "../../../zustand/useVehicleStore";
 import { useDestinoStore } from "../../../zustand/useDestinationsStore";
 
 export default function TripsTable() {
-  const { trips, fetchTrips, loading, error } = useTripsStore();
+  const { trips, fetchTrips } = useTripsStore();
+
+  const { users, fetchUsers } = useUserStore();
+  const { vehicles, fetchVehicles } = useVehicleStore();
+  const { destinos, fetchDestinos } = useDestinoStore();
+
+  const choferes = users.filter(u => u.tipo === "chofer");
+  const encargados = users.filter(u => u.tipo === "encargado");
 
   const [search, setSearch] = useState("");
   const [tipo, setTipo] = useState("");
   const [page, setPage] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 🔥 MODALES CENTRALIZADOS
+  const [modalType, setModalType] = useState(null); // "caja" | "cheque" | "add"
   const [selectedTrip, setSelectedTrip] = useState(null);
+
   const limit = 8;
-
-  // Stores para modal
-  const { users, fetchUsers } = useUserStore();
-  const choferes = users.filter(u => u.tipo === "chofer");
-  const encargados = users.filter(u => u.tipo === "encargado");
-
-  const { vehicles, fetchVehicles } = useVehicleStore();
-  const { destinos, fetchDestinos } = useDestinoStore();
 
   useEffect(() => {
     fetchTrips();
@@ -33,38 +38,50 @@ export default function TripsTable() {
     fetchDestinos();
   }, []);
 
-  // Reiniciar página si cambia búsqueda o tipo
   useEffect(() => setPage(1), [search, tipo]);
 
+  // 🔥 CONTROL DE MODALES
+  const handleOpenModal = (type, trip = null) => {
+    setModalType(type);
+    setSelectedTrip(trip);
+  };
+
+  const handleCloseModal = () => {
+    setModalType(null);
+    setSelectedTrip(null);
+  };
+
+  // 🔍 FILTRO
   const filteredTrips = trips.filter(t => {
     const matchesSearch =
       t.entidad?.toLowerCase().includes(search.toLowerCase()) ||
       t.objetivo?.toLowerCase().includes(search.toLowerCase());
+
     const matchesTipo = tipo ? t.tipo === tipo : true;
+
     return matchesSearch && matchesTipo;
   });
 
   const totalPages = Math.ceil(filteredTrips.length / limit);
-  const currentTrips = filteredTrips.slice((page - 1) * limit, page * limit);
-
-  const handleSaveTrip = (data) => {
-    console.log("Viaje guardado:", data);
-    setIsModalOpen(false);
-    // Aquí podrías llamar a tu store para guardar el viaje
-  };
+  const currentTrips = filteredTrips.slice(
+    (page - 1) * limit,
+    page * limit
+  );
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition-all p-4">
-      {/* Barra superior: Buscador + select + agregar */}
+    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
+
+      {/* 🔝 HEADER */}
       <div className="flex justify-between items-center mb-4 gap-4 flex-wrap">
         <div className="flex gap-2 items-center">
           <SearchBarTrips search={search} setSearch={setSearch} />
+
           <select
             value={tipo}
             onChange={(e) => setTipo(e.target.value)}
-            className="h-10 px-3 rounded-lg border border-gray-300 text-gray-700"
+            className="h-10 px-3 rounded-lg border"
           >
-            <option value="">Todos los tipos</option>
+            <option value="">Todos</option>
             <option value="Viaje de Práctica">Viaje de Práctica</option>
             <option value="Viaje de Inspección">Viaje de Inspección</option>
             <option value="Viaje Académico">Viaje Académico</option>
@@ -73,17 +90,17 @@ export default function TripsTable() {
         </div>
 
         <button
-          onClick={() => { setSelectedTrip(null); setIsModalOpen(true); }}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-lg font-medium transition"
+          onClick={() => handleOpenModal("add")}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
         >
-          <span className="text-lg font-bold text-white">＋</span> Agregar Viaje
+          + Agregar Viaje
         </button>
       </div>
 
-      {/* Tabla */}
-      <div className="overflow-x-auto w-full rounded-xl border border-gray-200 shadow-sm">
-        <table className="w-full border-collapse text-sm bg-white">
-          <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
+      {/* 📊 TABLA */}
+      <div className="overflow-x-auto border rounded">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-100">
             <tr>
               {[
                 "#",
@@ -92,23 +109,30 @@ export default function TripsTable() {
                 "Objetivo",
                 "Días",
                 "Pasajeros",
-                "Fecha Inicial",
-                "Fecha Final",
+                "Inicio",
+                "Fin",
                 "Estado",
-                "Operaciones",
+                "Acciones",
               ].map(h => (
-                <th key={h} className="border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700">
+                <th key={h} className="px-3 py-2 text-left">
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
+
           <tbody>
             {currentTrips.length > 0 ? (
-              currentTrips.map(trip => <TripsRow key={trip.id} trip={trip} />)
+              currentTrips.map(trip => (
+                <TripsRow
+                  key={trip.id}
+                  trip={trip}
+                  onOpenModal={handleOpenModal}
+                />
+              ))
             ) : (
               <tr>
-                <td colSpan={10} className="text-center py-4 text-gray-500">
+                <td colSpan={10} className="text-center py-4">
                   No hay registros
                 </td>
               </tr>
@@ -117,22 +141,57 @@ export default function TripsTable() {
         </table>
       </div>
 
-      {/* Paginación */}
+      {/* 📄 PAGINACIÓN */}
       <div className="flex justify-center mt-4">
-        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          setPage={setPage}
+        />
       </div>
 
-      {/* Modal */}
-      {isModalOpen && (
+      {/* ================= MODALES ================= */}
+
+      {/* ➕ AGREGAR */}
+      {modalType === "add" && (
         <AddTripsFrom
           isOpen={true}
-          initialData={selectedTrip}
-          onClose={() => setIsModalOpen(false)}
-          onSave={handleSaveTrip}
+          initialData={null}
           choferes={choferes}
           encargados={encargados}
           vehiculos={vehicles}
           destinos={destinos}
+          onClose={handleCloseModal}
+          onSave={(data) => {
+            console.log("Nuevo viaje:", data);
+            handleCloseModal();
+          }}
+        />
+      )}
+
+      {/* 💰 CAJA */}
+      {modalType === "caja" && (
+        <TripsCajaForm
+          viajeData={selectedTrip}
+          choferes={choferes}
+          encargados={encargados}
+          vehiculos={vehicles}
+          onClose={handleCloseModal}
+          onSubmit={(data) => {
+            console.log("Caja:", data);
+            handleCloseModal();
+          }}
+        />
+      )}
+
+      {/* 🧾 CHEQUE */}
+      {modalType === "cheque" && (
+        <CheckTripForm
+          data={selectedTrip}
+          onClose={handleCloseModal}
+          choferes={choferes}
+          encargados={encargados}
+          vehiculos={vehicles}
         />
       )}
     </div>

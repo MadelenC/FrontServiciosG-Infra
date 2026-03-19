@@ -14,13 +14,13 @@ import { GiHorizonRoad } from "react-icons/gi";
 import { SiOrganicmaps } from "react-icons/si";
 
 const navItems = [
-  { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", subItems: [{ name: " Ver Lista de Usuarios", path: "/", pro: false }] },
-  { icon: <MdDomainAdd className="text-white" />, name: "Entidades", subItems: [{ name: " Lista de Entidades", path: "/entidades", pro: false }] },
+  { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", subItems: [{ name: " Ver Lista", path: "/", pro: false }] },
+  { icon: <MdDomainAdd className="text-white" />, name: "Entidades", subItems: [{ name: " Ver Lista", path: "/entidades", pro: false }] },
   { name: "Rol de Viajes", icon: <FaUsersGear className="text-white" />, subItems: [{ name: "Motrar", path: "/travel-rol", pro: false }] },
   { name: "Vehiculos ", icon: <BiSpreadsheet className="text-white" />, subItems: [{ name: "Mostrar", path: "/vehiculos", pro: false }] },
   { name: "Combustible", icon: <BsFillFuelPumpDieselFill className="text-white" />, subItems: [{ name: "Mostrar", path: "/combustible", pro: false }] },
-  { name: "Destinos", icon: <GiHorizonRoad className="text-white" />, subItems: [{ name: "Lista de Destinos", path: "/destinos", pro: false }] },
-  { name: "Mapas", icon: <SiOrganicmaps className="text-white" />, subItems: [{ name: "listar", path: "/mapas", pro: false }] },
+  { name: "Destinos", icon: <GiHorizonRoad className="text-white" />, subItems: [{ name: "Ver Lista ", path: "/destinos", pro: false }] },
+  { name: "Mapas", icon: <SiOrganicmaps className="text-white" />, subItems: [{ name: " Ver lista", path: "/mapas", pro: false }] },
   { name: "Reservas", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "reservas", path: "/reservas", pro: false }] },
   //{ icon: <BiCalendar className="text-white" />, name: "Calendar", path: "/calendar" },
   {name: "Viajes", 
@@ -34,7 +34,27 @@ const navItems = [
      subItems: [{ name: "Tipo A (cheque)", path: "/presupuestos", pro: false },
                 { name: "Tipo B (caja)", path: "/presupuestos/caja", pro: false }
               ] },
+  { name: "Autorizacion de Salidas", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Ver Lista", path: "/autorizacion", pro: false }] },
+  { name: "Solictud de Trabajo", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Ver Lista", path: "/Solicitud_Trabajo", pro: false }] },
+  {name: "Mantenimiento", 
+    icon: <MdTravelExplore className="text-white" />, 
+    subItems: [
+      { name: "Solicitudes", path: "/olicitudes", pro: false },
+      { name: "kardex", path: "/solicitudes/kardex", pro: false } 
+    ] 
+  },
+  {name: "Pedido de Material", 
+    icon: <MdTravelExplore className="text-white" />, 
+    subItems: [
+      { name: "Mecanico", path: "/mecanico", pro: false },
+      { name: "Escritorio/Demas", path: "/mecanico/excritorio", pro: false } 
+    ] 
+  },
+  { name: "Devolucion de Material", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Mostrar", path: "/devolucion_material", pro: false }] },                   
+              
 ];
+
+
 
 const othersItems = [
   {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function CheckBudgetForm({ data, onClose }) {
+export default function CheckBudgetForm({ data, onClose,choferes, encargados, vehiculos }) {
   const [form, setForm] = useState({
     vehiculo: data?.vehiculo || "",
     chofer: data?.chofer || "",
