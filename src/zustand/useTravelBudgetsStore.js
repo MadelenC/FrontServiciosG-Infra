@@ -17,7 +17,11 @@ export const useTravelBudgetsStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const data = await getBudgets();
-      set({ budgets: data, loading: false });
+
+      // 🔥 ORDENAR POR ID DESCENDENTE (último registro primero)
+      const sorted = (data || []).sort((a, b) => b.id - a.id);
+
+      set({ budgets: sorted, loading: false });
     } catch (err) {
       set({ error: err.message || err, loading: false });
     }
@@ -27,7 +31,9 @@ export const useTravelBudgetsStore = create((set, get) => ({
   addBudget: async (data) => {
     try {
       const newBudget = await createBudget(data);
-      set({ budgets: [...get().budgets, newBudget] });
+      set({
+        budgets: [newBudget, ...get().budgets] // 🔥 agregamos al inicio para mantener orden
+      });
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err.message || err };

@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import CheckBudgetTable from "./CheckBudgetTable";
 import CheckBudgetSearch from "../search/SearchBar";
-import Pagination from "./Pagination"; // Componente de paginación real
-import CheckBudgetForm from "../form/CheckBudgetForm"; 
-import { useTravelBudgetsStore } from "../../../zustand/useTravelBudgetsStore"; 
+import Pagination from "./Pagination";
+import CheckBudgetForm from "../form/CheckBudgetForm";
+
+import { useTravelBudgetsStore } from "../../../zustand/useTravelBudgetsStore";
+import { useUserStore } from "../../../zustand/userStore";
+import { useVehicleStore } from "../../../zustand/useVehicleStore";
 
 export default function TableCheckBudget() {
-  const { budgets, fetchBudgets } = useTravelBudgetsStore(); 
+  const { budgets, fetchBudgets } = useTravelBudgetsStore();
+  const { users, fetchUsers } = useUserStore();
+  const { vehicles, fetchVehicles } = useVehicleStore();
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -16,14 +21,32 @@ export default function TableCheckBudget() {
 
   useEffect(() => {
     fetchBudgets();
+    fetchUsers();
+    fetchVehicles();
   }, []);
 
   useEffect(() => {
     setPage(1);
   }, [search]);
 
-  // Filtrado de presupuestos según búsqueda
-  const filteredBudgets = (budgets || []).filter((b) =>
+  // 🔥 CRUCE DE DATOS (IGUAL QUE TU "ENCARGADO")
+  const enrichedBudgets = (budgets || []).map((b) => {
+    const choferData = users.find((u) => u.id == b.chofer);
+    const vehiculoData = vehicles.find((v) => v.id == b.vehiculo);
+
+    return {
+      ...b,
+      choferNombre: choferData
+        ? `${choferData.nombres} ${choferData.apellidos}`
+        : "Sin chofer",
+
+      vehiculoNombre: vehiculoData
+        ? vehiculoData.placa
+        : "Sin vehículo",
+    };
+  });
+
+  const filteredBudgets = enrichedBudgets.filter((b) =>
     Object.values(b).some(
       (v) => v && String(v).toLowerCase().includes(search.toLowerCase())
     )
@@ -35,12 +58,10 @@ export default function TableCheckBudget() {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md p-4">
       
-      {/* Buscador */}
       <div className="h-10 w-64 mb-4">
         <CheckBudgetSearch search={search} setSearch={setSearch} />
       </div>
 
-      {/* Tabla con presupuestos paginados */}
       <CheckBudgetTable 
         budgets={currentData} 
         onEdit={(budget) => {
@@ -49,7 +70,6 @@ export default function TableCheckBudget() {
         }}
       />
 
-      {/* Paginación funcional */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-4">
           <Pagination 
@@ -60,7 +80,6 @@ export default function TableCheckBudget() {
         </div>
       )}
 
-      {/* Formulario modal para editar presupuesto */}
       {openForm && (
         <CheckBudgetForm 
           data={selectedBudget} 
