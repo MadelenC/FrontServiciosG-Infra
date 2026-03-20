@@ -3,7 +3,7 @@ import ComponentCard from "../../components/common/ComponentCard";
 import PageMeta from "../../components/common/PageMeta";
 import TripsTable from "../../components/Trips/tables/TripsTable";
 
-export default function TripsPage() {
+export default function TripsHome() {
   return (
     <>
       <PageMeta

@@ -121,7 +121,11 @@ export default function TripsRow({ trip, onOpenModal }) {
           </div>
 
           {/* CANCELAR */}
-          <button className="w-full text-xs px-2 py-1 bg-red-100 text-red-600 rounded hover:bg-red-200 flex items-center gap-1">
+          <button   onClick={() => {
+              if (!confirm("¿Seguro que deseas cancelar este viaje?")) return;
+              onCancelTrip(trip.id);
+            }}
+          className="w-full text-xs px-2 py-1 bg-red-100 text-red-600 rounded hover:bg-red-200 flex items-center gap-1">
             <FaTimes size={10} />
             Cancelar
           </button>

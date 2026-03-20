@@ -8,10 +8,11 @@ import { LuBuilding2 } from "react-icons/lu";
 import { MdSecurityUpdate, MdDomainAdd, MdTravelExplore } from "react-icons/md";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { GoChevronDown } from "react-icons/go";
-import { FaUsersLine, FaUsersGear, FaMoneyBillTrendUp } from "react-icons/fa6";
+import { FaUsersLine, FaUsersGear, FaMoneyBillTrendUp,FaListUl  } from "react-icons/fa6";
 import { BsFillFuelPumpDieselFill, BsCardHeading } from "react-icons/bs";
 import { GiHorizonRoad } from "react-icons/gi";
 import { SiOrganicmaps } from "react-icons/si";
+import { IoCalendarNumberOutline } from "react-icons/io5";
 
 const navItems = [
   { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", subItems: [{ name: " Ver Lista", path: "/", pro: false }] },
@@ -22,12 +23,15 @@ const navItems = [
   { name: "Destinos", icon: <GiHorizonRoad className="text-white" />, subItems: [{ name: "Ver Lista ", path: "/destinos", pro: false }] },
   { name: "Mapas", icon: <SiOrganicmaps className="text-white" />, subItems: [{ name: " Ver lista", path: "/mapas", pro: false }] },
   { name: "Reservas", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "reservas", path: "/reservas", pro: false }] },
-  //{ icon: <BiCalendar className="text-white" />, name: "Calendar", path: "/calendar" },
   {name: "Viajes", 
     icon: <MdTravelExplore className="text-white" />, 
-    subItems: [
-      { name: "Listar", path: "/viajes", pro: false },
-      { name: "Calendario", path: "/viajes/calendar", pro: false } 
+    subItems: [ 
+      { name: "Listar", path: "/viajes", pro: false, 
+        icon:<FaListUl className="text-white " />
+      },
+      { name: "Calendario", path: "/viajes/calendar", 
+        pro: false, 
+        icon: <IoCalendarNumberOutline className="text-white " /> } 
     ] 
   },
   { name: "Presupuestos de Viaje", icon: <FaMoneyBillTrendUp className="text-white" />,
@@ -200,26 +204,43 @@ const AppSidebar = () => {
                     : "0px",
               }}
             >
-              <ul className="mt-2 space-y-1 ml-9">
+              <ul className="mt-2 space-y-4 ml-9  ">
                 {nav.subItems.map((subItem) => (
                   <li key={subItem.name}>
                     <Link
                       to={subItem.path}
-                      className={`menu-dropdown-item text-white ${
+                      className={`group flex items-center gap-2 px-3 py-2 rounded-lg text-white transition-all duration-200
+                      hover:bg-white/10 hover:translate-x-1 ${
                         isActive(subItem.path)
-                          ? "menu-dropdown-item-active"
-                          : "menu-dropdown-item-inactive"
+                          ? "bg-white/10 font-medium"
+                          : ""
                       }`}
                     >
-                    {subItem.name}
-                      <span className="flex items-center gap-1 ml-auto">
+                      {/* ICONO */}
+                      {subItem.icon && (
+                        <span className="flex items-center justify-center w-5 h-5 text-white/80 group-hover:text-white transition">
+                          {React.isValidElement(subItem.icon) ? (
+                            subItem.icon
+                          ) : (
+                            <subItem.icon className="w-4 h-4" />
+                          )}
+                        </span>
+                      )}
+
+                      {/* TEXTO */}
+                      <span className="text-sm leading-none">
+                        {subItem.name}
+                      </span>
+
+                      {/* BADGES */}
+                      <span className="ml-auto flex gap-1">
                         {subItem.new && (
-                          <span className={`ml-auto menu-dropdown-badge text-white`}>
+                          <span className="text-xs px-1.5 py-0.5 rounded bg-green-500/20 text-green-300">
                             new
                           </span>
                         )}
                         {subItem.pro && (
-                          <span className={`ml-auto menu-dropdown-badge text-white`}>
+                          <span className="text-xs px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300">
                             pro
                           </span>
                         )}

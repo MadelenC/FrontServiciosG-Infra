@@ -5,6 +5,9 @@ import Pagination from "./Paginations";
 import AddTripsFrom from "../form/AddTripsFrom";
 import CheckTripForm from "../form/TripsCheckForm";
 import TripsCajaForm from "../form/TripsCajaForm";
+import TripDeclarationForm from "../form/TripDeclarationForm";
+
+import { FiFileText, FiBarChart2, FiPlus } from "react-icons/fi";
 
 import { useTripsStore } from "../../../zustand/useTripsStore";
 import { useUserStore } from "../../../zustand/userStore";
@@ -13,7 +16,6 @@ import { useDestinoStore } from "../../../zustand/useDestinationsStore";
 
 export default function TripsTable() {
   const { trips, fetchTrips } = useTripsStore();
-
   const { users, fetchUsers } = useUserStore();
   const { vehicles, fetchVehicles } = useVehicleStore();
   const { destinos, fetchDestinos } = useDestinoStore();
@@ -25,8 +27,7 @@ export default function TripsTable() {
   const [tipo, setTipo] = useState("");
   const [page, setPage] = useState(1);
 
-  // 🔥 MODALES CENTRALIZADOS
-  const [modalType, setModalType] = useState(null); // "caja" | "cheque" | "add"
+  const [modalType, setModalType] = useState(null);
   const [selectedTrip, setSelectedTrip] = useState(null);
 
   const limit = 8;
@@ -40,7 +41,6 @@ export default function TripsTable() {
 
   useEffect(() => setPage(1), [search, tipo]);
 
-  // 🔥 CONTROL DE MODALES
   const handleOpenModal = (type, trip = null) => {
     setModalType(type);
     setSelectedTrip(trip);
@@ -51,7 +51,14 @@ export default function TripsTable() {
     setSelectedTrip(null);
   };
 
-  // 🔍 FILTRO
+  const handleCancelTrip = (id) => {
+    const updated = trips.map(t =>
+      t.id === id ? { ...t, estado: "Cancelado" } : t
+    );
+
+    useTripsStore.setState({ trips: updated });
+  };
+
   const filteredTrips = trips.filter(t => {
     const matchesSearch =
       t.entidad?.toLowerCase().includes(search.toLowerCase()) ||
@@ -68,18 +75,41 @@ export default function TripsTable() {
     page * limit
   );
 
-  return (
-    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
+  const SimpleModal = ({ title, children }) => (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl shadow-lg w-[420px] p-6">
+        <h2 className="text-lg font-semibold mb-4">{title}</h2>
 
-      {/* 🔝 HEADER */}
+        <div className="text-sm text-gray-600">
+          {children}
+        </div>
+
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={handleCloseModal}
+            className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md p-4">
+
+      {/* HEADER */}
       <div className="flex justify-between items-center mb-4 gap-4 flex-wrap">
-        <div className="flex gap-2 items-center">
+
+        {/* SEARCH + FILTER */}
+        <div className="flex items-center gap-2 h-10">
           <SearchBarTrips search={search} setSearch={setSearch} />
 
           <select
             value={tipo}
             onChange={(e) => setTipo(e.target.value)}
-            className="h-10 px-3 rounded-lg border"
+            className="h-full px-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             <option value="">Todos</option>
             <option value="Viaje de Práctica">Viaje de Práctica</option>
@@ -89,18 +119,43 @@ export default function TripsTable() {
           </select>
         </div>
 
-        <button
-          onClick={() => handleOpenModal("add")}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          + Agregar Viaje
-        </button>
+        {/* BOTONES */}
+        <div className="flex gap-2 flex-wrap">
+
+          <button
+            onClick={() => handleOpenModal("declaratoria")}
+            className="flex items-center gap-2 bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg"
+          >
+            <FiFileText size={18} />
+            Declaratorias
+          </button>
+
+          <button
+            onClick={() => handleOpenModal("informe")}
+            className="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-800 text-white px-4 py-2 rounded-lg"
+          >
+            <FiBarChart2 size={18} />
+            Informe
+          </button>
+
+          {/* 🔥 ESTE ES EL QUE SE ROMPIA */}
+          <button
+            onClick={() => handleOpenModal("add")}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+          >
+            <FiPlus size={18} />
+            Agregar Viaje
+          </button>
+
+        </div>
       </div>
 
-      {/* 📊 TABLA */}
-      <div className="overflow-x-auto border rounded">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-100">
+      {/* TABLE */}
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+
+        <table className="w-full text-sm bg-white border-collapse">
+
+          <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
             <tr>
               {[
                 "#",
@@ -114,7 +169,10 @@ export default function TripsTable() {
                 "Estado",
                 "Acciones",
               ].map(h => (
-                <th key={h} className="px-3 py-2 text-left">
+                <th
+                  key={h}
+                  className="border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700"
+                >
                   {h}
                 </th>
               ))}
@@ -128,20 +186,22 @@ export default function TripsTable() {
                   key={trip.id}
                   trip={trip}
                   onOpenModal={handleOpenModal}
+                  onCancelTrip={handleCancelTrip}
                 />
               ))
             ) : (
               <tr>
-                <td colSpan={10} className="text-center py-4">
+                <td colSpan={10} className="text-center py-4 text-gray-500">
                   No hay registros
                 </td>
               </tr>
             )}
           </tbody>
+
         </table>
       </div>
 
-      {/* 📄 PAGINACIÓN */}
+      {/* PAGINATION */}
       <div className="flex justify-center mt-4">
         <Pagination
           page={page}
@@ -150,9 +210,7 @@ export default function TripsTable() {
         />
       </div>
 
-      {/* ================= MODALES ================= */}
-
-      {/* ➕ AGREGAR */}
+      {/* MODALES */}
       {modalType === "add" && (
         <AddTripsFrom
           isOpen={true}
@@ -169,31 +227,36 @@ export default function TripsTable() {
         />
       )}
 
-      {/* 💰 CAJA */}
       {modalType === "caja" && (
         <TripsCajaForm
           viajeData={selectedTrip}
-          choferes={choferes}
-          encargados={encargados}
-          vehiculos={vehicles}
+          onClose={handleCloseModal}
+        />
+      )}
+
+      {modalType === "cheque" && (
+        <CheckTripForm
+          data={selectedTrip}
+          onClose={handleCloseModal}
+        />
+      )}
+
+      {modalType === "declaratoria" && (
+        <TripDeclarationForm
           onClose={handleCloseModal}
           onSubmit={(data) => {
-            console.log("Caja:", data);
+            console.log("Declaratoria:", data);
             handleCloseModal();
           }}
         />
       )}
 
-      {/* 🧾 CHEQUE */}
-      {modalType === "cheque" && (
-        <CheckTripForm
-          data={selectedTrip}
-          onClose={handleCloseModal}
-          choferes={choferes}
-          encargados={encargados}
-          vehiculos={vehicles}
-        />
+      {modalType === "informe" && (
+        <SimpleModal title="Informe de Viajes">
+          Aquí podrás generar reportes de viajes.
+        </SimpleModal>
       )}
+
     </div>
   );
 }
