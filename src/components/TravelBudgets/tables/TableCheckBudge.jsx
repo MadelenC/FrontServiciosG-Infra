@@ -29,11 +29,10 @@ export default function TableCheckBudget() {
     setPage(1);
   }, [search]);
 
-  // 🔥 filtros tipo TripsTable
+  // filtros tipo TripsTable
   const choferes = users.filter(u => u.tipo === "chofer");
   const encargados = users.filter(u => u.tipo === "encargado");
 
-  // 🔥 CRUCE DE DATOS (IGUAL QUE TU "ENCARGADO")
   const enrichedBudgets = (budgets || []).map((b) => {
     const choferData = users.find((u) => u.id == b.chofer);
     const vehiculoData = vehicles.find((v) => v.id == b.vehiculo);

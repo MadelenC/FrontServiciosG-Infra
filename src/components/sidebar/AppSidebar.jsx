@@ -8,7 +8,7 @@ import { LuBuilding2 } from "react-icons/lu";
 import { MdSecurityUpdate, MdDomainAdd, MdTravelExplore } from "react-icons/md";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { GoChevronDown } from "react-icons/go";
-import { FaUsersLine, FaUsersGear, FaMoneyBillTrendUp,FaListUl  } from "react-icons/fa6";
+import { FaUsersLine, FaUsersGear, FaMoneyBillTrendUp,FaListUl,FaFileLines,FaFilePen   } from "react-icons/fa6";
 import { BsFillFuelPumpDieselFill, BsCardHeading } from "react-icons/bs";
 import { GiHorizonRoad } from "react-icons/gi";
 import { SiOrganicmaps } from "react-icons/si";
@@ -39,9 +39,15 @@ const navItems = [
                 { name: "Tipo B (caja)", path: "/presupuestos/caja", pro: false }
               ] },
   { name: "Autorizacion de Salidas",
-    icon: <BsCardHeading className="text-white" />,
-    subItems: [{ name: "Ver Lista", path: "/autorizacion", pro: false }] },
+    icon: <FaFilePen  className="text-white" />, 
+    subItems: [{ name: "Ver Lista", path: "/autorizacion",
+   pro: false
+   }] },
+ 
+   { name: "Informe de viajes", icon: <FaFileLines className="text-white" />, subItems: [{ name: "Mostrar", path: "/informe", pro: false }] },
+ 
   { name: "Solictud de Trabajo", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Ver Lista", path: "/Solicitud_Trabajo", pro: false }] },
+  
   {name: "Mantenimiento", 
     icon: <MdTravelExplore className="text-white" />, 
     subItems: [

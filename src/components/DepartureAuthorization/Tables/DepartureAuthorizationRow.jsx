@@ -51,7 +51,7 @@ export default function DepartureAuthorizationRow({
           <button
             className="p-2 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition"
             title="Editar "
-            onClick={() => onEdit(budget)}
+            onClick={() => onEdit(departure)}
           >
             <FaEdit size={14} />
           </button>

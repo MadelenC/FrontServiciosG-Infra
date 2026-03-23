@@ -20,10 +20,12 @@ import TripsHome from "./pages/Trips/TripsHome";
 import CheckBudgetHome from "./pages/TravelBudget/CheckBudgetHome";
 import CashBudgetHome from "./pages/TravelBudget/CashBudgetHome";
 import DepartureHome from "./pages/DepartureAuthorization/DepartureHome";
+import TripReportHome from "./pages/TripReport/TripReportHome";
 import AppLayout from "./layouts/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/UserList/Home";
 import { ProtectedRoute, PublicRoute } from "./auth/PrivateRoute";
+
 
 
 export default function App() {
@@ -61,6 +63,7 @@ export default function App() {
             <Route path="caja" element={<CashBudgetHome />} />
             </Route>
             <Route path="/autorizacion" element={<DepartureHome/>}></Route>
+            <Route path="/informe" element={<TripReportHome/>}></Route>
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/avatars" element={<Avatars />} />

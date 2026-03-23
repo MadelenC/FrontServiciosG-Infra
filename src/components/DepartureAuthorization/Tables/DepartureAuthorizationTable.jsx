@@ -1,28 +1,38 @@
 import { useState, useEffect } from "react";
 import DepartureAuthorizationRow from "./DepartureAuthorizationRow";
-
 import SearchBar from "../Search/SearchBar";
 import Pagination from "./Pagination";
-
 import { FiPlus } from "react-icons/fi";
 
 import { useDepartureAuthorizationStore } from "../../../zustand/useDepartureAuthorizationStore";
 import { useUserStore } from "../../../zustand/userStore";
 import { useVehicleStore } from "../../../zustand/useVehicleStore";
 
+import CreateDepartureAuthorizationForm from "../Form/CreateDepartureAuthorizationForm";
+import EditDepartureAuthorizationForm from "../Form/EditDepartureAuthorizationForm";
+
 export default function DepartureAuthorizationTable({ externalDepartureId = null }) {
 
-  const { departures, fetchDepartures } = useDepartureAuthorizationStore();
+  const {
+    departures,
+    fetchDepartures,
+    createDepartureform,
+    updateDeparture,   // 🔥 IMPORTANTE (debes tenerlo en tu store)
+  } = useDepartureAuthorizationStore();
+
   const { users, fetchUsers } = useUserStore();
   const { vehicles, fetchVehicles } = useVehicleStore();
 
   const choferes = users.filter(u => u.tipo === "chofer");
-  const responsables = users.filter(u => u.tipo === "responsable");
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
+  // CREATE
   const [modalType, setModalType] = useState(null);
+
+  // EDIT
+  const [editOpen, setEditOpen] = useState(false);
   const [selectedDeparture, setSelectedDeparture] = useState(null);
 
   const limit = 8;
@@ -35,22 +45,42 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
 
   useEffect(() => setPage(1), [search]);
 
-  const handleOpenModal = (type, dep = null) => {
-    setModalType(type);
-    setSelectedDeparture(dep);
+  // ---------------- CREATE ----------------
+  const handleOpenCreate = () => {
+    setModalType("add");
   };
 
-  const handleCloseModal = () => {
-    setModalType(null);
+  // ---------------- EDIT ----------------
+  const handleEdit = (departure) => {
+    setSelectedDeparture(departure);
+    setEditOpen(true);
+  };
+
+  const handleCloseEdit = () => {
+    setEditOpen(false);
     setSelectedDeparture(null);
   };
 
+  const handleSaveCreate = async (data) => {
+    const res = await createDepartureform(data);
+    if (res?.ok) fetchDepartures();
+    return res;
+  };
+
+  const handleSaveEdit = async (data) => {
+    const res = await updateDeparture(selectedDeparture.id, data);
+    if (res?.ok) fetchDepartures();
+    return res;
+  };
+
+  // ---------------- FILTER ----------------
   const filtered = departures.filter(d => {
+    const searchLower = search.toLowerCase();
 
     const matchesSearch =
-      d.lugar?.toLowerCase().includes(search.toLowerCase()) ||
-      d.motivo?.toLowerCase().includes(search.toLowerCase()) ||
-      d.responsable?.toLowerCase().includes(search.toLowerCase());
+      d.lugar?.toLowerCase().includes(searchLower) ||
+      d.motivo?.toLowerCase().includes(searchLower) ||
+      d.responsable?.toLowerCase().includes(searchLower);
 
     const matchesId = externalDepartureId
       ? Number(d.id) === Number(externalDepartureId)
@@ -60,6 +90,7 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
   });
 
   const totalPages = Math.ceil(filtered.length / limit);
+
   const currentData = filtered.slice(
     (page - 1) * limit,
     page * limit
@@ -71,13 +102,11 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
       {/* HEADER */}
       <div className="flex justify-between items-center mb-4">
 
-        {/* SEARCH */}
         <SearchBar search={search} setSearch={setSearch} />
 
-        {/* BOTÓN */}
         {!externalDepartureId && (
           <button
-            onClick={() => handleOpenModal("add")}
+            onClick={handleOpenCreate}
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
           >
             <FiPlus size={18} />
@@ -109,7 +138,7 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
                   key={d.id}
                   departure={d}
                   index={i + 1}
-                  onOpen={handleOpenModal}
+                  onEdit={handleEdit}   // 🔥 AQUÍ EL FIX
                 />
               ))
             ) : (
@@ -132,6 +161,29 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
           setPage={setPage}
         />
       </div>
+
+      {/* CREATE MODAL */}
+      {modalType === "add" && (
+        <CreateDepartureAuthorizationForm
+          isOpen={modalType === "add"}
+          onClose={() => setModalType(null)}
+          onSave={handleSaveCreate}
+          choferes={choferes}
+          vehiculos={vehicles}
+        />
+      )}
+
+      {/* EDIT MODAL */}
+      {editOpen && (
+        <EditDepartureAuthorizationForm
+          isOpen={editOpen}
+          onClose={handleCloseEdit}
+          onSave={handleSaveEdit}
+          choferes={choferes}
+          vehiculos={vehicles}
+          initialData={selectedDeparture}
+        />
+      )}
 
     </div>
   );

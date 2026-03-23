@@ -17,8 +17,7 @@ export default function TableReserva() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const limit = 5;
-
+  const limit = 8
   // Traer reservas
   useEffect(() => {
     fetchReservas();
