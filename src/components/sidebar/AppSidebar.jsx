@@ -38,7 +38,9 @@ const navItems = [
      subItems: [{ name: "Tipo A (cheque)", path: "/presupuestos", pro: false },
                 { name: "Tipo B (caja)", path: "/presupuestos/caja", pro: false }
               ] },
-  { name: "Autorizacion de Salidas", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Ver Lista", path: "/autorizacion", pro: false }] },
+  { name: "Autorizacion de Salidas",
+    icon: <BsCardHeading className="text-white" />,
+    subItems: [{ name: "Ver Lista", path: "/autorizacion", pro: false }] },
   { name: "Solictud de Trabajo", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Ver Lista", path: "/Solicitud_Trabajo", pro: false }] },
   {name: "Mantenimiento", 
     icon: <MdTravelExplore className="text-white" />, 

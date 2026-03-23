@@ -118,21 +118,42 @@ export default function CheckBudgetForm({ data, onClose,choferes, encargados, ve
           }
         >
           <div className="grid grid-cols-2 gap-4 mt-2">
-            <Input
-              label="Vehículo"
+            <select
+              className="border p-2 rounded"
               value={form.vehiculo}
-              onChange={(v) => handleChange("vehiculo", v)}
-            />
-            <Input
-              label="Chofer"
-              value={form.chofer}
-              onChange={(v) => handleChange("chofer", v)}
-            />
-            <Input
-              label="Encargado del viaje"
+              onChange={(e) => handleChange("vehiculo", e.target.value)}
+            >
+              <option value="">Seleccione vehículo</option>
+              {vehiculos?.map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.placa}
+                </option>
+              ))}
+            </select>
+          <select
+            className="border p-2 rounded"
+            value={form.chofer}
+            onChange={(e) => handleChange("chofer", e.target.value)}
+            >
+            <option value="">Seleccione chofer</option>
+            {choferes?.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.nombres} {c.apellidos}
+              </option>
+            ))}
+           </select>
+            <select
+              className="border p-2 rounded"
               value={form.encargado}
-              onChange={(v) => handleChange("encargado", v)}
-            />
+              onChange={(e) => handleChange("encargado", e.target.value)}
+            >
+              <option value="">Seleccione encargado</option>
+              {encargados?.map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.nombres} {e.apellidos}
+                </option>
+              ))}
+            </select>
             <Input
               label="Fecha de solicitud"
               type="date"

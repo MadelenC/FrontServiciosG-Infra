@@ -14,7 +14,9 @@ import { useUserStore } from "../../../zustand/userStore";
 import { useVehicleStore } from "../../../zustand/useVehicleStore";
 import { useDestinoStore } from "../../../zustand/useDestinationsStore";
 
-export default function TripsTable() {
+//AGREGAMOS externalTripId
+export default function TripsTable({ externalTripId = null }) {
+
   const { trips, fetchTrips } = useTripsStore();
   const { users, fetchUsers } = useUserStore();
   const { vehicles, fetchVehicles } = useVehicleStore();
@@ -58,15 +60,19 @@ export default function TripsTable() {
 
     useTripsStore.setState({ trips: updated });
   };
-
   const filteredTrips = trips.filter(t => {
+
     const matchesSearch =
       t.entidad?.toLowerCase().includes(search.toLowerCase()) ||
       t.objetivo?.toLowerCase().includes(search.toLowerCase());
 
     const matchesTipo = tipo ? t.tipo === tipo : true;
 
-    return matchesSearch && matchesTipo;
+    const matchesId = externalTripId
+      ? Number(t.id) === Number(externalTripId)
+      : true;
+
+    return matchesSearch && matchesTipo && matchesId;
   });
 
   const totalPages = Math.ceil(filteredTrips.length / limit);
@@ -138,14 +144,16 @@ export default function TripsTable() {
             Informe
           </button>
 
-          {/* 🔥 ESTE ES EL QUE SE ROMPIA */}
-          <button
-            onClick={() => handleOpenModal("add")}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-          >
-            <FiPlus size={18} />
-            Agregar Viaje
-          </button>
+          {/* SOLO SE MUESTRA SI NO VIENE DEL CALENDARIO */}
+          {!externalTripId && (
+            <button
+              onClick={() => handleOpenModal("add")}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+            >
+              <FiPlus size={18} />
+              Agregar Viaje
+            </button>
+          )}
 
         </div>
       </div>

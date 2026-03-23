@@ -29,6 +29,10 @@ export default function TableCheckBudget() {
     setPage(1);
   }, [search]);
 
+  // 🔥 filtros tipo TripsTable
+  const choferes = users.filter(u => u.tipo === "chofer");
+  const encargados = users.filter(u => u.tipo === "encargado");
+
   // 🔥 CRUCE DE DATOS (IGUAL QUE TU "ENCARGADO")
   const enrichedBudgets = (budgets || []).map((b) => {
     const choferData = users.find((u) => u.id == b.chofer);
@@ -84,6 +88,9 @@ export default function TableCheckBudget() {
         <CheckBudgetForm 
           data={selectedBudget} 
           onClose={() => setOpenForm(false)}
+          choferes={choferes}
+          encargados={encargados}
+          vehiculos={vehicles}
         />
       )}
     </div>

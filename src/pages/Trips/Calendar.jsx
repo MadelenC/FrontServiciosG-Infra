@@ -4,11 +4,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import esLocale from "@fullcalendar/core/locales/es";
-
 import PageMeta from "../../components/common/PageMeta";
 import { useTripsStore } from "../../../src/zustand/useTripsStore";
-
-import TripsRow from "../../components/Trips/tables/TripsRow";
+import TripsTable from "../../components/Trips/tables/TripsTable";
 
 const Calendar = () => {
   const { trips, fetchTrips } = useTripsStore();
@@ -21,8 +19,6 @@ const Calendar = () => {
   useEffect(() => {
     fetchTrips();
   }, []);
-
-  // 🎨 COLORES POR ESTADO + FECHA
   const getColor = (trip) => {
     const hoy = new Date();
     const inicio = new Date(trip.fecha_inicial);
@@ -30,41 +26,32 @@ const Calendar = () => {
 
     const estado = (trip.estado || "").toLowerCase();
 
-    if (estado === "cancelado") return "#ef4444"; // rojo
-
-    if (fin < hoy) return "#22c55e"; // verde (concluido)
-
-    if (inicio <= hoy && fin >= hoy) return "#f59e0b"; // amarillo
-
-    if (inicio > hoy) return "#3b82f6"; // azul
+    if (estado === "cancelado") return "#ef4444";
+    if (fin < hoy) return "#22c55e";
+    if (inicio <= hoy && fin >= hoy) return "#f59e0b";
+    if (inicio > hoy) return "#3b82f6";
 
     return "#3b82f6";
   };
 
-  // 📌 MAPEAR TRIPS A EVENTOS
+  // MAPEAR EVENTOS
   useEffect(() => {
     if (!trips) return;
 
     const mapped = trips.map((trip) => ({
       id: trip.id,
       title: trip.entidad || "Viaje",
-
       start: trip.fecha_inicial,
       end: trip.fecha_final,
-
       allDay: true,
-
-      extendedProps: {
-        trip,
-      },
-
+      extendedProps: { trip },
       backgroundColor: getColor(trip),
     }));
 
     setEvents(mapped);
   }, [trips]);
 
-  // 📌 CLICK EN EVENTO
+  //CLICK para ABRIR MODAL
   const handleEventClick = (clickInfo) => {
     const trip = clickInfo.event.extendedProps.trip;
     setSelectedTrip(trip);
@@ -104,55 +91,26 @@ const Calendar = () => {
         />
       </div>
 
-      {/* 🔥 MODAL CON TABLA COMPLETA */}
+      {/*MODAL CON TODA LA TABLA */}
       {selectedTrip && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white w-[95%] max-w-6xl rounded-xl shadow-lg p-6 relative">
 
-            {/* CLOSE */}
+          <div className="bg-white w-[95%] max-w-7xl rounded-xl shadow-lg p-6 relative">
             <button
               onClick={() => setSelectedTrip(null)}
-              className="absolute top-3 right-4 text-2xl text-gray-500 hover:text-red-600"
+              className="absolute top-3 right-3 text-gray font-bold bg-white-600 px-3 py-1 rounded hover:bg-gray-200"
             >
               ×
             </button>
 
             <h2 className="text-xl font-bold mb-4">
-              Detalle del Viaje
+              Gestión del Viaje
             </h2>
 
-            {/* 🔥 TABLA COMPLETA */}
-            <table className="w-full text-sm border">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th>#</th>
-                  <th>Entidad</th>
-                  <th>Tipo</th>
-                  <th>Objetivo</th>
-                  <th>Días</th>
-                  <th>Pasajeros</th>
-                  <th>Inicio</th>
-                  <th>Fin</th>
-                  <th>Estado</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <TripsRow
-                  trip={selectedTrip}
-                  onOpenModal={() => {}}
-                  onCancelTrip={(id) => {
-                    const updated = trips.map(t =>
-                      t.id === id ? { ...t, estado: "Cancelado" } : t
-                    );
-                    useTripsStore.setState({ trips: updated });
-                  }}
-                />
-              </tbody>
-            </table>
+            <TripsTable externalTripId={selectedTrip.id} />
 
           </div>
+
         </div>
       )}
     </>

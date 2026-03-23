@@ -20,7 +20,7 @@ export default function TripsCajaForm({
     objetivo: "",
   });
 
-  // ✅ Inicializar correctamente con IDs
+  // Inicializar correctamente con IDs
   useEffect(() => {
     if (!viajeData) return;
 
@@ -50,7 +50,14 @@ export default function TripsCajaForm({
 
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-start pt-10 z-50 overflow-y-auto">
-      <div className="bg-white w-[95%] sm:w-[80%] md:w-[60%] max-w-[800px] p-6 rounded-xl shadow-lg space-y-6">
+      <div className="bg-white w-[95%] sm:w-[80%] md:w-[60%] max-w-[800px] p-6 rounded-xl shadow-lg space-y-6 relative">
+ 
+       <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray font-bold bg-white-600 px-3 py-1 rounded hover:bg-gray-200"
+        >
+          X
+        </button>
 
         <h2 className="text-2xl font-bold">
           Presupuesto de viaje por caja
