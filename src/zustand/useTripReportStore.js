@@ -11,7 +11,7 @@ export const useTripReportStore = create((set, get) => ({
   loading: false,
   error: null,
 
-  // 🔹 Traer todos los informes
+  // 🔹 TRAER TODOS
   fetchTripReports: async () => {
     set({ loading: true, error: null });
 
@@ -64,28 +64,19 @@ export const useTripReportStore = create((set, get) => ({
       }));
 
       set({ tripReports: mapped, loading: false });
+
     } catch (err) {
       set({ error: err.message || err, loading: false });
     }
   },
 
-  // 🔹 Crear informe
+  // 🔹 CREAR
   addTripReport: async (data) => {
     try {
       const newReport = await createTripReport(data);
 
-      const mapped = {
-        id: newReport.id,
-        vehiculo: newReport.vehiculo,
-        chofer: newReport.chofer,
-        encargado: newReport.encargado,
-        fechapartida: newReport.fechapartida,
-        tiempopartida: newReport.tiempopartida,
-        kilopartida: newReport.kilopartida,
-      };
-
       set({
-        tripReports: [...get().tripReports, mapped],
+        tripReports: [...get().tripReports, newReport],
       });
 
       return { ok: true };
@@ -94,34 +85,30 @@ export const useTripReportStore = create((set, get) => ({
     }
   },
 
-  // 🔹 Editar informe
+  // 🔹 EDITAR (🔥 CORREGIDO)
   editTripReport: async (id, data) => {
     try {
       const updated = await updateTripReport(id, data);
 
-      const mapped = {
-        id: updated.id,
-        vehiculo: updated.vehiculo,
-        chofer: updated.chofer,
-        encargado: updated.encargado,
-        fechapartida: updated.fechapartida,
-        tiempopartida: updated.tiempopartida,
-        kilopartida: updated.kilopartida,
-      };
-
       set({
         tripReports: get().tripReports.map((r) =>
-          r.id === id ? mapped : r
+          r.id === id
+            ? {
+                ...r,
+                ...updated, // 🔥 mantiene TODOS los campos
+              }
+            : r
         ),
       });
 
       return { ok: true };
+
     } catch (err) {
       return { ok: false, error: err.message || err };
     }
   },
 
-  // 🔹 Eliminar informe
+  // 🔹 ELIMINAR
   removeTripReport: async (id) => {
     try {
       await deleteTripReport(id);
@@ -131,6 +118,7 @@ export const useTripReportStore = create((set, get) => ({
       });
 
       return { ok: true };
+
     } catch (err) {
       return { ok: false, error: err.message || err };
     }

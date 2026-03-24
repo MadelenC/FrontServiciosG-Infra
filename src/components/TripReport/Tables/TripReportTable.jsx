@@ -9,21 +9,30 @@ import { useTripReportStore } from "../../../zustand/useTripReportStore";
 import { useUserStore } from "../../../zustand/userStore";
 import { useVehicleStore } from "../../../zustand/useVehicleStore";
 
+import UpdateKmForm from "../Form/UpdateKmForm";
+
 export default function TripReportTable({ externalTripId = null }) {
 
   const {
     tripReports,
     fetchTripReports,
-    addTripReport,
     editTripReport,
-    removeTripReport,
   } = useTripReportStore();
 
   const { users, fetchUsers } = useUserStore();
-  const { vehicles, fetchVehicles } = useVehicleStore();
+
+  const {
+    vehicles,
+    fetchVehicles,
+    editVehicle
+  } = useVehicleStore();
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+
+  const [openUpdateKmPanel, setOpenUpdateKmPanel] = useState(false);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [selectedTrip, setSelectedTrip] = useState(null);
 
   const limit = 8;
 
@@ -35,7 +44,7 @@ export default function TripReportTable({ externalTripId = null }) {
 
   useEffect(() => setPage(1), [search]);
 
-  // 🔥 FIX PRINCIPAL: ENRIQUECER DATOS
+  // ENRIQUECER
   const enrichedTrips = useMemo(() => {
     return tripReports.map((t) => {
 
@@ -43,38 +52,22 @@ export default function TripReportTable({ externalTripId = null }) {
       const choferId = t.chofer?.id || t.chofer;
       const encargadoId = t.encargado?.id || t.encargado;
 
-      const vehiculo = vehicles.find(
-        v => Number(v.id) === Number(vehiculoId)
-      );
-
-      const chofer = users.find(
-        u => Number(u.id) === Number(choferId)
-      );
-
-      const encargado = users.find(
-        u => Number(u.id) === Number(encargadoId)
-      );
+      const vehiculo = vehicles.find(v => Number(v.id) === Number(vehiculoId));
+      const chofer = users.find(u => Number(u.id) === Number(choferId));
+      const encargado = users.find(u => Number(u.id) === Number(encargadoId));
 
       return {
         ...t,
-
         vehiculoNombre: vehiculo?.placa || "Sin vehículo",
-
-        choferNombre: chofer
-          ? `${chofer.nombres} ${chofer.apellidos}`
-          : "Sin chofer",
-
-        encargadoNombre: encargado
-          ? `${encargado.nombres} ${encargado.apellidos}`
-          : "Sin encargado",
+        choferNombre: chofer ? `${chofer.nombres} ${chofer.apellidos}` : "Sin chofer",
+        encargadoNombre: encargado ? `${encargado.nombres} ${encargado.apellidos}` : "Sin encargado",
+        vehiculoObj: vehiculo
       };
     });
   }, [tripReports, users, vehicles]);
 
-  // 🔍 FILTER
   const filtered = enrichedTrips.filter(t => {
     const s = search.toLowerCase();
-
     return (
       t.vehiculoNombre?.toLowerCase().includes(s) ||
       t.choferNombre?.toLowerCase().includes(s) ||
@@ -89,31 +82,35 @@ export default function TripReportTable({ externalTripId = null }) {
     page * limit
   );
 
+  // 🔥 CLICK KM
+  const handleUpdateKm = (trip) => {
+
+    if (!trip.vehiculoObj) {
+      alert("Vehículo no encontrado");
+      return;
+    }
+
+    setSelectedVehicle(trip.vehiculoObj);
+    setSelectedTrip(trip);
+    setOpenUpdateKmPanel(true);
+  };
+
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md p-4">
+    <div className="p-4">
 
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-4">
-
+      <div className="flex justify-between mb-4">
         <SearchBar search={search} setSearch={setSearch} />
 
-        {!externalTripId && (
-          <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg">
-            <FiPlus size={18} />
-            Nuevo Informe
-          </button>
-        )}
-
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg flex gap-2">
+          <FiPlus /> Nuevo Informe
+        </button>
       </div>
 
-      {/* TABLE */}
       <TableTripReport
         tripReports={currentData}
-        onEdit={() => {}}
-        onDelete={() => {}}
+        onUpdateKm={handleUpdateKm}
       />
 
-      {/* PAGINATION */}
       <div className="flex justify-center mt-4">
         <Pagination
           page={page}
@@ -121,6 +118,46 @@ export default function TripReportTable({ externalTripId = null }) {
           setPage={setPage}
         />
       </div>
+
+      {/* MODAL */}
+      {openUpdateKmPanel && selectedVehicle && selectedTrip && (
+        <UpdateKmForm
+          vehicle={selectedVehicle}
+          onClose={() => setOpenUpdateKmPanel(false)}
+          onUpdateKm={async (updatedVehicle) => {
+
+            // VEHÍCULO
+            const resVehicle = await editVehicle(updatedVehicle.id, updatedVehicle);
+            if (!resVehicle.ok) return alert(resVehicle.error);
+
+            // CALCULAR KM
+            const nuevoKm = updatedVehicle.kilometraje;
+            const kmSalida = Number(selectedTrip.kilopartida || 0);
+
+            if (nuevoKm < kmSalida) {
+              return alert("Km inválido");
+            }
+
+            const kmTotal = nuevoKm - kmSalida;
+
+            // TRIP
+            const resTrip = await editTripReport(selectedTrip.id, {
+              ...selectedTrip,
+              kilollegada: nuevoKm,
+              kmtotal: kmTotal,
+            });
+
+            if (!resTrip.ok) return alert(resTrip.error);
+
+            alert("Actualizado correctamente 🚀");
+
+            await fetchVehicles();
+            await fetchTripReports();
+
+            setOpenUpdateKmPanel(false);
+          }}
+        />
+      )}
 
     </div>
   );
