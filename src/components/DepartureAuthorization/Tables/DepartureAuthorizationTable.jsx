@@ -33,11 +33,7 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-
-  // CREATE
   const [modalType, setModalType] = useState(null);
-
-  // EDIT
   const [editOpen, setEditOpen] = useState(false);
   const [selectedDeparture, setSelectedDeparture] = useState(null);
 
@@ -51,12 +47,10 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
 
   useEffect(() => setPage(1), [search]);
 
-  // ---------------- CREATE ----------------
   const handleOpenCreate = () => {
     setModalType("add");
   };
 
-  // ---------------- EDIT ----------------
   const handleEdit = (departure) => {
     setSelectedDeparture(departure);
     setEditOpen(true);
@@ -82,7 +76,6 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
     return res;
   };
 
-  // ---------------- FILTER ----------------
   const filtered = departures.filter(d => {
     const searchLower = search.toLowerCase();
 
@@ -147,7 +140,7 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
                   key={d.id}
                   departure={d}
                   index={i + 1}
-                  onEdit={handleEdit}   // 🔥 AQUÍ EL FIX
+                  onEdit={handleEdit}  
                 />
               ))
             ) : (
