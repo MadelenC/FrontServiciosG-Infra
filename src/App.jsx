@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import NotFound from "./pages/OtherPage/NotFound";
@@ -33,6 +35,7 @@ export default function App() {
     <>
       <Router>
         <ScrollToTop />
+        <ToastContainer />
         <Routes>
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>

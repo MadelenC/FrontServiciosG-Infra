@@ -11,7 +11,7 @@ export const useTripReportStore = create((set, get) => ({
   loading: false,
   error: null,
 
-  // 🔹 TRAER TODOS
+  //TRAER TODOS
   fetchTripReports: async () => {
     set({ loading: true, error: null });
 
@@ -70,7 +70,7 @@ export const useTripReportStore = create((set, get) => ({
     }
   },
 
-  // 🔹 CREAR
+  // CREAR
   addTripReport: async (data) => {
     try {
       const newReport = await createTripReport(data);
@@ -85,7 +85,7 @@ export const useTripReportStore = create((set, get) => ({
     }
   },
 
-  // 🔹 EDITAR (🔥 CORREGIDO)
+  // EDITAR 
   editTripReport: async (id, data) => {
     try {
       const updated = await updateTripReport(id, data);
@@ -95,7 +95,7 @@ export const useTripReportStore = create((set, get) => ({
           r.id === id
             ? {
                 ...r,
-                ...updated, // 🔥 mantiene TODOS los campos
+                ...updated,
               }
             : r
         ),

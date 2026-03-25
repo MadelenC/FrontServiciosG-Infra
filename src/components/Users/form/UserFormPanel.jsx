@@ -1,4 +1,5 @@
 import React from "react";
+import { toast } from "react-toastify";
 import { useUserStore } from "../../../zustand/userStore";
 import GeneralForm from "./GeneralForm";
 import EncargadoForm from "./EncargadoForm";
@@ -9,12 +10,12 @@ export default function UserFormPanel({ open, onClose, formType, setFormType }) 
   const handleSubmit = async (userData) => {
     const result = await createUser(userData);
     if (result.ok) {
-      alert("Usuario registrado correctamente");
+      toast.success("Usuario registrado correctamente");
       onClose();
     } else {
-      alert("Error al registrar usuario: " + result.error);
+      toast.error("Error al registrar usuario: " + result.error);
     }
-  };
+  };  
 
   if (!open) return null;
 

@@ -43,7 +43,7 @@ export default function GeneralForm({ onSubmit }) {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      alert("Por favor, complete todos los campos obligatorios.");
+      toast.warning("Por favor, complete todos los campos obligatorios.");
       return;
     }
 

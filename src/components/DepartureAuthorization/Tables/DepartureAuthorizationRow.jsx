@@ -31,26 +31,27 @@ export default function DepartureAuthorizationRow({
         {index}
       </TableCell>
 
-      {/* Chofer */}
+      {/* ✅ CHOFER (CORREGIDO) */}
       <TableCell className="border border-gray-200 px-3 py-2 text-gray-700">
-        {departure.chofer?.nombre || departure.chofer}
+        {departure.chofer?.nombre || ""}
       </TableCell>
 
-      {/* Movilidad */}
+      {/* ✅ VEHÍCULO (CORREGIDO) */}
       <TableCell className="border border-gray-200 px-3 py-2 text-gray-700">
-        {departure.vehiculo?.placa || departure.vehiculo}
+        {departure.vehiculo?.placa || ""}
       </TableCell>
 
-      {/* Responsable */}
+      {/* RESPONSABLE */}
       <TableCell className="border border-gray-200 px-3 py-2 text-gray-700">
         {departure.responsable}
-      </TableCell>  
-      {/* Operaciones */}
+      </TableCell>
+
+      {/* OPERACIONES */}
       <TableCell className="border border-gray-200 px-3 py-2">
         <div className="flex items-center gap-2">
           <button
             className="p-2 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition"
-            title="Editar "
+            title="Editar"
             onClick={() => onEdit(departure)}
           >
             <FaEdit size={14} />
@@ -58,7 +59,7 @@ export default function DepartureAuthorizationRow({
 
           <button
             className="p-2 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition"
-            title="Imprimir "
+            title="Imprimir"
             onClick={handlePrint}
           >
             <FaPrint size={14} />

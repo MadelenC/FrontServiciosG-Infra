@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { toast } from "react-toastify";
 const getCurrentTime = () => {
   const now = new Date();
   return now.toTimeString().slice(0, 5); // HH:mm
@@ -52,22 +52,23 @@ export default function CreateDepartureAuthorizationForm({
     }
 
     const payload = {
-  chofer: formData.chofer,
-  vehiculo: formData.movilidad,
-  lugar: formData.lugar,
-  motivo: formData.motivo,
-  responsable: formData.responsable,
-  hsalida: formData.horaSalida,
-  hllegada: formData.horaLlegada,
-};
+      chofer: formData.chofer,
+      vehiculo: formData.movilidad,
+      lugar: formData.lugar,
+      motivo: formData.motivo,
+      responsable: formData.responsable,
+      hsalida: formData.horaSalida,
+      hllegada: formData.horaLlegada,
+    };
 
     setSaving(true);
     const response = await onSave(payload);
     setSaving(false);
 
     if (!response?.ok) {
-      alert(response?.error || "Error al guardar");
+      toast.error(response?.error || "Error al guardar");
     } else {
+       toast.success("✅ Registro exitoso");
       onClose();
     }
   };
@@ -76,141 +77,139 @@ export default function CreateDepartureAuthorizationForm({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-5">
-      <div className="bg-white w-full max-w-3xl p-6 rounded-xl shadow-2xl relative">
 
-         <button
+      {/* CONTENEDOR PRINCIPAL */}
+      <div className="bg-white w-full max-w-3xl rounded-xl shadow-2xl relative h-[90vh] flex flex-col">
+
+        {/* BOTÓN CERRAR */}
+        <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray font-bold bg-white-600 px-3 py-1 rounded hover:bg-gray-200"
+          className="absolute top-3 right-3 text-gray font-bold px-3 py-1 rounded hover:bg-gray-200"
         >
           X
         </button>
-        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">
+
+        <h2 className="text-2xl font-bold text-center text-gray-700 mt-6">
           Autorización de Salidas
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {/* CONTENIDO SCROLL */}
+        <div className="flex-1 overflow-y-auto p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* CHOFER */}
-          <div>
-            <label className="block mb-1 font-semibold">Chofer</label>
-            <select
-              name="chofer"
-              value={formData.chofer}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md"
-            >
-              <option value="">Seleccione chofer</option>
-              {choferes?.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {[c.nombres, c.apellidos].filter(Boolean).join(" ")}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* MOVILIDAD */}
-          <div>
-            <label className="block mb-1 font-semibold">Movilidad</label>
-            <select
-              name="movilidad"
-              value={formData.movilidad}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md"
-            >
-              <option value="">Seleccione movilidad</option>
-              {vehiculos?.map((v) => (
-                <option key={v.id} value={v.id}>
-                  {[v.tipog, v.placa].filter(Boolean).join(" - ")}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* LUGAR */}
-          <div>
-            <label className="block mb-1 font-semibold">Lugar</label>
-            <input
-              type="text"
-              name="lugar"
-              value={formData.lugar}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md"
-            />
-          </div>
-
-          {/* MOTIVO */}
-          <div>
-            <label className="block mb-1 font-semibold">Motivo</label>
-            <input
-              type="text"
-              name="motivo"
-              value={formData.motivo}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md"
-            />
-          </div>
-
-          {/* RESPONSABLE */}
-          <div>
-            <label className="block mb-1 font-semibold">Responsable</label>
-            <input
-              type="text"
-              name="responsable"
-              value={formData.responsable}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-md"
-            />
-          </div>
-
-          {/* HORAS */}
-          <div className="grid grid-cols-2 gap-4">
-
-            {/* SALIDA AUTOMÁTICA */}
+            {/* CHOFER */}
             <div>
-              <label className="block mb-1 font-semibold">Hora de Salida</label>
+              <label className="block mb-1 font-semibold">Chofer</label>
+              <select
+                name="chofer"
+                value={formData.chofer}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded-md"
+              >
+                <option value="">Seleccione chofer</option>
+                {choferes?.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {[c.nombres, c.apellidos].filter(Boolean).join(" ")}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* MOVILIDAD */}
+            <div>
+              <label className="block mb-1 font-semibold">Movilidad</label>
+              <select
+                name="movilidad"
+                value={formData.movilidad}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded-md"
+              >
+                <option value="">Seleccione movilidad</option>
+                {vehiculos?.map((v) => (
+                  <option key={v.id} value={v.id}>
+                    {[v.tipog, v.placa].filter(Boolean).join(" - ")}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* LUGAR */}
+            <div>
+              <label className="block mb-1 font-semibold">Lugar</label>
               <input
-                type="time"
-                name="horaSalida"
-                value={formData.horaSalida}
+                type="text"
+                name="lugar"
+                value={formData.lugar}
                 onChange={handleChange}
                 className="w-full border px-3 py-2 rounded-md"
               />
             </div>
 
-            {/* LLEGADA MANUAL */}
+            {/* MOTIVO */}
             <div>
-              <label className="block mb-1 font-semibold">Hora de Llegada</label>
+              <label className="block mb-1 font-semibold">Motivo</label>
               <input
-                type="time"
-                name="horaLlegada"
-                value={formData.horaLlegada}
+                type="text"
+                name="motivo"
+                value={formData.motivo}
                 onChange={handleChange}
                 className="w-full border px-3 py-2 rounded-md"
               />
             </div>
 
-          </div>
+            {/* RESPONSABLE */}
+            <div>
+              <label className="block mb-1 font-semibold">Responsable</label>
+              <input
+                type="text"
+                name="responsable"
+                value={formData.responsable}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded-md"
+              />
+            </div>
 
-          {/* BOTONES */}
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <button
-              type="button"
-              onClick={onClose}
-              className="bg-gray-500 text-white px-5 py-2 rounded-md"
-            >
-              Eliminar
-            </button>
+            {/* HORAS */}
+            <div className="grid grid-cols-2 gap-4">
 
-            <button
-              type="submit"
-              disabled={saving}
-              className="bg-blue-700 text-white px-5 py-2 rounded-md"
-            >
-              {saving ? "Guardando..." : "Registrar"}
-            </button>
-          </div>
+              <div>
+                <label className="block mb-1 font-semibold">Hora de Salida</label>
+                <input
+                  type="time"
+                  name="horaSalida"
+                  value={formData.horaSalida}
+                  onChange={handleChange}
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+              </div>
 
-        </form>
+              <div>
+                <label className="block mb-1 font-semibold">Hora de Llegada</label>
+                <input
+                  type="time"
+                  name="horaLlegada"
+                  value={formData.horaLlegada}
+                  onChange={handleChange}
+                  className="w-full border px-3 py-2 rounded-md"
+                />
+              </div>
+
+            </div>
+
+          </form>
+        </div>
+
+        {/* BOTONES FIJOS */}
+        <div className="flex justify-end gap-3 p-4 border-t">
+          <button
+            onClick={handleSubmit}
+            disabled={saving}
+            className="bg-blue-700 text-white px-5 py-2 rounded-md"
+          >
+           Registrar
+          </button>
+        </div>
+
       </div>
     </div>
   );

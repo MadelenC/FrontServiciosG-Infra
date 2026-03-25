@@ -58,7 +58,9 @@ export default function TripReportTable({ externalTripId = null }) {
 
       return {
         ...t,
-        vehiculoNombre: vehiculo?.placa || "Sin vehículo",
+        vehiculoNombre: vehiculo
+          ? `${vehiculo.placa} (${vehiculo.tipo || vehiculo.tipog || ""})`
+          : "Sin vehículo",
         choferNombre: chofer ? `${chofer.nombres} ${chofer.apellidos}` : "Sin chofer",
         encargadoNombre: encargado ? `${encargado.nombres} ${encargado.apellidos}` : "Sin encargado",
         vehiculoObj: vehiculo
@@ -66,14 +68,17 @@ export default function TripReportTable({ externalTripId = null }) {
     });
   }, [tripReports, users, vehicles]);
 
-  const filtered = enrichedTrips.filter(t => {
-    const s = search.toLowerCase();
-    return (
-      t.vehiculoNombre?.toLowerCase().includes(s) ||
-      t.choferNombre?.toLowerCase().includes(s) ||
-      t.encargadoNombre?.toLowerCase().includes(s)
-    );
-  });
+ const sortedTrips = [...enrichedTrips].sort((a, b) => a.id - b.id);
+
+// LUEGO FILTRAR
+const filtered = sortedTrips.filter(t => {
+  const s = search.toLowerCase();
+  return (
+    t.vehiculoNombre?.toLowerCase().includes(s) ||
+    t.choferNombre?.toLowerCase().includes(s) ||
+    t.encargadoNombre?.toLowerCase().includes(s)
+  );
+});
 
   const totalPages = Math.ceil(filtered.length / limit);
 
@@ -82,7 +87,7 @@ export default function TripReportTable({ externalTripId = null }) {
     page * limit
   );
 
-  // 🔥 CLICK KM
+  // CLICK KM
   const handleUpdateKm = (trip) => {
 
     if (!trip.vehiculoObj) {
@@ -96,21 +101,21 @@ export default function TripReportTable({ externalTripId = null }) {
   };
 
   return (
-    <div className="p-4">
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition-all p-4">
 
-      <div className="flex justify-between mb-4">
+      
+      {/* BUSCADOR */}
+      <div className="mb-4 w-64">
         <SearchBar search={search} setSearch={setSearch} />
-
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg flex gap-2">
-          <FiPlus /> Nuevo Informe
-        </button>
       </div>
 
+      {/* TABLA */}
       <TableTripReport
         tripReports={currentData}
         onUpdateKm={handleUpdateKm}
       />
 
+      {/* PAGINACIÓN */}
       <div className="flex justify-center mt-4">
         <Pagination
           page={page}

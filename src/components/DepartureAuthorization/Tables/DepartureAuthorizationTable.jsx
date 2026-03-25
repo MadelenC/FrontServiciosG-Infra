@@ -16,14 +16,20 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
   const {
     departures,
     fetchDepartures,
-    createDepartureform,
-    updateDeparture,   // 🔥 IMPORTANTE (debes tenerlo en tu store)
+    addDeparture,
+    editDeparture,   
   } = useDepartureAuthorizationStore();
 
   const { users, fetchUsers } = useUserStore();
   const { vehicles, fetchVehicles } = useVehicleStore();
+    
+  console.log("USERS:", users);
+  console.log("VEHICLES:", vehicles);
+
 
   const choferes = users.filter(u => u.tipo === "chofer");
+   
+  console.log("CHOFERES FILTRADOS:", choferes);
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -62,14 +68,17 @@ export default function DepartureAuthorizationTable({ externalDepartureId = null
   };
 
   const handleSaveCreate = async (data) => {
-    const res = await createDepartureform(data);
+    const res = await addDeparture(data);
     if (res?.ok) fetchDepartures();
     return res;
   };
 
   const handleSaveEdit = async (data) => {
-    const res = await updateDeparture(selectedDeparture.id, data);
-    if (res?.ok) fetchDepartures();
+    const res = await editDeparture(selectedDeparture.id, data);
+    if (res?.ok) {fetchDepartures();
+      alert("✅ Actualizacion Exitosa");
+    }
+
     return res;
   };
 
