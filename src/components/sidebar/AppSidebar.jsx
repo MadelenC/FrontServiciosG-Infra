@@ -51,8 +51,8 @@ const navItems = [
   {name: "Mantenimiento", 
     icon: <MdTravelExplore className="text-white" />, 
     subItems: [
-      { name: "Solicitudes", path: "/olicitudes", pro: false },
-      { name: "kardex", path: "/solicitudes/kardex", pro: false } 
+      { name: "Solicitudes", path: "/mantenimiento/solicitudes", pro: false },
+      { name: "kardex", path: "/mantenimiento/kardex", pro: false } 
     ] 
   },
   {name: "Pedido de Material", 
