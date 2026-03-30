@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import JobApplicationRow from "./ApplicationRow";
-import SearchBar from "../Search/SearchBar";
+import SearchBarApplication from "../Search/SearchBar"; 
 import Pagination from "./Pagination";
 import { FiPlus } from "react-icons/fi";
+import CreateJobForm from "../Form/CreateJobForm"; 
+import MaterialRequestForm from "../Form/MaterialRequestForm";
 import { useJobApplicationStore } from "../../../zustand/useJobApplicationStore";
 import { useVehicleStore } from "../../../zustand/useVehicleStore";
 import { useAccessoriesStore } from "../../../zustand/useAccessories";
-
-
+import { useUserStore } from "../../../zustand/userStore"; 
 
 export default function ApplicationTable() {
-
   const {
     applications,
     fetchApplications,
@@ -20,22 +20,29 @@ export default function ApplicationTable() {
 
   const { vehicles, fetchVehicles } = useVehicleStore();
   const { accessories, fetchAccessories } = useAccessoriesStore();
+  const { users, fetchUsers } = useUserStore(); 
+  const [chofer, setChofer] = useState("");
+  const [vehiculo, setVehiculo] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [modalType, setModalType] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [jobFormOpen, setJobFormOpen] = useState(false);
+  const [selectedJobApplication, setSelectedJobApplication] = useState(null);
+  const [materialRequestOpen, setMaterialRequestOpen] = useState(false);
+const [selectedMaterialApplication, setSelectedMaterialApplication] = useState(null);
 
   const limit = 8;
 
   useEffect(() => {
     fetchApplications();
     fetchVehicles();
-     fetchAccessories(); 
+    fetchAccessories();
+    fetchUsers();
   }, []);
 
-
-  useEffect(() => setPage(1), [search]);
+  useEffect(() => setPage(1), [search, chofer, vehiculo]);
 
   const handleOpenCreate = () => {
     setModalType("add");
@@ -66,14 +73,42 @@ export default function ApplicationTable() {
     return res;
   };
 
-  // 🔍 FILTRO
-  const filtered = applications.filter(a => {
-    const searchLower = search.toLowerCase();
+  const handleOpenJobForm = (application) => {
+    setSelectedJobApplication(application);
+    setJobFormOpen(true);
+  };
 
-    return (
-      a.chofer?.toLowerCase().includes(searchLower) ||
-      a.descripcion?.toLowerCase().includes(searchLower)
-    );
+  const handleCloseJobForm = () => {
+    setJobFormOpen(false);
+    setSelectedJobApplication(null);
+  };
+
+  const handleOpenMaterialRequestForm = (application) => {
+  setSelectedMaterialApplication(application);
+  setMaterialRequestOpen(true);
+};
+
+const handleCloseMaterialRequestForm = () => {
+  setMaterialRequestOpen(false);
+  setSelectedMaterialApplication(null);
+};
+  const choferes = users?.filter(u => u.tipo && u.tipo.toLowerCase() === "chofer");
+  const filtered = applications.filter((a) => {
+      const choferNombre = a.chofer
+        ? `${a.chofer.nombres || ""} ${a.chofer.apellidos || ""}`.toLowerCase()
+        : "";
+
+      const matchChofer = chofer
+        ? choferNombre.includes(chofer.toLowerCase())
+        : true;
+
+      const idVehiculo = a.vehiculo?.id ? String(a.vehiculo.id) : "";
+      const tipoVehiculo = a.vehiculo?.tipog ? String(a.vehiculo.tipog).toLowerCase() : "";
+      const matchVehiculo = vehiculo
+        ? idVehiculo === vehiculo || tipoVehiculo.includes(vehiculo.toLowerCase())
+        : true;
+
+      return matchChofer && matchVehiculo;
   });
 
   const totalPages = Math.ceil(filtered.length / limit);
@@ -89,14 +124,23 @@ export default function ApplicationTable() {
       {/* HEADER */}
       <div className="flex justify-between items-center mb-4">
 
-        <SearchBar search={search} setSearch={setSearch} />
+        <SearchBarApplication
+          chofer={chofer}
+          setChofer={setChofer}
+          vehiculo={vehiculo}
+          setVehiculo={setVehiculo}
+          listaChoferes={(choferes || []).map(c => ({
+            value: `${c.nombres} ${c.apellidos}`,
+            label: `${c.nombres} ${c.apellidos}`
+          }))}
+          listaVehiculos={vehicles}
+        />
 
         <button
           onClick={handleOpenCreate}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+          className="flex items-center gap-2 bg-orange-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
         >
-          <FiPlus size={18} />
-          Agregar Solicitud
+          Imprimir
         </button>
 
       </div>
@@ -106,7 +150,7 @@ export default function ApplicationTable() {
 
         <table className="w-full text-sm">
 
-          <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
+          <thead className="bg-gradient-to-r from-blue-50 to-blue-100 ">
             <tr>
               <th className="border px-3 py-2">#</th>
               <th className="border px-3 py-2">Chofer</th>
@@ -127,11 +171,13 @@ export default function ApplicationTable() {
                   application={a}
                   index={i + 1}
                   onEdit={handleEdit}
+                  onConcretar={handleOpenJobForm} 
+                  onPedido={handleOpenMaterialRequestForm}
                 />
               ))
             ) : (
               <tr>
-                <td colSpan={7} className="text-center py-4 text-gray-500">
+                <td colSpan={8} className="text-center py-4 text-gray-500">
                   No hay registros
                 </td>
               </tr>
@@ -141,7 +187,7 @@ export default function ApplicationTable() {
         </table>
       </div>
 
-      {/* PAGINATION */}
+      {/* PAGINACIÓN */}
       <div className="flex justify-center mt-4">
         <Pagination
           page={page}
@@ -149,6 +195,40 @@ export default function ApplicationTable() {
           setPage={setPage}
         />
       </div>
+
+      {/* FORMULARIO MODAL concretar */}
+      {jobFormOpen && selectedJobApplication && (
+        <CreateJobForm
+          isOpen={jobFormOpen}
+          onClose={handleCloseJobForm}
+          application={selectedJobApplication}
+          onSave={async (data) => {
+            // Aquí guardas el trabajo realizado, luego refrescas la lista y cierras modal
+            // Ejemplo (debes adaptar según tu store/api):
+            // await saveJob(data); 
+            // fetchApplications();
+            setJobFormOpen(false);
+            return { ok: true };
+          }}
+        />
+      )}
+
+      {materialRequestOpen && selectedMaterialApplication && (
+        <MaterialRequestForm
+          isOpen={materialRequestOpen}
+          onClose={handleCloseMaterialRequestForm}
+          onSave={async (data) => {
+            // Aquí guardas la petición de material
+            // Puedes usar selectedMaterialApplication si necesitas datos para el guardado
+            // Ejemplo:
+            // await saveMaterialRequest(data);
+            // fetchApplications();
+            setMaterialRequestOpen(false);
+            return { ok: true };
+          }}
+        />
+      )}
+
     </div>
   );
 }

@@ -25,6 +25,7 @@ import DepartureHome from "./pages/DepartureAuthorization/DepartureHome";
 import TripReportHome from "./pages/TripReport/TripReportHome";
 import JobApplicationHome from "./pages/JobApplication/JobApplicationHome" ;
 import ApplicationHome from "./pages/Maintenance/ApplicationHome";
+import KardexHome from "./pages/Maintenance/KardexHome";
 import AppLayout from "./layouts/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/UserList/Home";
@@ -74,7 +75,7 @@ export default function App() {
             <Route path="/mantenimiento">
              <Route index element={<ApplicationHome />} />
             <Route path="solicitudes" element={<ApplicationHome />} />
-            <Route path="caja" element={<CashBudgetHome />} />
+            <Route path="kardex" element={<KardexHome />} />
             </Route>
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />

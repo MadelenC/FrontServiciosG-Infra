@@ -49,6 +49,7 @@ export default function TripReportRow({
         <button
           onClick={() => onUpdateKm?.(trip)}
           className="p-2 rounded-full bg-green-100 text-green-600 hover:bg-green-200"
+          title="Actualizar KM"
         >
           <FaTachometerAlt size={14} />
         </button>
