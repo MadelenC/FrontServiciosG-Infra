@@ -6,7 +6,7 @@ import { FiPlus } from "react-icons/fi";
 
 import { useJobApplicationStore } from "../../../zustand/useJobApplicationStore";
 import { useVehicleStore } from "../../../zustand/useVehicleStore";
-import { useAccessoriesStore } from "../../../zustand/useAccessories";
+import { useAccessoriesStore } from "../../../zustand/useAccessoriesStore";
 import CreateJobApplicationForm from "../Form/CreateJobApplicationForm";
 
 

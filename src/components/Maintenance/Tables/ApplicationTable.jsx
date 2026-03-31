@@ -7,7 +7,7 @@ import CreateJobForm from "../Form/CreateJobForm";
 import MaterialRequestForm from "../Form/MaterialRequestForm";
 import { useJobApplicationStore } from "../../../zustand/useJobApplicationStore";
 import { useVehicleStore } from "../../../zustand/useVehicleStore";
-import { useAccessoriesStore } from "../../../zustand/useAccessories";
+import { useAccessoriesStore } from "../../../zustand/useAccessoriesStore";
 import { useUserStore } from "../../../zustand/userStore"; 
 
 export default function ApplicationTable() {
@@ -25,8 +25,7 @@ export default function ApplicationTable() {
   const [vehiculo, setVehiculo] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [modalType, setModalType] = useState(null);
-  const [editOpen, setEditOpen] = useState(false);
+
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [jobFormOpen, setJobFormOpen] = useState(false);
   const [selectedJobApplication, setSelectedJobApplication] = useState(null);

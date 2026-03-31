@@ -1,13 +1,8 @@
 import React from "react";
 import { TableRow, TableCell } from "../../ui/table";
-import { FaTachometerAlt,FaCheck } from "react-icons/fa";
+import { FaTachometerAlt, FaCheck } from "react-icons/fa";
 
-export default function KardexRow({
-  maintenance,
-  index,
-  onActualizarKm,
-  onRealizar,
-}) {
+export default function KardexRow({ maintenance, index, onActualizarKm, onRealizar }) {
   return (
     <TableRow className="border border-gray-200 hover:bg-gray-50 transition-colors">
 
@@ -18,12 +13,14 @@ export default function KardexRow({
 
       {/* Vehículo */}
       <TableCell className="border px-3 py-2 text-gray-700">
-        {maintenance.equipo || "-"}
+         {maintenance.solicitud?.vehiculo
+    ? `${maintenance.solicitud.vehiculo.tipo} - ${maintenance.solicitud.vehiculo.placa}`
+    : "-"}
       </TableCell>
 
       {/* Kilometraje */}
       <TableCell className="border px-3 py-2 text-gray-700">
-        {maintenance.id_nro || "-"}
+        {maintenance.kilometraje}
       </TableCell>
 
       {/* Fecha */}
@@ -33,45 +30,44 @@ export default function KardexRow({
 
       {/* Cantidad */}
       <TableCell className="border px-3 py-2 text-gray-700">
-        {maintenance.cantidad || "-"}
+        {maintenance.cantidad}
       </TableCell>
 
       {/* Unidad */}
       <TableCell className="border px-3 py-2 text-gray-700">
-        {maintenance.otros || "-"}
+        {maintenance.unidad}
       </TableCell>
 
       {/* Trabajo */}
       <TableCell className="border px-3 py-2 text-gray-700">
-        {maintenance.descripcion || "-"}
+        {maintenance.trabajo}
       </TableCell>
 
       {/* Marca */}
       <TableCell className="border px-3 py-2 text-gray-700">
-        {maintenance.marca || "-"}
+        {maintenance.marca}
       </TableCell>
 
       {/* Código */}
       <TableCell className="border px-3 py-2 text-gray-700">
-        {maintenance.codigo || "-"}
+        {maintenance.codigo}
       </TableCell>
 
       {/* Repuesto */}
       <TableCell className="border px-3 py-2 text-gray-700">
-        {maintenance.repuesto || "-"}
+        {maintenance.repuesto}
       </TableCell>
 
-       {/* KM */}
-        <TableCell className="border px-3 py-2 text-center">
-          <button
-                onClick={() =>onActualizarKm?.(maintenance)}
-                className="p-2 rounded-full bg-green-100 text-green-600 hover:bg-green-200"
-                title="Actualizar KM"
-              >
-            <FaTachometerAlt size={14} />
-            
-             </button>
-        </TableCell>
+      {/* Actualizar KM */}
+      <TableCell className="border px-3 py-2 text-center">
+        <button
+          onClick={() => onActualizarKm?.(maintenance)}
+          className="p-2 rounded-full bg-green-100 text-green-600 hover:bg-green-200"
+          title="Actualizar KM"
+        >
+          <FaTachometerAlt size={14} />
+        </button>
+      </TableCell>
 
       {/* Operación */}
       <TableCell className="border px-3 py-2 text-gray-700">
@@ -86,7 +82,7 @@ export default function KardexRow({
 
       {/* Devolución */}
       <TableCell className="border px-3 py-2 text-red-600 font-bold text-center">
-        {maintenance.devolucion || 0}
+        {maintenance.devolucion}
       </TableCell>
 
     </TableRow>
