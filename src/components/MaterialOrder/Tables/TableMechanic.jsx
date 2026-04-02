@@ -1,11 +1,7 @@
 import React from "react";
-import KardexRow from "./KardexRow";
+import MechanicRow from "./MechanicRow";
 
-export default function TableKardex({
-  maintenances,
-  onActualizarKm,
-  onRealizar,
-}) {
+export default function TableMechanic({ requests, onRealizar }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
       <table className="w-full text-sm bg-white border-collapse">
@@ -13,18 +9,13 @@ export default function TableKardex({
           <tr>
             {[
               "#",
+              "Petición por",
               "Vehículo",
               "Kilometraje",
-              "Fecha",
-              "Cantidad",
-              "Unidad",
-              "Trabajo",
-              "Marca",
-              "Código",
-              "Repuesto",
-              "Actualizar km",
+              "Justificación",
+              "Observación",
               "Operación",
-              "Devolución",
+              "Respuestas",
             ].map((header) => (
               <th
                 key={header}
@@ -37,19 +28,18 @@ export default function TableKardex({
         </thead>
 
         <tbody>
-          {maintenances?.length > 0 ? (
-            maintenances.map((m, index) => (
-              <KardexRow
-                key={m.id}
-                maintenance={m}
+          {requests?.length > 0 ? (
+            requests.map((r, index) => (
+              <MechanicRow
+                key={r.id}
+                mechanic={r}
                 index={index + 1}
-                onActualizarKm={onActualizarKm}
                 onRealizar={onRealizar}
               />
             ))
           ) : (
             <tr>
-              <td colSpan={13} className="text-center py-4 text-gray-500">
+              <td colSpan={8} className="text-center py-4 text-gray-500">
                 No hay registros
               </td>
             </tr>

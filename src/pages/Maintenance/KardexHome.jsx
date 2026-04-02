@@ -13,7 +13,7 @@ export default function ApplicationHome() {
       <PageBreadcrumb pageTitle="Solicitudes de Trabajo" />
 
       <div className="space-y-6 justify-center">
-        <ComponentCard title="Lista de Solicitudes de Trabajo">
+        <ComponentCard title="kardex de mantenimiento">
           <KardexTable/>
         </ComponentCard>
       </div>

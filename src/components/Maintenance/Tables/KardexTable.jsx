@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import KardexRow from "./KardexRow";
 import Pagination from "./Pagination";
 import UpdateKmForm from "../Form/UpdateKmForm";
+import ProcessReturnForm from "../Form/ProcessReturnForm";
 import { useMechanicsStore } from "../../../zustand/useMechanicsStore";
 
 export default function KardexTable({ onRealizar }) {
@@ -13,6 +14,9 @@ export default function KardexTable({ onRealizar }) {
 
   const [updateKmOpen, setUpdateKmOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+
+  const [processReturnOpen, setProcessReturnOpen] = useState(false);
+  const [selectedReturn, setSelectedReturn] = useState(null);
 
   const handleOpenUpdateKm = (vehicle) => {
     setSelectedVehicle(vehicle);
@@ -28,6 +32,24 @@ export default function KardexTable({ onRealizar }) {
     await editMechanic(updatedVehicle.id, { kilometraje: updatedVehicle.kilometraje });
     fetchMechanics();
     handleCloseUpdateKm();
+  };
+
+  // Abrir formulario de devolución
+  const handleOpenProcessReturn = (maintenance) => {
+    setSelectedReturn(maintenance);
+    setProcessReturnOpen(true);
+  };
+
+  const handleCloseProcessReturn = () => {
+    setSelectedReturn(null);
+    setProcessReturnOpen(false);
+  };
+
+  // Guardar devolución
+  const handleSaveProcessReturn = async (data) => {
+    await editMechanic(data.id, { devolucion: data.devolucion });
+    fetchMechanics();
+    handleCloseProcessReturn();
   };
 
   useEffect(() => {
@@ -85,8 +107,8 @@ export default function KardexTable({ onRealizar }) {
                   key={m.id}
                   maintenance={{
                     vehiculo: m.solicitud?.vehiculo
-                    ? `${m.solicitud.vehiculo.tipo} - ${m.solicitud.vehiculo.placa}`
-                    : "-",
+                      ? `${m.solicitud.vehiculo.tipog} - ${m.solicitud.vehiculo.placa}`
+                      : "-",
                     kilometraje: m.kilometraje || "-",
                     fecha: m.fecha,
                     cantidad: m.cantidad || "-",
@@ -100,7 +122,7 @@ export default function KardexTable({ onRealizar }) {
                   }}
                   index={(page - 1) * limit + i + 1}
                   onActualizarKm={handleOpenUpdateKm}
-                  onRealizar={onRealizar}
+                  onRealizar={handleOpenProcessReturn} // <- CORREGIDO
                 />
               ))
             ) : (
@@ -127,6 +149,17 @@ export default function KardexTable({ onRealizar }) {
           onClose={handleCloseUpdateKm}
         />
       )}
+
+      {/* MODAL Devolución */}
+      {processReturnOpen && selectedReturn && (
+        <ProcessReturnForm
+          isOpen={processReturnOpen}
+          onClose={handleCloseProcessReturn}
+          onSave={handleSaveProcessReturn}
+          maintenance={selectedReturn}
+        />
+      )}
+
     </div>
   );
 }

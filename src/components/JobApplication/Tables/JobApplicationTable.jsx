@@ -7,11 +7,10 @@ import { FiPlus } from "react-icons/fi";
 import { useJobApplicationStore } from "../../../zustand/useJobApplicationStore";
 import { useVehicleStore } from "../../../zustand/useVehicleStore";
 import { useAccessoriesStore } from "../../../zustand/useAccessoriesStore";
+import { useUserStore } from "../../../zustand/userStore";
 import CreateJobApplicationForm from "../Form/CreateJobApplicationForm";
 
-
 export default function JobApplicationTable() {
-
   const {
     applications,
     fetchApplications,
@@ -21,6 +20,10 @@ export default function JobApplicationTable() {
 
   const { vehicles, fetchVehicles } = useVehicleStore();
   const { accessories, fetchAccessories } = useAccessoriesStore();
+  const { users, fetchUsers } = useUserStore();
+
+  const [chofer, setChofer] = useState("");
+  const [vehiculo, setVehiculo] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [modalType, setModalType] = useState(null);
@@ -32,11 +35,11 @@ export default function JobApplicationTable() {
   useEffect(() => {
     fetchApplications();
     fetchVehicles();
-     fetchAccessories(); 
+    fetchAccessories();
+    fetchUsers();
   }, []);
 
-
-  useEffect(() => setPage(1), [search]);
+  useEffect(() => setPage(1), [search, chofer, vehiculo]);
 
   const handleOpenCreate = () => {
     setModalType("add");
@@ -62,19 +65,35 @@ export default function JobApplicationTable() {
     const res = await editApplication(selectedApplication.id, data);
     if (res?.ok) {
       fetchApplications();
-      alert("✅ Actualización exitosa");
+      alert("Actualización exitosa");
     }
     return res;
   };
 
-  // 🔍 FILTRO
-  const filtered = applications.filter(a => {
-    const searchLower = search.toLowerCase();
+  // Filtrado combinando chofer, vehículo y búsqueda general
+  const choferes = users?.filter(u => u.tipo && u.tipo.toLowerCase() === "chofer") || [];
 
-    return (
-      a.chofer?.toLowerCase().includes(searchLower) ||
-      a.descripcion?.toLowerCase().includes(searchLower)
-    );
+  const filtered = applications.filter((a) => {
+    const choferNombre = a.chofer
+      ? `${a.chofer.nombres || ""} ${a.chofer.apellidos || ""}`.toLowerCase()
+      : "";
+
+    const matchChofer = chofer
+      ? choferNombre.includes(chofer.toLowerCase())
+      : true;
+
+    const idVehiculo = a.vehiculo?.id ? String(a.vehiculo.id) : "";
+    const tipoVehiculo = a.vehiculo?.tipog ? String(a.vehiculo.tipog).toLowerCase() : "";
+    const matchVehiculo = vehiculo
+      ? idVehiculo === vehiculo || tipoVehiculo.includes(vehiculo.toLowerCase())
+      : true;
+
+    const searchLower = search.toLowerCase();
+    const matchSearch = searchLower
+      ? a.descripcion?.toLowerCase().includes(searchLower) || choferNombre.includes(searchLower)
+      : true;
+
+    return matchChofer && matchVehiculo && matchSearch;
   });
 
   const totalPages = Math.ceil(filtered.length / limit);
@@ -86,11 +105,21 @@ export default function JobApplicationTable() {
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md p-4">
-
       {/* HEADER */}
       <div className="flex justify-between items-center mb-4">
-
-        <SearchBar search={search} setSearch={setSearch} />
+        <SearchBar
+          chofer={chofer}
+          setChofer={setChofer}
+          vehiculo={vehiculo}
+          setVehiculo={setVehiculo}
+          listaChoferes={choferes.map(c => ({
+            value: `${c.nombres} ${c.apellidos}`,
+            label: `${c.nombres} ${c.apellidos}`
+          }))}
+          listaVehiculos={vehicles}
+          search={search}
+          setSearch={setSearch}
+        />
 
         <button
           onClick={handleOpenCreate}
@@ -99,14 +128,11 @@ export default function JobApplicationTable() {
           <FiPlus size={18} />
           Agregar Solicitud
         </button>
-
       </div>
 
       {/* TABLE */}
       <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-
         <table className="w-full text-sm">
-
           <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
             <tr>
               <th className="border px-3 py-2">#</th>
@@ -125,7 +151,7 @@ export default function JobApplicationTable() {
                 <JobApplicationRow
                   key={a.id}
                   application={a}
-                  index={i + 1}
+                  index={(page - 1) * limit + i + 1}
                   onEdit={handleEdit}
                 />
               ))
@@ -137,7 +163,6 @@ export default function JobApplicationTable() {
               </tr>
             )}
           </tbody>
-
         </table>
       </div>
 
@@ -153,13 +178,13 @@ export default function JobApplicationTable() {
       {/* CREATE MODAL */}
       {modalType === "add" && (
         <CreateJobApplicationForm
-            isOpen={modalType === "add"}
-            onClose={() => setModalType(null)}
-            onSave={handleSaveCreate}
-            vehiculos={vehicles}
-            accesorios={accessories}  // esta es la variable correcta
+          isOpen={modalType === "add"}
+          onClose={() => setModalType(null)}
+          onSave={handleSaveCreate}
+          vehiculos={vehicles}
+          accesorios={accessories}
         />
-        )}
+      )}
     </div>
   );
 }

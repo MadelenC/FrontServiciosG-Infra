@@ -10,7 +10,7 @@ export default function ApplicationHome() {
         title="Solicitudes de Trabajo | Dashboard"
         description="Panel de control de solicitudes de trabajo con movilidad y accesorios"
       />
-      <PageBreadcrumb pageTitle="Solicitudes de Trabajo" />
+      <PageBreadcrumb pageTitle="Lista de Solicitudes de Trabajo" />
 
       <div className="space-y-6 justify-center">
         <ComponentCard title="Lista de Solicitudes de Trabajo">

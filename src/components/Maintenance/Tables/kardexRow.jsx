@@ -3,6 +3,7 @@ import { TableRow, TableCell } from "../../ui/table";
 import { FaTachometerAlt, FaCheck } from "react-icons/fa";
 
 export default function KardexRow({ maintenance, index, onActualizarKm, onRealizar }) {
+   console.log("KardexRow maintenance:", maintenance);
   return (
     <TableRow className="border border-gray-200 hover:bg-gray-50 transition-colors">
 
@@ -13,9 +14,7 @@ export default function KardexRow({ maintenance, index, onActualizarKm, onRealiz
 
       {/* Vehículo */}
       <TableCell className="border px-3 py-2 text-gray-700">
-         {maintenance.solicitud?.vehiculo
-    ? `${maintenance.solicitud.vehiculo.tipo} - ${maintenance.solicitud.vehiculo.placa}`
-    : "-"}
+         {maintenance.vehiculo}
       </TableCell>
 
       {/* Kilometraje */}
@@ -73,7 +72,7 @@ export default function KardexRow({ maintenance, index, onActualizarKm, onRealiz
       <TableCell className="border px-3 py-2 text-gray-700">
         <button
           onClick={() => onRealizar(maintenance)}
-          className="bg-blue-600 text-white px-2 py-1 rounded text-xs flex items-center gap-1"
+          className="w-full text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 flex items-center gap-1"
         >
           <FaCheck />
           Realizar
