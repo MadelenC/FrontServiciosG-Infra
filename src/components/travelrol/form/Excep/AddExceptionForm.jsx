@@ -20,7 +20,7 @@ export default function AddExceptionForm({ travel, onClose, onAdd }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
         <h2 className="text-xl font-semibold mb-4">Insertar Excepción</h2>
 

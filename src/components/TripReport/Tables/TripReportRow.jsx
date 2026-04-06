@@ -54,8 +54,7 @@ export default function TripReportRow({
           <FaTachometerAlt size={14} />
         </button>
       </TableCell>
-
-      {/* OPERACIÓN */}
+      
       <TableCell className="border px-3 py-2 text-center">
 
         <button

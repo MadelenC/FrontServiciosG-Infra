@@ -115,10 +115,11 @@ export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
         onSubmit={handleSubmit}
         className="relative bg-white rounded-lg shadow-md p-12 max-w-xl w-full max-h-[80vh] overflow-y-auto"
       >
-        {/* Botón cerrar */}
+       {/* Botón cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-white bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
+          className="absolute top-3 right-3 text-gray-700 font-bold px-3 py-1 rounded hover:bg-gray-200"
+          aria-label="Cerrar formulario"
         >
           X
         </button>

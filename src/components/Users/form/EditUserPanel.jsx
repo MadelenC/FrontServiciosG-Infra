@@ -31,11 +31,13 @@ export default function EditUserPanel({ open, onClose, user }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+    <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-5">
       <div className="w-full max-w-lg bg-white p-6 rounded-md shadow-lg relative max-h-[90vh] overflow-y-auto">
+        {/* Botón cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-white bg-gray-600 px-3 py-1 rounded hover:bg-gray-700"
+          className="absolute top-3 right-3 text-gray-700 font-bold px-3 py-1 rounded hover:bg-gray-200"
+          aria-label="Cerrar formulario"
         >
           X
         </button>

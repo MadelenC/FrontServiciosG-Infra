@@ -65,8 +65,14 @@ export default function TableUser() {
       <div className="flex justify-end mb-4">
         <button
           onClick={() => { setOpenPanel(true); setFormType(null); }}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg shadow-lg font-medium focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2 transition mb-4"
-        >
+          className="flex items-center gap-3
+             bg-gradient-to-r from-blue-600 to-blue-500
+             hover:from-blue-700 hover:to-blue-600
+             text-white px-5 py-3 rounded-lg shadow-lg font-medium
+             focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2
+             transition-all duration-300
+             hover:scale-105 active:scale-95
+             mb-4"      >
           <span className="text-lg font-bold text-white">＋</span> Agregar Usuario
         </button>
       </div>

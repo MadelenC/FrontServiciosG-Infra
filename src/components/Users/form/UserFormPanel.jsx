@@ -22,7 +22,7 @@ export default function UserFormPanel({ open, onClose, formType, setFormType }) 
   const panelWidth = formType ? "w-full max-w-lg" : "w-80";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
       
       <div
         className={`${panelWidth} relative bg-white rounded-2xl shadow-2xl
@@ -31,9 +31,8 @@ export default function UserFormPanel({ open, onClose, formType, setFormType }) 
         {/* Botón cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400
-                     hover:text-gray-600 transition text-xl font-semibold"
-          aria-label="Cerrar"
+          className="absolute top-3 right-3 text-gray-700 font-bold px-3 py-1 rounded hover:bg-gray-200"
+          aria-label="Cerrar formulario"
         >
           X
         </button>

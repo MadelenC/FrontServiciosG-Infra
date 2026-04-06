@@ -82,7 +82,7 @@ export default function TravelRow({ entitie }) {
         <td className="border border-gray-200 px-3 py-2 text-center relative" ref={refOperaciones}>
           <button
             onClick={() => setOpenOperaciones(!openOperaciones)}
-            className="p-2 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition text-xs flex items-center gap-1 justify-center"
+            className="p-2 rounded-full bg-green-100 text-green-500 hover:bg-green-200 transition text-xs flex items-center gap-1 justify-center"
           >
             Opciones <FaEllipsisV size={12} />
           </button>

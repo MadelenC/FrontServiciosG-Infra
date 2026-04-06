@@ -41,7 +41,7 @@ export default function TableTravel() {
   // Función para registrar un chofer en el backend usando VITE_API_URL
   const handleAddDriver = async (data) => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL; // lee la variable de entorno
+      const API_URL = import.meta.env.VITE_API_URL; 
       const response = await fetch(`${API_URL}/rolTravel`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -72,22 +72,34 @@ export default function TableTravel() {
   return (
     <div className="overflow-hidden rounded-xl bg-white shadow-md p-4">
 
-      {/* ================= NO SE IMPRIME ================= */}
+      
       <div className="print:hidden">
 
         {/* BOTONES */}
         <div className="flex justify-end mb-4 gap-2">
           <button
             onClick={() => setOpenPanel(true)}
-            className="border border-blue-500 text-blue-600 px-4 py-2 rounded-md hover:bg-blue-50 flex items-center gap-2"
-          >
+            className="flex items-center gap-3
+             bg-gradient-to-r from-blue-600 to-blue-500
+             hover:from-blue-700 hover:to-blue-600
+             text-white px-5 py-3 rounded-lg shadow-lg font-medium
+             focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2
+             transition-all duration-300
+             hover:scale-105 active:scale-95
+             mb-4"   >
             <FaPlus size={14} /> Agregar Chofer
           </button>
 
           <button
             onClick={() => window.print()}
-            className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-100 flex items-center gap-2"
-          >
+           className="flex items-center gap-3
+             bg-gradient-to-r from-orange-600 to-orange-500
+             hover:from-orange-700 hover:to-orange-600
+             text-white px-5 py-3 rounded-lg shadow-lg font-medium
+             focus:outline-none focus:ring-4 focus:ring-orange-400 focus:ring-offset-2
+             transition-all duration-300
+             hover:scale-105 active:scale-95
+             mb-4"   >
             <FaPrint size={14} /> Imprimir
           </button>
         </div>

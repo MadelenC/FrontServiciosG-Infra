@@ -55,16 +55,17 @@ const navItems = [
       { name: "kardex", path: "/mantenimiento/kardex", pro: false } 
     ] 
   },
-  {name: "Pedido_de_Material", 
+  {name: "Pedido de Material", 
     icon: <MdTravelExplore className="text-white" />, 
     subItems: [
       { name: "Mecanico", path: "/pedido/mecanico", pro: false },
-      { name: "Escritorio/Demas", path: "/pedido/excritorio", pro: false } 
+      { name: "Escritorio/Demas", path: "/pedido/escritorio", pro: false } 
     ] 
   },
-  { name: "Devolucion de Material", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Mostrar", path: "/devolucion_material", pro: false }] },                   
+  { name: "Devolucion de Material", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Mostrar", path: "/devoluciones", pro: false }] },                   
               
 ];
+
 
 
 

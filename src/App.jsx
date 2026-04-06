@@ -27,6 +27,8 @@ import JobApplicationHome from "./pages/JobApplication/JobApplicationHome" ;
 import ApplicationHome from "./pages/Maintenance/ApplicationHome";
 import KardexHome from "./pages/Maintenance/KardexHome";
 import MechanicHome from "./pages/MateriaOrder/MechanicHome";
+import DesktopHome from "./pages/MateriaOrder/DesktopHome";
+import RepaymentHome from "./pages/RepaymentOfMaterial/RepaymentHome";
 import AppLayout from "./layouts/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/UserList/Home";
@@ -81,7 +83,9 @@ export default function App() {
             <Route path="/pedido">
              <Route index element={<MechanicHome />} />
             <Route path="mecanico" element={<MechanicHome />} />
-            <Route path="escritorio" element={<KardexHome />} /></Route>
+            <Route path="escritorio" element={<DesktopHome />} /></Route>
+
+             <Route path="/devoluciones" element={<RepaymentHome/>} />
             
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
