@@ -1,30 +1,30 @@
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 
 export default function AddExceptionForm({ travel, onClose, onAdd }) {
   const [formData, setFormData] = useState({
     chofer: travel.chofer || "",
     tipoViaje: "",
     lugar: "",
-    fecha: new Date().toISOString().slice(0,16), // YYYY-MM-DDTHH:mm
+    fecha: new Date().toISOString().slice(0, 16), // YYYY-MM-DDTHH:mm
   });
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Insertar excepción para viaje:", travel.id, formData);
     onAdd?.(formData);
     onClose();
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
         <h2 className="text-xl font-semibold mb-4">Insertar Excepción</h2>
 
-        <form className="flex flex-col gap-3">
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           {/* Chofer */}
           <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-700">Chofer</label>
@@ -32,9 +32,8 @@ export default function AddExceptionForm({ travel, onClose, onAdd }) {
               type="text"
               name="chofer"
               value={formData.chofer}
-              onChange={handleChange}
-              className="h-10 px-3 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500"
               readOnly
+              className="h-10 px-3 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
@@ -94,6 +93,7 @@ export default function AddExceptionForm({ travel, onClose, onAdd }) {
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

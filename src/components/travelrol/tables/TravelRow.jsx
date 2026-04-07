@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaPlus, FaEye, FaEllipsisV, FaTrash, FaBroom } from "react-icons/fa";
 import AddExceptionForm from "../form/Excep/AddExceptionForm";
 
-export default function TravelRow({ entitie }) {
+export default function TravelRow({ entitie, onViewExceptions, onDelete}) {
   const [openExcepciones, setOpenExcepciones] = useState(false);
   const [openOperaciones, setOpenOperaciones] = useState(false);
   const [openAddExceptionForm, setOpenAddExceptionForm] = useState(false);
@@ -29,33 +29,22 @@ export default function TravelRow({ entitie }) {
   return (
     <>
       <tr className="hover:bg-gray-50 transition-colors">
-        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
-          {entitie.id}
-        </td>
-        <td className="border border-gray-200 px-3 py-2 text-gray-700">
-          {entitie.chofer}
-        </td>
-        <td className="border border-gray-200 px-3 py-2 text-gray-700">
-          {entitie.tipoA}
-        </td>
-        <td className="border border-gray-200 px-3 py-2 text-gray-700">
-          {entitie.tipoB}
-        </td>
-        <td className="border border-gray-200 px-3 py-2 text-gray-700">
-          {entitie.tipoC}
-        </td>
-        <td className="border border-gray-200 px-3 py-2 text-center text-gray-700">
-          {entitie.cantidad}
-        </td>
+        <td className="border px-3 py-2 text-center">{entitie.displayId}</td>
+        <td className="border px-3 py-2">{entitie.chofer}</td>
+        <td className="border px-3 py-2">{entitie.tipoA}</td>
+        <td className="border px-3 py-2">{entitie.tipoB}</td>
+        <td className="border px-3 py-2">{entitie.tipoC}</td>
+        <td className="border px-3 py-2 text-center">{entitie.cantidad}</td>
 
         {/* Excepciones */}
-        <td className="border border-gray-200 px-3 py-2 text-center relative" ref={refExcepciones}>
+        <td className="border px-3 py-2 text-center relative" ref={refExcepciones}>
           <button
             onClick={() => setOpenExcepciones(!openExcepciones)}
-            className="p-2 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition text-xs"
+            className="flex items-center gap-1 p-2 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition text-xs"
           >
-            Añadir
+              <FaPlus size={10} /> Añadir
           </button>
+
           {openExcepciones && (
             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-28 bg-white border rounded-md shadow-lg z-50">
               <button
@@ -65,7 +54,7 @@ export default function TravelRow({ entitie }) {
                 <FaPlus size={12} /> Añadir
               </button>
               <button
-                onClick={() => console.log("Ver excepción:", entitie)}
+                onClick={() => onViewExceptions(entitie)}
                 className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-1"
               >
                 <FaEye size={12} /> Ver
@@ -74,12 +63,10 @@ export default function TravelRow({ entitie }) {
           )}
         </td>
 
-        <td className="border border-gray-200 px-3 py-2 text-gray-700 text-center">
-          {entitie.fecha}
-        </td>
+        <td className="border px-3 py-2 text-center">{entitie.fecha}</td>
 
         {/* Operaciones */}
-        <td className="border border-gray-200 px-3 py-2 text-center relative" ref={refOperaciones}>
+        <td className="border px-3 py-2 text-center relative" ref={refOperaciones}>
           <button
             onClick={() => setOpenOperaciones(!openOperaciones)}
             className="p-2 rounded-full bg-green-100 text-green-500 hover:bg-green-200 transition text-xs flex items-center gap-1 justify-center"
@@ -88,28 +75,16 @@ export default function TravelRow({ entitie }) {
           </button>
           {openOperaciones && (
             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-36 bg-white border rounded-md shadow-lg z-50">
-              <button
-                onClick={() => console.log("Mostrar:", entitie)}
-                className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2"
-              >
+              <button onClick={() => console.log("Mostrar:", entitie)} className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2">
                 <FaEye /> Mostrar
               </button>
-              <button
-                onClick={() => console.log("Insertar:", entitie)}
-                className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2"
-              >
+              <button onClick={() => console.log("Insertar:", entitie)} className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2">
                 <FaPlus /> Insertar
               </button>
-              <button
-                onClick={() => console.log("Limpiar:", entitie)}
-                className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2"
-              >
+              <button onClick={() => console.log("Limpiar:", entitie)} className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2">
                 <FaBroom /> Limpiar
               </button>
-              <button
-                onClick={() => console.log("Eliminar:", entitie)}
-                className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2 text-red-600"
-              >
+              <button onClick={() => onDelete(entitie.id)}className="w-full px-3 py-1.5 text-xs text-left hover:bg-gray-100 flex items-center gap-2 text-red-600">
                 <FaTrash /> Eliminar
               </button>
             </div>
@@ -117,6 +92,7 @@ export default function TravelRow({ entitie }) {
         </td>
       </tr>
 
+      {/* Modal para añadir excepción */}
       {openAddExceptionForm && (
         <AddExceptionForm
           travel={entitie}

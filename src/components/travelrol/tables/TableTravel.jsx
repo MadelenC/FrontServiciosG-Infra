@@ -1,7 +1,7 @@
 import React from "react";
 import TravelRow from "./TravelRow";
 
-export default function TableTravel({ entidades }) {
+export default function TableTravel({ entidades, onViewExceptions, drivers  }) {
   const headers = [
     "ID",
     "Chofer",
@@ -31,7 +31,13 @@ export default function TableTravel({ entidades }) {
         <tbody>
           {entidades.length > 0 ? (
             entidades.map((entitie) => (
-              <TravelRow key={entitie.id} entitie={entitie} />
+              <TravelRow 
+              key={entitie.id} 
+              entitie={entitie}
+              drivers={drivers}
+              onViewExceptions={onViewExceptions} 
+
+               />
             ))
           ) : (
             <tr>
