@@ -2,26 +2,24 @@ import React from "react";
 import VehicleRow from "./VehicleRow";
 
 export default function TableVehicle({ vehicles }) {
-  const headers = [
-    "#",
-    "Asignación",
-    "Placa",
-    "Asientos",
-    "Tipo",
-    "Kilometraje",
-    "Estado",
-    "Operaciones",
-  ];
-
   return (
-    <div className="overflow-x-auto w-full">
-      <table className="min-w-[900px] w-full text-sm border-collapse border border-gray-300 ">
-        <thead className="bg-blue-100 ">
+    <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+      <table className="w-full border-collapse text-sm bg-white table-fixed">
+        <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
           <tr>
-            {headers.map((head) => (
+            {[
+              "ID",
+              "Asignación",
+              "Placa",
+              "Asientos",
+              "Tipo",
+              "Kilometraje",
+              "Estado",
+              "Acciones",
+            ].map((head) => (
               <th
                 key={head}
-                className=" px-6 py-3 text-left  text-gray-600 border-b border-gray-300 whitespace-nowrap"
+                className="border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700"
               >
                 {head}
               </th>
@@ -36,9 +34,7 @@ export default function TableVehicle({ vehicles }) {
             ))
           ) : (
             <tr>
-              <td
-                colSpan={headers.length}
-              >
+              <td colSpan={8} className="text-center py-4 text-gray-500">
                 No hay registros
               </td>
             </tr>

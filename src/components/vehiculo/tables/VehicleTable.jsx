@@ -85,15 +85,19 @@ export default function TableVehicle() {
 
         <button
           onClick={() => setOpenAddPanel(true)}
-          className="border border-blue-500 text-blue-600 px-4 py-2 rounded-md"
-        >
+         className="flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500
+              hover:from-blue-700 hover:to-blue-600 text-white px-5 py-3 rounded-lg shadow-lg font-medium
+              focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-300
+              hover:scale-105 active:scale-95 mb-4"
+          >
           + Agregar Vehículo
         </button>
       </div>
 
       {/* Tabla */}
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
       <table className="w-full text-sm">
-        <thead className="bg-blue-50">
+        <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
           <tr>
             {["#", "Asignación", "Placa", "Asientos", "Tipo", "Kilometraje", "Estado", "Operaciones"].map(
               (h) => (
@@ -132,6 +136,7 @@ export default function TableVehicle() {
           )}
         </tbody>
       </table>
+      </div>
 
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 

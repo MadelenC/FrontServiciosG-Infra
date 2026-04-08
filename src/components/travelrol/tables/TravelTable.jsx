@@ -57,27 +57,61 @@ export default function TravelTable() {
 
   // Agregar chofer
   const handleAddDriver = async (data) => {
-    try {
-      const API_URL = import.meta.env.VITE_API_URL; 
-      const response = await fetch(`${API_URL}/rolTravel`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+  try {
+    const API_URL = import.meta.env.VITE_API_URL; 
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Error al registrar chofer");
-      }
+    const response = await fetch(`${API_URL}/rolTravel`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-      await response.json();
-      fetchRolTravels();
-      setOpenPanel(false);
-    } catch (err) {
-      console.error(err);
-      alert("Error al registrar chofer: " + err.message);
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { ok: false, error: errorData.error };
     }
-  };
+
+    const result = await response.json();
+
+    fetchRolTravels();
+    setOpenPanel(false);
+
+    return { ok: true, data: result }; 
+  } catch (err) {
+    console.error(err);
+    return { ok: false, error: err.message }; 
+  }
+};
+
+const handleAddException = async (data) => {
+  try {
+    const API_URL = import.meta.env.VITE_API_URL;
+
+    const response = await fetch(`${API_URL}/excepciones`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { ok: false, error: errorData.error };
+    }
+
+    const result = await response.json();
+
+    fetchRolTravels(); // 🔥 ACTUALIZA TODO
+
+    return { ok: true, data: result };
+
+  } catch (error) {
+    return { ok: false, error: error.message };
+  }
+};
+
+
 
   if (loading) return <div className="p-6 text-center">Cargando viajes...</div>;
   if (error) return <div className="p-6 text-center text-red-500">Error: {error}</div>;
@@ -130,7 +164,8 @@ export default function TravelTable() {
                     entitie={travel}
                     drivers={drivers}
                     onViewExceptions={handleViewExceptions}
-                    onDelete={handleDelete} // 🔹 Función eliminar
+                    onDelete={handleDelete}
+                    onAddException={handleAddException}  
                   />
                 ))
               ) : (
@@ -163,6 +198,7 @@ export default function TravelTable() {
               ) : (
                 <AddDriverForm
                   choferes={drivers}
+                  choferesRegistrados={rolTravels} 
                   onSubmit={handleAddDriver}
                   onClose={() => setOpenPanel(false)}
                 />

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function AddDriverForm({ choferes = [], choferesRegistrados = [], onSubmit, onClose }) {
   const [choferId, setChoferId] = useState("");
@@ -6,15 +7,19 @@ export default function AddDriverForm({ choferes = [], choferesRegistrados = [],
 
   const inputBase = "p-2 border rounded text-sm w-full";
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!choferId) {
       setError("Debe seleccionar un chofer");
+      toast.error("❌ Debe seleccionar un chofer");
       return;
     }
-    if (choferesRegistrados.some(c => c.id === parseInt(choferId))) {
+
+    // Verificar si el chofer ya está registrado
+    if (choferesRegistrados.some(c => c.chofer_id === parseInt(choferId))) {
       setError("Este chofer ya está registrado");
+      toast.warning("⚠️ Este chofer ya está registrado");
       return;
     }
 
@@ -29,8 +34,19 @@ export default function AddDriverForm({ choferes = [], choferesRegistrados = [],
       fecha: new Date().toISOString(),
     };
 
-    onSubmit(payload);
-    setChoferId(""); 
+    try {
+      const res = await onSubmit(payload);
+
+      if (res?.ok || res === true) {
+        toast.success("✅ Chofer registrado correctamente");
+        setChoferId("");
+        onClose?.();
+      } else {
+        toast.error("❌ No se pudo registrar el chofer");
+      }
+    } catch (error) {
+      toast.error("⚠️ Error inesperado");
+    }
   };
 
   return (
@@ -50,11 +66,20 @@ export default function AddDriverForm({ choferes = [], choferesRegistrados = [],
           className={inputBase}
         >
           <option value="">Seleccione un chofer</option>
+
           {choferes.map((chofer) => {
-            const yaRegistrado = choferesRegistrados.some(c => c.id === chofer.id);
+            const yaRegistrado = choferesRegistrados.some(
+              c => c.chofer_id === chofer.id
+            );
+
             return (
-              <option key={chofer.id} value={chofer.id} disabled={yaRegistrado}>
-                {chofer.nombres} {chofer.apellidos} {yaRegistrado ? "(Ya registrado)" : ""}
+              <option
+                key={chofer.id}
+                value={chofer.id}
+                disabled={yaRegistrado}
+              >
+                {chofer.nombres} {chofer.apellidos}{" "}
+                {yaRegistrado ? "(Ya registrado)" : ""}
               </option>
             );
           })}
