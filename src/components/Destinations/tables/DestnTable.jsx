@@ -94,7 +94,11 @@ export default function DestTable() {
         </div>
 
         {/* Botón de imprimir */}
-        <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-100 flex items-center gap-2">
+        <button className="flex items-center gap-3 bg-gradient-to-r from-orange-600 to-orange-500
+              hover:from-orange-700 hover:to-orange-600 text-white px-5 py-3 rounded-lg shadow-lg font-medium
+              focus:outline-none focus:ring-4 focus:ring-orange-400 focus:ring-offset-2 transition-all duration-300
+              hover:scale-105 active:scale-95 mb-4"
+          >
           <FaPrint size={14} /> Imprimir
         </button>
       </div>
@@ -102,7 +106,6 @@ export default function DestTable() {
       {/* Tabla de destinos */}
       <TableDest data={currentData} />
 
-      {/* Mensaje si no hay resultados */}
       {currentData.length === 0 && (
         <div className="p-4 text-center text-gray-500 col-span-full">
           No hay resultados para los filtros seleccionados.

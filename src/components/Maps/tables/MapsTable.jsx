@@ -10,12 +10,12 @@ export default function MapsTable() {
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [modalItem, setModalItem] = useState(null); 
+  const [modalItem, setModalItem] = useState(null);
   const limit = 8;
 
   useEffect(() => {
     fetchMaps();
-  }, []);
+  }, [fetchMaps]); // 👈 mejora segura
 
   useEffect(() => {
     setPage(1);
@@ -35,13 +35,14 @@ export default function MapsTable() {
 
   return (
     <div className="bg-white rounded-xl shadow p-4">
+      
       <div className="flex justify-between items-center mb-4">
         <div className="h-10 w-64">
           <SearchBar search={search} setSearch={setSearch} />
         </div>
       </div>
 
-      {/* Tabla con filas */}
+      {/* Tabla */}
       <TableMaps data={currentData} openModal={setModalItem} />
 
       {/* Paginación */}
@@ -49,7 +50,7 @@ export default function MapsTable() {
         <Pagination page={page} totalPages={totalPages} setPage={setPage} />
       </div>
 
-      {/* Modal fuera de la tabla */}
+      {/* Modal */}
       {modalItem && (
         <ModalMap
           lat={modalItem.lat}
@@ -58,6 +59,7 @@ export default function MapsTable() {
           onClose={() => setModalItem(null)}
         />
       )}
+
     </div>
   );
 }

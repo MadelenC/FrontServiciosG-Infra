@@ -4,9 +4,9 @@ import api from "../helpers/axiosClient";
 export const getReservas = async () => {
   try {
     const response = await api.get("/reservas");
-    return response.data;
+    return { ok: true, data: response.data };
   } catch (err) {
-    throw err.response?.data?.message || "Error al obtener reservas";
+    return { ok: false, error: err.response?.data?.message || "Error al obtener reservas" };
   }
 };
 
@@ -14,9 +14,9 @@ export const getReservas = async () => {
 export const getReservaById = async (id) => {
   try {
     const response = await api.get(`/reservas/${id}`);
-    return response.data;
+    return { ok: true, data: response.data };
   } catch (err) {
-    throw err.response?.data?.message || "Error al obtener la reserva";
+    return { ok: false, error: err.response?.data?.message || "Error al obtener la reserva" };
   }
 };
 
@@ -24,9 +24,9 @@ export const getReservaById = async (id) => {
 export const createReserva = async (data) => {
   try {
     const response = await api.post("/reservas", data);
-    return response.data;
+    return { ok: true, data: response.data };
   } catch (err) {
-    throw err.response?.data?.message || "Error al crear la reserva";
+    return { ok: false, error: err.response?.data?.message || "Error al crear la reserva" };
   }
 };
 
@@ -34,9 +34,9 @@ export const createReserva = async (data) => {
 export const updateReserva = async (id, data) => {
   try {
     const response = await api.put(`/reservas/${id}`, data);
-    return response.data;
+    return { ok: true, data: response.data };
   } catch (err) {
-    throw err.response?.data?.message || "Error al actualizar la reserva";
+    return { ok: false, error: err.response?.data?.message || "Error al actualizar la reserva" };
   }
 };
 
@@ -44,8 +44,8 @@ export const updateReserva = async (id, data) => {
 export const deleteReserva = async (id) => {
   try {
     const response = await api.delete(`/reservas/${id}`);
-    return response.data;
+    return { ok: true, data: response.data };
   } catch (err) {
-    throw err.response?.data?.message || "Error al eliminar la reserva";
+    return { ok: false, error: err.response?.data?.message || "Error al eliminar la reserva" };
   }
 };

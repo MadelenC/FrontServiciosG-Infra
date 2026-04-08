@@ -52,7 +52,8 @@ export default function EditDestForm({ destino, onClose }) {
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-3 bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700"
+          className="absolute top-3 right-3 text-gray-700 font-bold px-3 py-1 rounded hover:bg-gray-200"
+       
         >
           X
         </button>

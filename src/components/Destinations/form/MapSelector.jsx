@@ -52,7 +52,9 @@ export default function MapSelector({ open, onClose, onSelectLocation, initialLo
           <h2 className="text-lg font-bold">Inserte la ubicación en el mapa</h2>
           <button
             onClick={onClose}
-            className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700"
+            className=" text-gray-700 px-3 py-1 font-bold  rounded hover:bg-gray-200"
+            
+       
           >
             X
           </button>
