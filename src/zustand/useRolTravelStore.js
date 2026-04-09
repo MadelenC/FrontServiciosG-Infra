@@ -39,7 +39,7 @@ export const useRolTravelStore = create((set, get) => ({
     }
   },
 
-  // 🔹 Agregar un nuevo viaje (al final)
+  //  Agregar un nuevo viaje (al final)
   addRolTravel: async (data) => {
     try {
       const newTravel = await createRolTravel(data);
