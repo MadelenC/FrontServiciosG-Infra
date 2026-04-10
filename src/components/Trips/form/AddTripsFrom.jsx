@@ -115,6 +115,7 @@ export default function AddTripsModal({ initialData, isOpen, onClose, onSave, ch
   const seleccionarDestino = (index, dest) => {
     const nuevosDestinos = [...formData.destinos];
     nuevosDestinos[index] = {
+       id: dest.id,
       nombre: `(${dest.departamentoInicio}) ${dest.origen} → (${dest.departamentoFinal}) ${dest.destino}`,
       km: dest.distancia || "",
     };

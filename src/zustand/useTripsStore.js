@@ -11,57 +11,73 @@ export const useTripsStore = create((set, get) => ({
   loading: false,
   error: null,
 
-  // Obtener todos los viajes
+  // GET ALL
   fetchTrips: async () => {
     set({ loading: true, error: null });
     try {
       const data = await getTrips();
       set({ trips: data, loading: false });
     } catch (err) {
-      set({ error: err.message || err, loading: false });
+      set({
+        error: err?.message || "Error al cargar viajes",
+        loading: false
+      });
     }
   },
 
-  // Crear viaje
+  // CREATE FULL VIAJE
   addTrip: async (data) => {
     try {
       const newTrip = await createTrip(data);
-      set({ trips: [...get().trips, newTrip] });
-      return { ok: true };
+
+      set((state) => ({
+        trips: [...state.trips, newTrip]
+      }));
+
+      return { ok: true, data: newTrip };
     } catch (err) {
-      return { ok: false, error: err.message || err };
+      return {
+        ok: false,
+        error: err?.message || "Error al crear viaje"
+      };
     }
   },
 
-  // Editar viaje
+  // UPDATE FULL VIAJE
   editTrip: async (id, data) => {
     try {
       const updated = await updateTrip(id, data);
 
-      set({
-        trips: get().trips.map((t) =>
+      set((state) => ({
+        trips: state.trips.map((t) =>
           t.id === id ? updated : t
         )
-      });
+      }));
 
-      return { ok: true };
+      return { ok: true, data: updated };
     } catch (err) {
-      return { ok: false, error: err.message || err };
+      return {
+        ok: false,
+        error: err?.message || "Error al actualizar viaje"
+      };
     }
   },
 
-  // Eliminar viaje
+  // DELETE FULL VIAJE
   removeTrip: async (id) => {
     try {
       await deleteTrip(id);
 
-      set({
-        trips: get().trips.filter((t) => t.id !== id)
-      });
+      set((state) => ({
+        trips: state.trips.filter((t) => t.id !== id)
+      }));
 
       return { ok: true };
     } catch (err) {
-      return { ok: false, error: err.message || err };
+      return {
+        ok: false,
+        error: err?.message || "Error al eliminar viaje"
+      };
     }
   }
 }));
