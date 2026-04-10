@@ -170,22 +170,44 @@ export default function AddTripsModal({ initialData, isOpen, onClose, onSave, ch
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!validate()) {
-      toast.error("Por favor complete los campos obligatorios en rojo.");
-      return;
-    }
+  e.preventDefault();
 
-    const dataToSend = {
-      ...formData,
-      chofer: formData.chofer.map(c => c.value),
-      vehiculo: formData.vehiculo.map(v => v.value),
-      encargado: formData.encargado.map(u => u.value),
-    };
+  if (!validate()) {
+    toast.error("Por favor complete los campos obligatorios en rojo.");
+    return;
+  }
 
-    onSave(dataToSend);
-    toast.success("Viaje registrado correctamente!");
+  const dataToSend = {
+    tipo: formData.tipoViaje,
+    entidad: formData.entidad,
+    objetivo: formData.objetivo,
+    dias: formData.dias,
+    pasajeros: Number(formData.pasajeros),
+
+    fecha_inicial: formData.inicio,
+    fecha_final: formData.final,
+
+    destinos: formData.destinos.map(d => ({
+      id: d.id,
+      //km: Number(d.km)
+    })),
+
+    vehiculos: formData.vehiculo.map(v => ({
+      id: v.value
+    })),
+
+    usuarios: [
+      ...formData.chofer.map(c => ({ id: c.value })),
+      ...formData.encargado.map(u => ({ id: u.value }))
+    ]
   };
+
+  console.log("Nuevo viaje:", dataToSend); // 👈 DEBUG
+
+  onSave(dataToSend);
+
+  toast.success("Viaje registrado correctamente!");
+};
 
   const choferOptions = choferes?.map(c => ({ value: c.id, label: `${c.nombres} ${c.apellidos}` })) || [];
   const vehiculoOptions = vehiculos?.map(v => ({ value: v.id, label: `${v.tipog} ${v.placa}` })) || [];

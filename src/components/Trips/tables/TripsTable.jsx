@@ -14,7 +14,8 @@ import { useUserStore } from "../../../zustand/userStore";
 import { useVehicleStore } from "../../../zustand/useVehicleStore";
 import { useDestinoStore } from "../../../zustand/useDestinationsStore";
 
-//AGREGAMOS externalTripId
+import { toast } from "react-toastify";
+
 export default function TripsTable({ externalTripId = null }) {
 
   const { trips, fetchTrips } = useTripsStore();
@@ -60,6 +61,7 @@ export default function TripsTable({ externalTripId = null }) {
 
     useTripsStore.setState({ trips: updated });
   };
+
   const filteredTrips = trips.filter(t => {
 
     const matchesSearch =
@@ -86,9 +88,7 @@ export default function TripsTable({ externalTripId = null }) {
       <div className="bg-white rounded-xl shadow-lg w-[420px] p-6">
         <h2 className="text-lg font-semibold mb-4">{title}</h2>
 
-        <div className="text-sm text-gray-600">
-          {children}
-        </div>
+        <div className="text-sm text-gray-600">{children}</div>
 
         <div className="flex justify-end mt-6">
           <button
@@ -108,14 +108,13 @@ export default function TripsTable({ externalTripId = null }) {
       {/* HEADER */}
       <div className="flex justify-between items-center mb-4 gap-4 flex-wrap">
 
-        {/* SEARCH + FILTER */}
         <div className="flex items-center gap-2 h-10">
           <SearchBarTrips search={search} setSearch={setSearch} />
 
           <select
             value={tipo}
             onChange={(e) => setTipo(e.target.value)}
-            className="h-full px-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="h-full px-3 rounded-lg border border-gray-300"
           >
             <option value="">Todos</option>
             <option value="Viaje de Práctica">Viaje de Práctica</option>
@@ -125,32 +124,30 @@ export default function TripsTable({ externalTripId = null }) {
           </select>
         </div>
 
-        {/* BOTONES */}
         <div className="flex gap-2 flex-wrap">
 
           <button
             onClick={() => handleOpenModal("declaratoria")}
-            className="flex items-center gap-2 bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg"
+            className="flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-lg"
           >
-            <FiFileText size={18} />
+            <FiFileText />
             Declaratorias
           </button>
 
           <button
             onClick={() => handleOpenModal("informe")}
-            className="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-800 text-white px-4 py-2 rounded-lg"
+            className="flex items-center gap-2 bg-indigo-700 text-white px-4 py-2 rounded-lg"
           >
-            <FiBarChart2 size={18} />
+            <FiBarChart2 />
             Informe
           </button>
 
-          {/* SOLO SE MUESTRA SI NO VIENE DEL CALENDARIO */}
           {!externalTripId && (
             <button
               onClick={() => handleOpenModal("add")}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg"
             >
-              <FiPlus size={18} />
+              <FiPlus />
               Agregar Viaje
             </button>
           )}
@@ -159,30 +156,14 @@ export default function TripsTable({ externalTripId = null }) {
       </div>
 
       {/* TABLE */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+      <div className="overflow-x-auto border rounded-xl">
 
-        <table className="w-full text-sm bg-white border-collapse">
+        <table className="w-full text-sm">
 
-          <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
+          <thead>
             <tr>
-              {[
-                "#",
-                "Entidad",
-                "Tipo",
-                "Objetivo",
-                "Días",
-                "Pasajeros",
-                "Inicio",
-                "Fin",
-                "Estado",
-                "Acciones",
-              ].map(h => (
-                <th
-                  key={h}
-                  className="border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700"
-                >
-                  {h}
-                </th>
+              {["#", "Entidad", "Tipo", "Objetivo", "Días", "Pasajeros", "Inicio", "Fin", "Estado", "Acciones"].map(h => (
+                <th key={h} className="px-3 py-2 border">{h}</th>
               ))}
             </tr>
           </thead>
@@ -199,7 +180,7 @@ export default function TripsTable({ externalTripId = null }) {
               ))
             ) : (
               <tr>
-                <td colSpan={10} className="text-center py-4 text-gray-500">
+                <td colSpan={10} className="text-center py-4">
                   No hay registros
                 </td>
               </tr>
@@ -218,7 +199,7 @@ export default function TripsTable({ externalTripId = null }) {
         />
       </div>
 
-      {/* MODALES */}
+      {/* MODAL ADD - 🔥 CORREGIDO AQUÍ */}
       {modalType === "add" && (
         <AddTripsFrom
           isOpen={true}
@@ -228,25 +209,56 @@ export default function TripsTable({ externalTripId = null }) {
           vehiculos={vehicles}
           destinos={destinos}
           onClose={handleCloseModal}
-          onSave={(data) => {
-            console.log("Nuevo viaje:", data);
-            handleCloseModal();
+
+          onSave={async (data) => {
+            try {
+              console.log("📤 Enviando viaje:", data);
+
+              const res = await fetch("http://localhost:3000/api/viajes", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+              });
+
+              const text = await res.text(); // 👈 primero como texto
+
+              let result;
+              try {
+                result = JSON.parse(text); // 👈 intentamos parsear JSON
+              } catch (e) {
+                console.error("❌ Respuesta NO es JSON:", text);
+                throw new Error("Backend no devolvió JSON válido");
+              }
+
+              if (!res.ok) {
+                console.error("❌ Error backend:", result);
+                throw new Error(result?.message || "Error al registrar viaje");
+              }
+
+              console.log("📥 Respuesta backend:", result);
+
+              toast.success("Viaje registrado correctamente!");
+
+              await fetchTrips();
+
+              handleCloseModal();
+
+            } catch (error) {
+              console.error("❌ Error:", error);
+              toast.error(error.message || "Error al registrar viaje");
+            }
           }}
         />
       )}
 
       {modalType === "caja" && (
-        <TripsCajaForm
-          viajeData={selectedTrip}
-          onClose={handleCloseModal}
-        />
+        <TripsCajaForm viajeData={selectedTrip} onClose={handleCloseModal} />
       )}
 
       {modalType === "cheque" && (
-        <CheckTripForm
-          data={selectedTrip}
-          onClose={handleCloseModal}
-        />
+        <CheckTripForm data={selectedTrip} onClose={handleCloseModal} />
       )}
 
       {modalType === "declaratoria" && (
