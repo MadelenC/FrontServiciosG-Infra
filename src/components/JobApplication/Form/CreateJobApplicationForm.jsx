@@ -5,8 +5,8 @@ export default function CreateJobApplicationForm({
   isOpen,
   onClose,
   onSave,
-  vehiculos = [],       // recibe vehículos como prop
-  accesorios = [],     // recibe accesorios como prop
+  vehiculos = [],       
+  accesorios = [],     
 }) {
   const [formData, setFormData] = useState({
     vehiculo_id: "",
