@@ -3,26 +3,34 @@ import { Link, useLocation } from "react-router";
 import { BiCalendar } from "react-icons/bi";
 import { useSidebar } from "../../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
-import { BiSpreadsheet } from "react-icons/bi";
-import { LuBuilding2 } from "react-icons/lu";
-import { MdSecurityUpdate, MdDomainAdd, MdTravelExplore } from "react-icons/md";
+import { BiSpreadsheet,BiFile,BiWrench, BiClipboard, BiCog, BiPackage} from "react-icons/bi";
+import { LuBuilding2,LuClipboardCopy } from "react-icons/lu";
+import { MdSecurityUpdate, MdDomainAdd, MdTravelExplore,MdReplyAll  } from "react-icons/md";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { GoChevronDown } from "react-icons/go";
-import { FaUsersLine, FaUsersGear, FaMoneyBillTrendUp,FaListUl,FaFileLines,FaFilePen   } from "react-icons/fa6";
+import { FaUsersLine, FaUsersGear, FaMoneyBillTrendUp,FaListUl,FaFileLines,FaFilePen, FaMoneyCheckDollar, FaCashRegister, FaCarSide   } from "react-icons/fa6";
 import { BsFillFuelPumpDieselFill, BsCardHeading } from "react-icons/bs";
 import { GiHorizonRoad } from "react-icons/gi";
 import { SiOrganicmaps } from "react-icons/si";
 import { IoCalendarNumberOutline } from "react-icons/io5";
 
 const navItems = [
-  { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", subItems: [{ name: " Ver Lista", path: "/", pro: false }] },
-  { icon: <MdDomainAdd className="text-white" />, name: "Entidades", subItems: [{ name: " Ver Lista", path: "/entidades", pro: false }] },
-  { name: "Rol de Viajes", icon: <FaUsersGear className="text-white" />, subItems: [{ name: "Motrar", path: "/travel-rol", pro: false }] },
-  { name: "Vehiculos ", icon: <BiSpreadsheet className="text-white" />, subItems: [{ name: "Mostrar", path: "/vehiculos", pro: false }] },
-  { name: "Combustible", icon: <BsFillFuelPumpDieselFill className="text-white" />, subItems: [{ name: "Mostrar", path: "/combustible", pro: false }] },
-  { name: "Destinos", icon: <GiHorizonRoad className="text-white" />, subItems: [{ name: "Ver Lista ", path: "/destinos", pro: false }] },
-  { name: "Mapas", icon: <SiOrganicmaps className="text-white" />, subItems: [{ name: " Ver lista", path: "/mapas", pro: false }] },
-  { name: "Reservas", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "reservas", path: "/reservas", pro: false }] },
+  { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", subItems: [{ name: " Ver Lista", path: "/", pro: false, icon:<FaListUl className="text-white " /> }] },
+  { icon: <MdDomainAdd className="text-white" />, name: "Entidades", subItems: [{ name: " Ver Lista", path: "/entidades", pro: false,icon:<FaListUl className="text-white " /> }] },
+  { name: "Rol de Viajes", icon: <FaUsersGear className="text-white" />, subItems: [{ name: "Motrar", path: "/travel-rol", pro: false,icon:<FaListUl className="text-white " /> }] },
+  { name: "Vehiculos ", icon: <FaCarSide  className="text-white" />, subItems: [{ name: "Mostrar", path: "/vehiculos", pro: false,icon:<FaListUl className="text-white " /> }] },
+  { name: "Combustible", icon: <BsFillFuelPumpDieselFill className="text-white" />, subItems: [{ name: "Mostrar", path: "/combustible", pro: false,icon:<FaListUl className="text-white " /> }] },
+  { name: "Destinos", icon: <GiHorizonRoad className="text-white" />, subItems: [{ name: "Ver Lista ", path: "/destinos", pro: false,icon:<FaListUl className="text-white " /> }] },
+  { name: "Mapas", icon: <SiOrganicmaps className="text-white" />, 
+    subItems: [
+      { name: " Ver lista", path: "/mapas", pro: false,
+         icon:<FaListUl className="text-white " />
+       }] },
+  { name: "Reservas", icon: <BsCardHeading className="text-white" />, 
+    subItems: [
+      { name: "Listar", path: "/reservas", pro: false,
+         icon:<FaListUl className="text-white " />
+       }] },
   {name: "Viajes", 
     icon: <MdTravelExplore className="text-white" />, 
     subItems: [ 
@@ -35,34 +43,34 @@ const navItems = [
     ] 
   },
   { name: "Presupuestos de Viaje", icon: <FaMoneyBillTrendUp className="text-white" />,
-     subItems: [{ name: "Tipo A (cheque)", path: "/presupuestos", pro: false },
-                { name: "Tipo B (caja)", path: "/presupuestos/caja", pro: false }
+     subItems: [{ name: "Tipo A (cheque)", path: "/presupuestos", pro: false , icon:<FaMoneyCheckDollar className="text-white" /> },
+                { name: "Tipo B (caja)", path: "/presupuestos/caja", pro: false,icon:<FaCashRegister className="text-white"/> }
               ] },
   { name: "Autorizacion de Salidas",
     icon: <FaFilePen  className="text-white" />, 
     subItems: [{ name: "Ver Lista", path: "/autorizacion",
-   pro: false
+   pro: false,icon:<FaListUl className="text-white " />
    }] },
  
-   { name: "Informe de viajes", icon: <FaFileLines className="text-white" />, subItems: [{ name: "Mostrar", path: "/informe", pro: false }] },
+   { name: "Informe de viajes", icon: <FaFileLines className="text-white" />, subItems: [{ name: "Mostrar", path: "/informe", pro: false,icon:<FaListUl className="text-white " /> }] },
  
-  { name: "Solictud de Trabajo", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Ver Lista", path: "/Solicitud_Trabajo", pro: false }] },
+  { name: "Solictud de Trabajo", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Ver Lista", path: "/Solicitud_Trabajo", pro: false, icon:<FaListUl className="text-white " />}] },
   
   {name: "Mantenimiento", 
-    icon: <MdTravelExplore className="text-white" />, 
+    icon: <BiCog className="text-white" />, 
     subItems: [
-      { name: "Solicitudes", path: "/mantenimiento/solicitudes", pro: false },
-      { name: "kardex", path: "/mantenimiento/kardex", pro: false } 
+      { name: "Solicitudes", path: "/mantenimiento/solicitudes", pro: false, icon: <LuClipboardCopy className="text-white"/> },
+      { name: "kardex", path: "/mantenimiento/kardex", pro: false, icon: <BiFile className="text-white"/>} 
     ] 
   },
   {name: "Pedido de Material", 
-    icon: <MdTravelExplore className="text-white" />, 
+    icon: <BiPackage className="text-white" />, 
     subItems: [
-      { name: "Mecanico", path: "/pedido/mecanico", pro: false },
-      { name: "Escritorio/Demas", path: "/pedido/escritorio", pro: false } 
+      { name: "Mecanico", path: "/pedido/mecanico", pro: false,icon:<BiWrench className="text-white"/> },
+      { name: "Escritorio/Demas", path: "/pedido/escritorio", pro: false, icon:<BiClipboard className="text-white"/> } 
     ] 
   },
-  { name: "Devolucion de Material", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Mostrar", path: "/devoluciones", pro: false }] },                   
+  { name: "Devolucion de Material", icon: <MdReplyAll  className="text-white" />, subItems: [{ name: "Mostrar", path: "/devoluciones", pro: false,icon:<FaListUl className="text-white " /> }] },                   
               
 ];
 

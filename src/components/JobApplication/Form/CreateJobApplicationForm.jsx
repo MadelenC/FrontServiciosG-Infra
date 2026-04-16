@@ -5,66 +5,85 @@ export default function CreateJobApplicationForm({
   isOpen,
   onClose,
   onSave,
-  vehiculos = [],       
-  accesorios = [],     
+  vehiculos = [],
 }) {
   const [formData, setFormData] = useState({
     vehiculo_id: "",
-    accesorios: [],
     descripcion: "",
+    accesorioInput: "",
   });
 
   const [saving, setSaving] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  // Resetear formulario cuando se abre
+  const sugerenciasBase = [
+    "Cambio de disco de embriague",
+    "Cambio de aceite",
+    "Revisión de frenos",
+    "Cambio de llantas",
+    "Afinamiento general",
+  ];
+
+  const sugerenciasFiltradas =
+    formData.accesorioInput.trim() === ""
+      ? []
+      : sugerenciasBase.filter((item) =>
+          item.toLowerCase().includes(formData.accesorioInput.toLowerCase())
+        );
+
+  // reset modal
   useEffect(() => {
     if (!isOpen) return;
+
     setFormData({
       vehiculo_id: "",
-      accesorios: [],
       descripcion: "",
+      accesorioInput: "",
     });
+
+    setShowDropdown(false);
   }, [isOpen]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleAccesoriosChange = (e) => {
-    const options = Array.from(e.target.selectedOptions);
-    const values = options.map((opt) => opt.value);
-    setFormData((prev) => ({ ...prev, accesorios: values }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.vehiculo_id) {
-      toast.error("Seleccione un vehículo");
+      toast.error("Seleccione un vehículo 🚗");
       return;
     }
 
     if (!formData.descripcion) {
-      toast.error("Ingrese una descripción");
+      toast.error("Ingrese una descripción 📝");
+      return;
+    }
+
+    if (!formData.accesorioInput) {
+      toast.warning("Seleccione o escriba un accesorio ⚙️");
       return;
     }
 
     const payload = {
       descripsoli: formData.descripcion,
       vehiculo_id: formData.vehiculo_id,
-      accesorios: formData.accesorios,
+      accesorios: formData.accesorioInput,
     };
 
-    setSaving(true);
-    const response = await onSave(payload);
-    setSaving(false);
+    try {
+      setSaving(true);
 
-    if (!response?.ok) {
-      toast.error(response?.error || "Error al guardar");
-    } else {
-      toast.success("✅ Solicitud registrada");
+      const response = await onSave(payload);
+
+      if (!response?.ok) {
+        toast.error(response?.error || "Error al guardar ❌");
+        return;
+      }
+
+      toast.success("Solicitud registrada correctamente ✅");
       onClose();
+    } catch (error) {
+      toast.error("Error del servidor ❌");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -82,24 +101,28 @@ export default function CreateJobApplicationForm({
           X
         </button>
 
-        {/* TÍTULO */}
+        {/* TITULO */}
         <h2 className="text-2xl font-bold text-center text-gray-700 mt-6">
           Solicitud de Trabajo
         </h2>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
 
-          {/* VEHÍCULO */}
+          {/* VEHICULO */}
           <div>
             <label className="block mb-1 font-semibold">Movilidad</label>
             <select
-              name="vehiculo_id"
               value={formData.vehiculo_id}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData((p) => ({
+                  ...p,
+                  vehiculo_id: e.target.value,
+                }))
+              }
               className="w-full border px-3 py-2 rounded-md"
             >
               <option value="">Seleccione vehículo</option>
-              {vehiculos?.map((v) => (
+              {vehiculos.map((v) => (
                 <option key={v.id} value={v.id}>
                   {[v.tipog, v.placa].filter(Boolean).join(" - ")}
                 </option>
@@ -107,35 +130,70 @@ export default function CreateJobApplicationForm({
             </select>
           </div>
 
-          {/* ACCESORIOS */}
+          {/* ACCESORIOS (CORREGIDO) */}
           <div>
             <label className="block mb-1 font-semibold">Accesorios</label>
-            <select
-              multiple
-              value={formData.accesorios}
-              onChange={handleAccesoriosChange}
-              className="w-full border px-3 py-2 rounded-md h-28"
-            >
-              {accesorios?.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.nombre}
-                </option>
-              ))}
-            </select>
+
+            <div className="relative">
+              <input
+                type="text"
+                value={formData.accesorioInput}
+                onChange={(e) => {
+                  setFormData((p) => ({
+                    ...p,
+                    accesorioInput: e.target.value,
+                  }));
+                  setShowDropdown(true);
+                }}
+                onBlur={() => {
+                  setTimeout(() => setShowDropdown(false), 150);
+                }}
+                placeholder="Buscar o escribir accesorio..."
+                className="w-full border px-3 py-2 rounded-md"
+              />
+
+              {/* DROPDOWN CONTROLADO */}
+              {showDropdown &&
+                formData.accesorioInput.trim() !== "" &&
+                sugerenciasFiltradas.length > 0 && (
+                  <div className="absolute left-0 right-0 bg-white border rounded-md shadow-lg mt-1 max-h-40 overflow-auto z-50">
+                    {sugerenciasFiltradas.map((item, i) => (
+                      <div
+                        key={i}
+                        onMouseDown={() => {
+                          setFormData((p) => ({
+                            ...p,
+                            accesorioInput: item,
+                          }));
+
+                          setShowDropdown(false);
+                        }}
+                        className="p-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                )}
+            </div>
           </div>
 
-          {/* DESCRIPCIÓN */}
+          {/* DESCRIPCION */}
           <div>
             <label className="block mb-1 font-semibold">Descripción</label>
             <textarea
-              name="descripcion"
               value={formData.descripcion}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData((p) => ({
+                  ...p,
+                  descripcion: e.target.value,
+                }))
+              }
               className="w-full border px-3 py-2 rounded-md"
             />
           </div>
 
-          {/* BOTÓN */}
+          {/* BOTON */}
           <div className="flex justify-end pt-4">
             <button
               type="submit"

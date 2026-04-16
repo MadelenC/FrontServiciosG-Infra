@@ -8,7 +8,6 @@ import { loginService } from "../../services/authService";
 export default function LoginForm() {
   const navigate = useNavigate();
 
-  // Zustand store
   const setUser = useUserStore((state) => state.setUser);
   const setToken = useUserStore((state) => state.setToken);
 
@@ -28,14 +27,11 @@ export default function LoginForm() {
     e.preventDefault();
     try {
       const res = await loginService(formData);
-      // Guarda en Zustand
+
       setUser(res.user);
       setToken(res.token);
-      // Guarda en localStorage
-      // localStorage.setItem("user", JSON.stringify(res.user));
-      // localStorage.setItem("token", res.token);
 
-      navigate("/"); // Redirige al home
+      navigate("/");
     } catch (err) {
       console.log(err.response);
       alert(err.response?.message || "Error al iniciar sesión");
@@ -43,35 +39,52 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow">
-        <h1 className="mb-2 font-semibold text-gray-800 text-title-sm sm:text-title-md">
-          Iniciar sesión
-        </h1>
-        <p className="text-sm text-gray-500">
-          Ingresa tu CI y contraseña para acceder.
-        </p>
+    <div className="min-h-screen flex items-center justify-center px-6 bg-[#F3F4F6]">
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+      <div className="w-full max-w-md">
+
+        {/* HEADER */}
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
+            Iniciar sesión
+          </h1>
+          <p className="mt-2 text-sm text-gray-500">
+            Ingresa tu CI y contraseña para continuar
+          </p>
+        </div>
+
+        {/* FORM */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+
+          {/* CÉDULA */}
           <div>
-            <label>
-              Cédula de Identidad <span className="text-error-500">*</span>
+            <label className="text-sm text-gray-700">
+              Cédula de Identidad
             </label>
+
             <input
               name="cedula"
               type="text"
               value={formData.cedula}
               onChange={handleChange}
-              placeholder="Ej: 12345678"
+              placeholder="12345678"
               required
+              className="mt-1 w-full px-4 py-3 rounded-xl
+              bg-white border border-gray-300
+              text-gray-900 placeholder:text-gray-400
+              focus:outline-none focus:ring-2 focus:ring-[#2563EB]
+              focus:border-[#2563EB]
+              transition"
             />
           </div>
 
+          {/* PASSWORD */}
           <div>
-            <label>
-              Contraseña <span className="text-error-500">*</span>
+            <label className="text-sm text-gray-700">
+              Contraseña
             </label>
-            <div className="relative">
+
+            <div className="relative mt-1">
               <input
                 name="password"
                 type={showPassword ? "text" : "password"}
@@ -79,31 +92,59 @@ export default function LoginForm() {
                 onChange={handleChange}
                 placeholder="••••••••"
                 required
+                className="w-full px-4 py-3 rounded-xl
+                bg-white border border-gray-300
+                text-gray-900 placeholder:text-gray-400
+                focus:outline-none focus:ring-2 focus:ring-[#2563EB]
+                focus:border-[#2563EB]
+                transition"
               />
-              <span
+
+              <button
+                type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2
+                text-gray-400 hover:text-[#2563EB] transition"
               >
-                <TbLockPassword className="fill-gray-500 size-5" />
-              </span>
+                <TbLockPassword className="size-5" />
+              </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <checkbox checked={isChecked} onChange={setIsChecked} />
-            <span className="text-sm text-gray-700">Mantener sesión activa</span>
-          </div>
+          {/* CHECKBOX */}
+          <label className="flex items-center gap-2 text-sm text-gray-600">
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={(e) => setIsChecked(e.target.checked)}
+              className="w-4 h-4 rounded border-gray-300 accent-[#2563EB]"
+            />
+            Mantener sesión activa
+          </label>
 
-          <Button type="submit" className="w-full" size="sm">
+          {/* BUTTON */}
+          <Button
+            type="submit"
+            className="w-full py-3 rounded-xl
+            bg-[#2563EB] text-white
+            hover:bg-[#1D4ED8]
+            active:scale-[0.99]
+            transition"
+          >
             Iniciar sesión
           </Button>
 
-          <p className="mt-4 text-sm text-center text-gray-500">
+          {/* FOOTER */}
+          <p className="text-center text-sm text-gray-500">
             ¿No tienes cuenta?{" "}
-            <Link to="/register" className="text-blue-500 hover:underline">
+            <Link
+              to="/register"
+              className="text-[#2563EB] font-medium hover:underline"
+            >
               Regístrate aquí
             </Link>
           </p>
+
         </form>
       </div>
     </div>
