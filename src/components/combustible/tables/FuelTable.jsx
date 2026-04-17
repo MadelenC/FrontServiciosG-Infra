@@ -41,36 +41,41 @@ export default function FuelTable() {
   );
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-4">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 transition-all">
+
       {/* CABECERA */}
       <div className="flex justify-between items-center mb-4">
+
         {/* BOTONES */}
-        <div className="flex gap-2">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm shadow-md font-sans">
+        <div className="flex gap-2 flex-wrap">
+
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-sm shadow-md font-sans transition">
             <FaSyncAlt className="w-4 h-4" />
             Actualizar Capital
           </button>
 
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm shadow-md font-sans">
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 text-white text-sm shadow-md font-sans transition">
             <FaPlus className="w-4 h-4" />
             Agregar
           </button>
 
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-800 text-white text-sm shadow-md font-sans">
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-800 dark:bg-purple-700 dark:hover:bg-purple-800 text-white text-sm shadow-md font-sans transition">
             <FaPrint className="w-4 h-4" />
             Imprimir
           </button>
 
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm shadow-md font-sans">
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-sm shadow-md font-sans transition">
             <FaSave className="w-4 h-4" />
             Guardar
           </button>
+
         </div>
 
         {/* SEARCH */}
         <div className="w-64">
           <SearchBar search={search} setSearch={setSearch} />
         </div>
+
       </div>
 
       {/* TABLA */}
@@ -80,6 +85,7 @@ export default function FuelTable() {
       <div className="flex justify-center mt-4">
         <Pagination page={page} totalPages={totalPages} setPage={setPage} />
       </div>
+
     </div>
   );
 }

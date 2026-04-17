@@ -6,11 +6,12 @@ import Pagination from "./Pagination";
 import SearchBar from "../search/SearchBar";
 import AddDriverForm from "../form/AddDriverForm";
 import PrintTravel from "../tables/TableTravelPrint";
-import ListException from "../form/Excep/ListException"; 
+import ListException from "../form/Excep/ListException";
 import { FaPlus, FaPrint } from "react-icons/fa";
 
 export default function TravelTable() {
-  const { rolTravels = [], fetchRolTravels, removeRolTravel, loading, error } = useRolTravelStore();
+  const { rolTravels = [], fetchRolTravels, removeRolTravel, loading, error } =
+    useRolTravelStore();
   const { fetchUsers, getDrivers, loading: loadingUsers } = useUserStore();
 
   const [search, setSearch] = useState("");
@@ -23,7 +24,6 @@ export default function TravelTable() {
 
   const drivers = getDrivers();
 
-  // Filtrado por búsqueda
   const filteredTravels = rolTravels.filter((v) => {
     const term = search.toLowerCase();
     return (
@@ -35,92 +35,100 @@ export default function TravelTable() {
   });
 
   const totalPages = Math.ceil(filteredTravels.length / limit);
-  const currentTravels = filteredTravels.slice((page - 1) * limit, page * limit);
+  const currentTravels = filteredTravels.slice(
+    (page - 1) * limit,
+    page * limit
+  );
 
   useEffect(() => {
     fetchRolTravels();
     fetchUsers();
   }, [fetchRolTravels, fetchUsers]);
 
-  // Mostrar excepciones
   const handleViewExceptions = (travel) => {
     setSelectedTravel(travel);
     setOpenExceptionsModal(true);
   };
 
-  // Eliminar viaje
   const handleDelete = async (id) => {
     if (window.confirm("¿Desea eliminar este viaje?")) {
       await removeRolTravel(id);
     }
   };
 
-  // Agregar chofer
   const handleAddDriver = async (data) => {
-  try {
-    const API_URL = import.meta.env.VITE_API_URL; 
+    try {
+      const API_URL = import.meta.env.VITE_API_URL;
 
-    const response = await fetch(`${API_URL}/rolTravel`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+      const response = await fetch(`${API_URL}/rolTravel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return { ok: false, error: errorData.error };
+      if (!response.ok) {
+        const errorData = await response.json();
+        return { ok: false, error: errorData.error };
+      }
+
+      const result = await response.json();
+
+      fetchRolTravels();
+      setOpenPanel(false);
+
+      return { ok: true, data: result };
+    } catch (err) {
+      return { ok: false, error: err.message };
     }
+  };
 
-    const result = await response.json();
+  const handleAddException = async (data) => {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL;
 
-    fetchRolTravels();
-    setOpenPanel(false);
+      const response = await fetch(`${API_URL}/excepciones`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-    return { ok: true, data: result }; 
-  } catch (err) {
-    console.error(err);
-    return { ok: false, error: err.message }; 
-  }
-};
+      if (!response.ok) {
+        const errorData = await response.json();
+        return { ok: false, error: errorData.error };
+      }
 
-const handleAddException = async (data) => {
-  try {
-    const API_URL = import.meta.env.VITE_API_URL;
+      const result = await response.json();
 
-    const response = await fetch(`${API_URL}/excepciones`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+      fetchRolTravels();
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return { ok: false, error: errorData.error };
+      return { ok: true, data: result };
+    } catch (error) {
+      return { ok: false, error: error.message };
     }
+  };
 
-    const result = await response.json();
+  if (loading)
+    return (
+      <div className="p-6 text-center text-gray-500 dark:text-gray-300">
+        Cargando viajes...
+      </div>
+    );
 
-    fetchRolTravels(); // 🔥 ACTUALIZA TODO
-
-    return { ok: true, data: result };
-
-  } catch (error) {
-    return { ok: false, error: error.message };
-  }
-};
-
-
-
-  if (loading) return <div className="p-6 text-center">Cargando viajes...</div>;
-  if (error) return <div className="p-6 text-center text-red-500">Error: {error}</div>;
+  if (error)
+    return (
+      <div className="p-6 text-center text-red-500">
+        Error: {error}
+      </div>
+    );
 
   return (
-    <div className="overflow-hidden rounded-xl bg-white shadow-md p-4">
+    <div className="overflow-hidden rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-md p-4">
+
       <div className="print:hidden">
+
         {/* BOTONES */}
         <div className="flex justify-end mb-4 gap-2">
+
           <button
             onClick={() => setOpenPanel(true)}
             className="flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500
@@ -140,6 +148,7 @@ const handleAddException = async (data) => {
           >
             <FaPrint size={14} /> Imprimir
           </button>
+
         </div>
 
         {/* BUSCADOR */}
@@ -147,16 +156,36 @@ const handleAddException = async (data) => {
 
         {/* TABLA */}
         <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead className="bg-blue-50">
+
+          <table className="min-w-full text-sm bg-white dark:bg-gray-900">
+
+            <thead className="bg-blue-50 dark:bg-gray-800">
+
               <tr>
-                {["ID", "Chofer", "TipoA", "TipoB", "TipoC", "Cantidad", "Excepciones", "Fecha", "Operaciones"].map((head) => (
-                  <th key={head} className="px-4 py-3 text-left font-medium text-gray-700">{head}</th>
+                {[
+                  "ID",
+                  "Chofer",
+                  "TipoA",
+                  "TipoB",
+                  "TipoC",
+                  "Cantidad",
+                  "Excepciones",
+                  "Fecha",
+                  "Operaciones",
+                ].map((head) => (
+                  <th
+                    key={head}
+                    className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    {head}
+                  </th>
                 ))}
               </tr>
+
             </thead>
 
             <tbody>
+
               {currentTravels.length > 0 ? (
                 currentTravels.map((travel) => (
                   <TravelRow
@@ -165,16 +194,24 @@ const handleAddException = async (data) => {
                     drivers={drivers}
                     onViewExceptions={handleViewExceptions}
                     onDelete={handleDelete}
-                    onAddException={handleAddException}  
+                    onAddException={handleAddException}
                   />
                 ))
               ) : (
                 <tr>
-                  <td colSpan={9} className="text-center py-4 text-gray-500">No hay registros</td>
+                  <td
+                    colSpan={9}
+                    className="text-center py-4 text-gray-500 dark:text-gray-400"
+                  >
+                    No hay registros
+                  </td>
                 </tr>
               )}
+
             </tbody>
+
           </table>
+
         </div>
 
         <Pagination page={page} totalPages={totalPages} setPage={setPage} />
@@ -191,27 +228,39 @@ const handleAddException = async (data) => {
         {/* MODAL AGREGAR CHOFER */}
         {openPanel && (
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setOpenPanel(false)} />
+
+            <div
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              onClick={() => setOpenPanel(false)}
+            />
+
             <div className="relative z-10 w-[420px] animate-fadeIn">
+
               {loadingUsers ? (
-                <div className="p-4 text-center">Cargando choferes...</div>
+                <div className="p-4 text-center text-gray-300">
+                  Cargando choferes...
+                </div>
               ) : (
                 <AddDriverForm
                   choferes={drivers}
-                  choferesRegistrados={rolTravels} 
+                  choferesRegistrados={rolTravels}
                   onSubmit={handleAddDriver}
                   onClose={() => setOpenPanel(false)}
                 />
               )}
+
             </div>
+
           </div>
         )}
+
       </div>
 
-      {/* VERSIÓN DE IMPRESIÓN */}
+      {/* PRINT */}
       <div className="hidden print:block">
         <PrintTravel travels={filteredTravels} />
       </div>
+
     </div>
   );
 }

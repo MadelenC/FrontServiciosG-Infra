@@ -3,7 +3,7 @@ import SearchBar from "../search/SerachBar";
 import TableDest from "./TableDestn";
 import Pagination from "./Paginations";
 import { useDestinoStore } from "../../../zustand/useDestinationsStore";
-import { FaPlus, FaPrint } from "react-icons/fa";
+import { FaPrint } from "react-icons/fa";
 
 export default function DestTable() {
   const { destinos = [], fetchDestinos, loading, error } = useDestinoStore();
@@ -28,24 +28,24 @@ export default function DestTable() {
     fetchDestinos();
   }, []);
 
-  // Resetear página al cambiar búsqueda o filtro
   useEffect(() => {
     setPage(1);
   }, [search, departmentFilter]);
 
-  // Función para normalizar strings (quitar acentos y pasar a minúsculas)
   const normalize = (str) =>
     str
       ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
       : "";
 
-  // Filtrado robusto por búsqueda y departamento
   const filtered = destinos.filter((d) => {
     const searchMatch = Object.values(d).some(
-      (v) => v !== undefined && normalize(String(v)).includes(normalize(search))
+      (v) =>
+        v !== undefined &&
+        normalize(String(v)).includes(normalize(search))
     );
 
     const departmentNormalized = normalize(departmentFilter);
+
     const departmentMatch =
       departmentFilter === "" ||
       normalize(d.departamentoInicio).includes(departmentNormalized) ||
@@ -59,20 +59,26 @@ export default function DestTable() {
 
   if (loading)
     return (
-      <div className="p-4 text-center text-gray-500 animate-pulse">
+      <div className="p-4 text-center text-gray-500 dark:text-gray-400 animate-pulse">
         Cargando destinos...
       </div>
     );
+
   if (error)
     return (
-      <div className="p-4 text-center text-red-500 font-semibold">{error}</div>
+      <div className="p-4 text-center text-red-500 font-semibold">
+        {error}
+      </div>
     );
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-4 transition-all">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 border border-gray-200 dark:border-gray-700 transition-all">
+
       {/* Barra superior */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+
         <div className="flex flex-col sm:flex-row items-center gap-2">
+
           {/* Search */}
           <div className="h-10 w-full sm:w-64">
             <SearchBar search={search} setSearch={setSearch} />
@@ -82,7 +88,7 @@ export default function DestTable() {
           <select
             value={departmentFilter}
             onChange={(e) => setDepartmentFilter(e.target.value)}
-            className="h-10 border border-gray-300 text-gray-700 px-3 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-600 transition"
+            className="h-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition"
           >
             <option value="">Todos los Departamentos</option>
             {departments.map((d) => (
@@ -91,23 +97,26 @@ export default function DestTable() {
               </option>
             ))}
           </select>
+
         </div>
 
-        {/* Botón de imprimir */}
+        {/* Botón imprimir */}
         <button className="flex items-center gap-3 bg-gradient-to-r from-orange-600 to-orange-500
-              hover:from-orange-700 hover:to-orange-600 text-white px-5 py-3 rounded-lg shadow-lg font-medium
-              focus:outline-none focus:ring-4 focus:ring-orange-400 focus:ring-offset-2 transition-all duration-300
-              hover:scale-105 active:scale-95 mb-4"
-          >
+          hover:from-orange-700 hover:to-orange-600 text-white px-5 py-3 rounded-lg shadow-lg font-medium
+          focus:outline-none focus:ring-4 focus:ring-orange-400 focus:ring-offset-2 transition-all duration-300
+          hover:scale-105 active:scale-95 mb-4">
+
           <FaPrint size={14} /> Imprimir
+
         </button>
+
       </div>
 
-      {/* Tabla de destinos */}
+      {/* Tabla */}
       <TableDest data={currentData} />
 
       {currentData.length === 0 && (
-        <div className="p-4 text-center text-gray-500 col-span-full">
+        <div className="p-4 text-center text-gray-500 dark:text-gray-400">
           No hay resultados para los filtros seleccionados.
         </div>
       )}
@@ -118,10 +127,10 @@ export default function DestTable() {
           <Pagination page={page} totalPages={totalPages} setPage={setPage} />
         </div>
       )}
+
     </div>
   );
 }
-
 
 
 

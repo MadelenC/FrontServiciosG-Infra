@@ -36,54 +36,49 @@ export default function TableReserva() {
   const currentData = filtered.slice((page - 1) * limit, page * limit);
   const encargados = users?.filter(u => u.tipo === "encargado") || [];
 
-const handleSaveReserva = async (data) => {
-  setSaving(true);
-  const response = await addReserva(data); 
-  setSaving(false);
+  const handleSaveReserva = async (data) => {
+    setSaving(true);
+    const response = await addReserva(data); 
+    setSaving(false);
 
-  if (response.ok) {
-    //Aquí hacemos el refetch de todas las reservas
-    await fetchReservas(); 
-    setIsModalOpen(false); 
-  } else {
-    alert("Error al guardar: " + response.error);
+    if (response.ok) {
+      await fetchReservas(); 
+      setIsModalOpen(false); 
+    } else {
+      alert("Error al guardar: " + response.error);
+    }
   }
-}
 
   if (loading)
-    return <div className="p-4 text-center">Cargando reservas...</div>;
+    return <div className="p-4 text-center text-gray-600 dark:text-gray-300">Cargando reservas...</div>;
 
   if (error)
     return <div className="p-4 text-center text-red-500">{error}</div>;
 
   return (
-    <div className="bg-white rounded-xl shadow p-4">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow p-4 transition-all">
+
       <ToastContainer position="top-right" autoClose={3000} />
-      
+
       <div className="flex justify-between items-center mb-4 gap-4">
+
         <SearchBar search={search} setSearch={setSearch} />
-        <div className="flex gap-2">
-          <button className="flex items-center gap-3 bg-gradient-to-r from-orange-600 to-orange-500
-              hover:from-orange-700 hover:to-orange-600 text-white px-5 py-3 rounded-lg shadow-lg font-medium
-              focus:outline-none focus:ring-4 focus:ring-orange-400 focus:ring-offset-2 transition-all duration-300
-              hover:scale-105 active:scale-95 mb-4">
+
+        <div className="flex gap-2 flex-wrap">
+
+          <button className="flex items-center gap-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 dark:from-orange-600 dark:to-orange-500 dark:hover:from-orange-700 dark:hover:to-orange-600 text-white px-5 py-3 rounded-lg shadow-lg font-medium transition">
             Imprimir
           </button>
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-3
-             bg-gradient-to-r from-blue-600 to-blue-500
-             hover:from-blue-700 hover:to-blue-600
-             text-white px-5 py-3 rounded-lg shadow-lg font-medium
-             focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2
-             transition-all duration-300
-             hover:scale-105 active:scale-95
-             mb-4"  
+            className="flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 dark:from-blue-600 dark:to-blue-500 dark:hover:from-blue-700 dark:hover:to-blue-600 text-white px-5 py-3 rounded-lg shadow-lg font-medium transition"
           >
             + Agregar Reserva
           </button>
+
         </div>
+
       </div>
 
       <ReservaTable reservas={currentData} />
@@ -98,6 +93,7 @@ const handleSaveReserva = async (data) => {
         onSave={handleSaveReserva}
         encargados={encargados} 
       />
+
     </div>
   );
 }

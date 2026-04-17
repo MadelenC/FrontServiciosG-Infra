@@ -19,6 +19,7 @@ const Calendar = () => {
   useEffect(() => {
     fetchTrips();
   }, []);
+
   const getColor = (trip) => {
     const hoy = new Date();
     const inicio = new Date(trip.fecha_inicial);
@@ -34,7 +35,6 @@ const Calendar = () => {
     return "#3b82f6";
   };
 
-  // MAPEAR EVENTOS
   useEffect(() => {
     if (!trips) return;
 
@@ -51,7 +51,6 @@ const Calendar = () => {
     setEvents(mapped);
   }, [trips]);
 
-  //CLICK para ABRIR MODAL
   const handleEventClick = (clickInfo) => {
     const trip = clickInfo.event.extendedProps.trip;
     setSelectedTrip(trip);
@@ -63,9 +62,11 @@ const Calendar = () => {
 
       {/* TITULO */}
       <div className="text-center my-4">
-        <h1 className="text-3xl font-bold">Calendario de Viajes</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          Calendario de Viajes
+        </h1>
 
-        <div className="text-sm text-gray-600 mt-2">
+        <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
           <p>🟢 Verde: Viaje concluido</p>
           <p>🟡 Amarillo: En proceso</p>
           <p>🔵 Azul: Próximo viaje</p>
@@ -74,7 +75,7 @@ const Calendar = () => {
       </div>
 
       {/* CALENDARIO */}
-      <div className="max-w-6xl mx-auto bg-white p-4 rounded-xl border">
+      <div className="max-w-6xl mx-auto bg-white dark:bg-gray-900 dark:text-gray-100 p-4 rounded-xl border dark:border-gray-700">
         <FullCalendar
           ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -91,14 +92,14 @@ const Calendar = () => {
         />
       </div>
 
-      {/*MODAL CON TODA LA TABLA */}
+      {/* MODAL */}
       {selectedTrip && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-900 dark:text-gray-100 w-[95%] max-w-7xl rounded-xl shadow-lg p-6 relative border dark:border-gray-700">
 
-          <div className="bg-white w-[95%] max-w-7xl rounded-xl shadow-lg p-6 relative">
             <button
               onClick={() => setSelectedTrip(null)}
-              className="absolute top-3 right-3 text-gray font-bold bg-white-600 px-3 py-1 rounded hover:bg-gray-200"
+              className="absolute top-3 right-3 text-gray-700 dark:text-gray-200 font-bold bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
             >
               ×
             </button>
@@ -108,9 +109,7 @@ const Calendar = () => {
             </h2>
 
             <TripsTable externalTripId={selectedTrip.id} />
-
           </div>
-
         </div>
       )}
     </>

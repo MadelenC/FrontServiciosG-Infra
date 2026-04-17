@@ -41,7 +41,6 @@ export default function TripReportTable({ externalTripId = null }) {
 
   useEffect(() => setPage(1), [search]);
 
-  // ENRIQUECER
   const enrichedTrips = useMemo(() => {
     return tripReports.map((t) => {
 
@@ -65,17 +64,16 @@ export default function TripReportTable({ externalTripId = null }) {
     });
   }, [tripReports, users, vehicles]);
 
- const sortedTrips = [...enrichedTrips].sort((a, b) => a.id - b.id);
+  const sortedTrips = [...enrichedTrips].sort((a, b) => a.id - b.id);
 
-// LUEGO FILTRAR
-const filtered = sortedTrips.filter(t => {
-  const s = search.toLowerCase();
-  return (
-    t.vehiculoNombre?.toLowerCase().includes(s) ||
-    t.choferNombre?.toLowerCase().includes(s) ||
-    t.encargadoNombre?.toLowerCase().includes(s)
-  );
-});
+  const filtered = sortedTrips.filter(t => {
+    const s = search.toLowerCase();
+    return (
+      t.vehiculoNombre?.toLowerCase().includes(s) ||
+      t.choferNombre?.toLowerCase().includes(s) ||
+      t.encargadoNombre?.toLowerCase().includes(s)
+    );
+  });
 
   const totalPages = Math.ceil(filtered.length / limit);
 
@@ -84,7 +82,6 @@ const filtered = sortedTrips.filter(t => {
     page * limit
   );
 
-  // CLICK KM
   const handleUpdateKm = (trip) => {
 
     if (!trip.vehiculoObj) {
@@ -98,9 +95,8 @@ const filtered = sortedTrips.filter(t => {
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition-all p-4">
+    <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-white/[0.03] shadow-md transition-all p-4">
 
-      
       {/* BUSCADOR */}
       <div className="mb-4 w-64">
         <SearchBar search={search} setSearch={setSearch} />
@@ -128,11 +124,9 @@ const filtered = sortedTrips.filter(t => {
           onClose={() => setOpenUpdateKmPanel(false)}
           onUpdateKm={async (updatedVehicle) => {
 
-            // VEHÍCULO
             const resVehicle = await editVehicle(updatedVehicle.id, updatedVehicle);
             if (!resVehicle.ok) return alert(resVehicle.error);
 
-            // CALCULAR KM
             const nuevoKm = updatedVehicle.kilometraje;
             const kmSalida = Number(selectedTrip.kilopartida || 0);
 
@@ -142,7 +136,6 @@ const filtered = sortedTrips.filter(t => {
 
             const kmTotal = nuevoKm - kmSalida;
 
-            // TRIP
             const resTrip = await editTripReport(selectedTrip.id, {
               ...selectedTrip,
               kilollegada: nuevoKm,

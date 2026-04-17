@@ -70,8 +70,8 @@ export default function JobApplicationTable() {
     return res;
   };
 
-  // Filtrado combinando chofer, vehículo y búsqueda general
-  const choferes = users?.filter(u => u.tipo && u.tipo.toLowerCase() === "chofer") || [];
+  const choferes =
+    users?.filter(u => u.tipo && u.tipo.toLowerCase() === "chofer") || [];
 
   const filtered = applications.filter((a) => {
     const choferNombre = a.chofer
@@ -83,14 +83,20 @@ export default function JobApplicationTable() {
       : true;
 
     const idVehiculo = a.vehiculo?.id ? String(a.vehiculo.id) : "";
-    const tipoVehiculo = a.vehiculo?.tipog ? String(a.vehiculo.tipog).toLowerCase() : "";
+    const tipoVehiculo = a.vehiculo?.tipog
+      ? String(a.vehiculo.tipog).toLowerCase()
+      : "";
+
     const matchVehiculo = vehiculo
-      ? idVehiculo === vehiculo || tipoVehiculo.includes(vehiculo.toLowerCase())
+      ? idVehiculo === vehiculo ||
+        tipoVehiculo.includes(vehiculo.toLowerCase())
       : true;
 
     const searchLower = search.toLowerCase();
+
     const matchSearch = searchLower
-      ? a.descripcion?.toLowerCase().includes(searchLower) || choferNombre.includes(searchLower)
+      ? a.descripcion?.toLowerCase().includes(searchLower) ||
+        choferNombre.includes(searchLower)
       : true;
 
     return matchChofer && matchVehiculo && matchSearch;
@@ -104,9 +110,11 @@ export default function JobApplicationTable() {
   );
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md p-4">
+    <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md p-4">
+
       {/* HEADER */}
       <div className="flex justify-between items-center mb-4">
+
         <SearchBar
           chofer={chofer}
           setChofer={setChofer}
@@ -123,32 +131,40 @@ export default function JobApplicationTable() {
 
         <button
           onClick={handleOpenCreate}
-         className="flex items-center gap-3
-             bg-gradient-to-r from-blue-600 to-blue-500
-             hover:from-blue-700 hover:to-blue-600
-             text-white px-5 py-3 rounded-lg shadow-lg font-medium
-             focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2
-             transition-all duration-300
-             hover:scale-105 active:scale-95
-             mb-4"  
-          >
+          className="flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500
+          hover:from-blue-700 hover:to-blue-600 text-white px-5 py-3 rounded-lg shadow-lg font-medium
+          focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2
+          transition-all duration-300 hover:scale-105 active:scale-95 mb-4"
+        >
           <FiPlus size={18} />
           Agregar Solicitud
         </button>
+
       </div>
 
       {/* TABLE */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-        <table className="w-full text-sm">
-          <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+
+        <table className="w-full text-sm bg-white dark:bg-gray-900">
+
+          <thead className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-900">
             <tr>
-              <th className="border px-3 py-2">#</th>
-              <th className="border px-3 py-2">Chofer</th>
-              <th className="border px-3 py-2">Vehículo</th>
-              <th className="border px-3 py-2">Accesorios</th>
-              <th className="border px-3 py-2">Descripción</th>
-              <th className="border px-3 py-2">Fecha</th>
-              <th className="border px-3 py-2">Operación</th>
+              {[
+                "#",
+                "Chofer",
+                "Vehículo",
+                "Accesorios",
+                "Descripción",
+                "Fecha",
+                "Operación",
+              ].map((h) => (
+                <th
+                  key={h}
+                  className="border border-gray-200 dark:border-gray-700 px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-300"
+                >
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
 
@@ -164,22 +180,23 @@ export default function JobApplicationTable() {
               ))
             ) : (
               <tr>
-                <td colSpan={7} className="text-center py-4 text-gray-500">
+                <td
+                  colSpan={7}
+                  className="text-center py-4 text-gray-500 dark:text-gray-400"
+                >
                   No hay registros
                 </td>
               </tr>
             )}
           </tbody>
+
         </table>
+
       </div>
 
       {/* PAGINATION */}
       <div className="flex justify-center mt-4">
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          setPage={setPage}
-        />
+        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
       </div>
 
       {/* CREATE MODAL */}
@@ -192,6 +209,7 @@ export default function JobApplicationTable() {
           accesorios={accessories}
         />
       )}
+
     </div>
   );
 }

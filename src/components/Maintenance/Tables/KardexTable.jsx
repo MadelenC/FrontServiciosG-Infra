@@ -79,8 +79,10 @@ export default function KardexTable({ onRealizar }) {
         />
         <button
           onClick={() => window.print()}
-          className="bg-orange-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-        >
+         className="flex items-center gap-3 bg-gradient-to-r from-orange-600 to-orange-500
+              hover:from-orange-700 hover:to-orange-600 text-white px-5 py-3 rounded-lg shadow-lg font-medium
+              focus:outline-none focus:ring-4 focus:ring-orange-400 focus:ring-offset-2 transition-all duration-300
+              hover:scale-105 active:scale-95 mb-4">
           Imprimir
         </button>
       </div>

@@ -8,12 +8,12 @@ export default function TableJobApplication({
   onDelete,
 }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+    <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
 
-      <table className="w-full text-sm bg-white border-collapse">
+      <table className="w-full text-sm bg-white dark:bg-gray-900 border-collapse">
 
         {/* HEADER */}
-        <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
+        <thead className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-900">
           <tr>
             {[
               "#",
@@ -26,7 +26,7 @@ export default function TableJobApplication({
             ].map((h) => (
               <th
                 key={h}
-                className="border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700"
+                className="border border-gray-200 dark:border-gray-700 px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-300"
               >
                 {h}
               </th>
@@ -49,7 +49,10 @@ export default function TableJobApplication({
             ))
           ) : (
             <tr>
-              <td colSpan={7} className="text-center py-4 text-gray-500">
+              <td
+                colSpan={7}
+                className="text-center py-4 text-gray-500 dark:text-gray-400"
+              >
                 No se encontraron solicitudes.
               </td>
             </tr>

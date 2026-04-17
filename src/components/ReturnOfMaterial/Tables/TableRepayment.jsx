@@ -6,77 +6,105 @@ export default function TableRepayment({ data, onAction }) {
   const [endDate, setEndDate] = useState("");
   const [search, setSearch] = useState("");
 
-  // Filtrar datos por fechas y por búsqueda de nombre
-  const filteredData = data?.filter((item) => {
-    const itemDate = new Date(item.fecha);
-    const matchStart = startDate ? itemDate >= new Date(startDate) : true;
-    const matchEnd = endDate ? itemDate <= new Date(endDate) : true;
-    const matchSearch = item.nombre
-      ? item.nombre.toLowerCase().includes(search.toLowerCase())
-      : true;
-    return matchStart && matchEnd && matchSearch;
-  }) || [];
+  const filteredData =
+    data?.filter((item) => {
+      const itemDate = new Date(item.fecha);
+      const matchStart = startDate ? itemDate >= new Date(startDate) : true;
+      const matchEnd = endDate ? itemDate <= new Date(endDate) : true;
+      const matchSearch = item.nombre
+        ? item.nombre.toLowerCase().includes(search.toLowerCase())
+        : true;
+      return matchStart && matchEnd && matchSearch;
+    }) || [];
 
   const handlePrint = () => {
     window.print();
   };
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm p-4 bg-white">
+    <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-4 bg-white dark:bg-gray-900">
 
-      {/* HEADER: búsqueda + filtro fechas + imprimir */}
+      {/* HEADER */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
-        <div className="flex gap-2 items-center">
+
+        <div className="flex flex-wrap gap-2 items-center text-gray-700 dark:text-gray-200">
+
           <input
             type="text"
             placeholder="Buscar por nombre..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border px-3 py-1 rounded shadow-sm"
+            className="border px-3 py-1 rounded shadow-sm
+                       bg-white dark:bg-gray-800
+                       dark:border-gray-700 dark:text-gray-100"
           />
-          <label>
+
+          <label className="text-sm">
             Desde:{" "}
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="border px-2 py-1 rounded"
+              className="border px-2 py-1 rounded
+                         bg-white dark:bg-gray-800
+                         dark:border-gray-700 dark:text-gray-100"
             />
           </label>
-          <label>
+
+          <label className="text-sm">
             Hasta:{" "}
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="border px-2 py-1 rounded"
+              className="border px-2 py-1 rounded
+                         bg-white dark:bg-gray-800
+                         dark:border-gray-700 dark:text-gray-100"
             />
           </label>
+
         </div>
 
         <button
           onClick={handlePrint}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+          className="
+            bg-green-600 hover:bg-green-700
+            text-white px-4 py-2 rounded
+            transition
+          "
         >
           Imprimir
         </button>
       </div>
 
       {/* TABLA */}
-      <table className="w-full text-sm bg-white border-collapse">
-        <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
+      <table className="w-full text-sm border-collapse">
+
+        <thead className="bg-gradient-to-r from-blue-50 to-blue-100
+                          dark:from-gray-800 dark:to-gray-700">
+
           <tr>
-            {["#", "Serial", "Fecha", "Nombre", "Cantidad", "Detalle", "Vehiculo", "Operación"].map(
-              (header) => (
-                <th
-                  key={header}
-                  className="border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700"
-                >
-                  {header}
-                </th>
-              )
-            )}
+            {[
+              "#",
+              "Serial",
+              "Fecha",
+              "Nombre",
+              "Cantidad",
+              "Detalle",
+              "Vehiculo",
+              "Operación",
+            ].map((header) => (
+              <th
+                key={header}
+                className="border px-3 py-2 text-left font-semibold
+                           text-gray-700 dark:text-gray-200
+                           dark:border-gray-700"
+              >
+                {header}
+              </th>
+            ))}
           </tr>
+
         </thead>
 
         <tbody>
@@ -91,12 +119,16 @@ export default function TableRepayment({ data, onAction }) {
             ))
           ) : (
             <tr>
-              <td colSpan={8} className="text-center py-4 text-gray-500">
+              <td
+                colSpan={8}
+                className="text-center py-4 text-gray-500 dark:text-gray-400"
+              >
                 No hay registros
               </td>
             </tr>
           )}
         </tbody>
+
       </table>
     </div>
   );

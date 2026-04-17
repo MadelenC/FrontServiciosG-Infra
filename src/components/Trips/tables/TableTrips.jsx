@@ -3,12 +3,12 @@ import TripsRow from "./TripsRow";
 
 export default function TableTrips({ trips, onOpenModal, onCancelTrip }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+    <div className="overflow-x-auto rounded-xl border border-gray-700 shadow-sm bg-gray-900">
 
-      <table className="w-full border-collapse text-sm bg-white">
+      <table className="w-full border-collapse text-sm text-gray-200">
 
-        {/* HEADER IGUAL ESTILO CHECKBUDGET */}
-        <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
+        {/* HEADER */}
+        <thead className="bg-gray-800">
           <tr>
             {[
               "#",
@@ -24,7 +24,7 @@ export default function TableTrips({ trips, onOpenModal, onCancelTrip }) {
             ].map((head) => (
               <th
                 key={head}
-                className="border border-gray-200 px-3 py-2 text-left font-semibold text-gray-700"
+                className="border border-gray-700 px-3 py-2 text-left font-semibold text-gray-300"
               >
                 {head}
               </th>
@@ -47,7 +47,7 @@ export default function TableTrips({ trips, onOpenModal, onCancelTrip }) {
             <tr>
               <td
                 colSpan={10}
-                className="text-center py-4 text-gray-500"
+                className="text-center py-6 text-gray-400"
               >
                 No se encontraron viajes.
               </td>

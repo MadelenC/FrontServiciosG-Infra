@@ -16,14 +16,16 @@ export default function TableFuel({ data }) {
   ];
 
   return (
-    <div className="overflow-x-auto w-full">
-      <table className="min-w-[1000px] w-full text-sm border-collapse border border-gray-300">
-        <thead className="bg-blue-100">
+    <div className="overflow-x-auto w-full rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+
+      <table className="min-w-[1000px] w-full text-sm border-collapse bg-white dark:bg-gray-900">
+
+        <thead className="bg-blue-100 dark:bg-gray-800">
           <tr>
             {headers.map((head) => (
               <th
                 key={head}
-                className="px-6 py-3 text-left font-semibold text-gray-700 border-b border-gray-300 whitespace-nowrap"
+                className="px-6 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 whitespace-nowrap"
               >
                 {head}
               </th>
@@ -44,14 +46,16 @@ export default function TableFuel({ data }) {
             <tr>
               <td
                 colSpan={headers.length}
-                className="text-center py-10 text-gray-500"
+                className="text-center py-10 text-gray-500 dark:text-gray-400"
               >
                 No hay registros
               </td>
             </tr>
           )}
         </tbody>
+
       </table>
+
     </div>
   );
 }
