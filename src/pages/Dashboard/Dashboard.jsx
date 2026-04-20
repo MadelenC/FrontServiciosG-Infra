@@ -1,6 +1,5 @@
-import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
-import DashboardCards from "./DashboardCards";
+import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import DashboardChart from "./DashboardChart";
 
 export default function Dashboard() {
@@ -8,59 +7,86 @@ export default function Dashboard() {
     <div className="space-y-6">
 
       <PageMeta
-        title="Dashboard | Infraestructura - UATF"
-        description="Panel principal del sistema"
+        title="Dashboard | Sistema"
+        description="Panel moderno de control"
       />
 
       <PageBreadcrumb pageTitle="Dashboard" />
 
       {/* HEADER */}
-      <div className="text-center space-y-2">
-        <h1 className="text-4xl font-bold text-gray-800 dark:text-white">
-          TABLERO DE CONTROL
+      <div>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+          Control del Sistema
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Resumen general del sistema de infraestructura
+        <p className="text-sm text-gray-500">
+          Monitoreo general en tiempo real
         </p>
       </div>
 
-      {/* CARDS */}
-      <DashboardCards />
+      {/* ================= KPIs (ESTADO DEL SISTEMA) ================= */}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
 
-      {/* ANALYTICS */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+        <div className="p-4 rounded-xl border bg-white dark:bg-gray-900">
+          <p className="text-sm text-gray-500">Actividad</p>
+          <h2 className="text-xl font-bold">Alta</h2>
+        </div>
 
-        <DashboardChart />
+        <div className="p-4 rounded-xl border bg-white dark:bg-gray-900">
+          <p className="text-sm text-gray-500">Estado</p>
+          <h2 className="text-xl font-bold text-green-500">Operativo</h2>
+        </div>
 
-        {/* STATUS PANEL */}
-        <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 rounded-2xl shadow-sm">
+        <div className="p-4 rounded-xl border bg-white dark:bg-gray-900">
+          <p className="text-sm text-gray-500">Alertas</p>
+          <h2 className="text-xl font-bold text-red-500">3</h2>
+        </div>
 
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-            Estado del sistema
-          </h2>
+        <div className="p-4 rounded-xl border bg-white dark:bg-gray-900">
+          <p className="text-sm text-gray-500">Consumo</p>
+          <h2 className="text-xl font-bold">Normal</h2>
+        </div>
 
-          <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+      </div>
 
-            <div className="flex justify-between">
-              <span>Viajes activos</span>
-              <span className="font-semibold">12</span>
-            </div>
+      {/* ================= GRÁFICO ================= */}
+      <DashboardChart />
 
-            <div className="flex justify-between">
-              <span> Pendientes</span>
-              <span className="font-semibold text-orange-500">3</span>
-            </div>
+      {/* ================= ALERTAS ================= */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-            <div className="flex justify-between">
-              <span>Autorizaciones</span>
-              <span className="font-semibold text-green-500">45</span>
-            </div>
+        <div className="p-5 bg-white dark:bg-gray-900 border rounded-xl">
+          <h2 className="font-semibold mb-3">Alertas del sistema</h2>
+          <p>⚠ Vehículo 3825 - exceso de KM</p>
+          <p>⚠ Vehículo 1224 - mantenimiento</p>
+        </div>
 
-            <div className="flex justify-between">
-              <span>Usuarios</span>
-              <span className="font-semibold">12</span>
-            </div>
+        <div className="p-5 bg-white dark:bg-gray-900 border rounded-xl">
+          <h2 className="font-semibold mb-3">Últimos eventos</h2>
+          <p>10:15 - viaje iniciado</p>
+          <p>09:30 - combustible cargado</p>
+        </div>
 
+      </div>
+
+      {/* ================= 📁 PDF / DOCUMENTOS ================= */}
+      <div className="p-5 bg-white dark:bg-gray-900 border rounded-xl">
+
+        <h2 className="font-semibold mb-4">
+          Biblioteca de documentos
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          <div className="p-4 border rounded-xl hover:shadow cursor-pointer">
+            📄 Manual de Operaciones
+          </div>
+
+          <div className="p-4 border rounded-xl hover:shadow cursor-pointer">
+            📊 Reporte Mensual
+          </div>
+
+          <div className="p-4 border rounded-xl hover:shadow cursor-pointer">
+            🧾 Formularios de Viaje
           </div>
 
         </div>

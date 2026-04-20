@@ -25,10 +25,20 @@ export default function DashboardChart() {
       p-6 rounded-2xl shadow-sm
     ">
 
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-        Viajes por mes
-      </h2>
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-4">
 
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+          Viajes por mes
+        </h2>
+
+        <span className="text-xs text-gray-400">
+          2026
+        </span>
+
+      </div>
+
+      {/* CHART */}
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
 
@@ -39,15 +49,17 @@ export default function DashboardChart() {
 
           <Tooltip
             contentStyle={{
-              borderRadius: "10px",
+              borderRadius: "12px",
               border: "none",
+              backgroundColor: "#111827",
+              color: "#fff"
             }}
           />
 
           <Bar
             dataKey="viajes"
             fill="#4F46E5"
-            radius={[6, 6, 0, 0]}
+            radius={[8, 8, 0, 0]}
           />
 
         </BarChart>
