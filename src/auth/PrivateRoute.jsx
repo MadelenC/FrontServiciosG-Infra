@@ -7,9 +7,10 @@ export const ProtectedRoute = ({ children }) => {
 };
 
 export const PublicRoute = ({ children }) => {
-  const data = localStorage.getItem("auth-storage");
-  const token = JSON.parse(data) 
-  return token?.state?.token ? <Navigate to="/" /> : children;
+   return children;
+  //const data = localStorage.getItem("auth-storage");
+  //const token = JSON.parse(data) 
+  //return token?.state?.token ? <Navigate to="/" /> : children;
 };
 
 

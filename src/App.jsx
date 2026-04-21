@@ -53,8 +53,6 @@ export default function App() {
 
       <Routes>
 
-        {/* ================= HOME ================= */}
-        
 <Route path="/" element={<Home />} />
         {/* ================= AUTH ================= */}
         <Route
@@ -81,11 +79,8 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* ================= USUARIOS ================= */}
+       {/* ================= MODULOS ================= */}
           <Route path="/usuarios" element={<UserHome />} />
-
-          {/* ================= MODULOS ================= */}
           <Route path="/entidades" element={<UserProfiles />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/vehiculos" element={<FormElements />} />

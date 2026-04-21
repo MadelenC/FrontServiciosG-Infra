@@ -38,7 +38,7 @@ export default function LoginForm() {
 
       console.log("MODULE:", module);
 
-      // 🔥 VALIDACIÓN IMPORTANTE
+      
       if (!module) {
         navigate("/");
         return;
@@ -46,7 +46,7 @@ export default function LoginForm() {
 
       switch (module) {
         case "mantenimiento":
-          navigate("/mantenimiento");
+          navigate("/dashboard");
           break;
 
         case "viajes":
