@@ -5,24 +5,24 @@ export const useUserStore = create(
   devtools(
     persist(
       (set) => ({
-      user: null,
-      token: null,
-      // Guardar usuario
-      setUser: (user) => set({ user }),
-      
-      // Guardar token
-      setToken: (token) => set({ token }),
+        user: null,
+        token: null,
 
-      // Limpiar sesión
-      logout: () => {
-        set({ user: null, token: null });
-        localStorage.removeItem("auth-storage");
-      },
-    }),
-    {
-      name: "auth-storage", // Nombre en localStorage
-    }
+        // Guardar usuario
+        setUser: (user) => set({ user }),
+
+        // Guardar token
+        setToken: (token) => set({ token }),
+
+        // Limpiar sesión
+        logout: () => {
+          set({ user: null, token: null });
+        },
+      }),
+      {
+        name: "auth-storage",
+      }
+    )
   )
-)
 );
 

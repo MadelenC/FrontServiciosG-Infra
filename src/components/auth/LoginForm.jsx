@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { TbLockPassword } from "react-icons/tb";
 import Button from "../ui/button/Button";
 import { useUserStore } from "../../zustand/AuthUsers";
@@ -7,6 +7,10 @@ import { loginService } from "../../services/authService";
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const params = new URLSearchParams(location.search);
+  const module = params.get("module");
 
   const setUser = useUserStore((state) => state.setUser);
   const setToken = useUserStore((state) => state.setToken);
@@ -25,13 +29,38 @@ export default function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const res = await loginService(formData);
 
       setUser(res.user);
       setToken(res.token);
 
-      navigate("/");
+      console.log("MODULE:", module);
+
+      // 🔥 VALIDACIÓN IMPORTANTE
+      if (!module) {
+        navigate("/");
+        return;
+      }
+
+      switch (module) {
+        case "mantenimiento":
+          navigate("/mantenimiento");
+          break;
+
+        case "viajes":
+          navigate("/viajes");
+          break;
+
+        case "servicios":
+          navigate("/servicios");
+          break;
+
+        default:
+          navigate("/");
+      }
+
     } catch (err) {
       console.log(err.response);
       alert(err.response?.message || "Error al iniciar sesión");
@@ -137,10 +166,7 @@ export default function LoginForm() {
           {/* FOOTER */}
           <p className="text-center text-sm text-gray-500">
             ¿No tienes cuenta?{" "}
-            <Link
-              to="/register"
-              className="text-[#2563EB] font-medium hover:underline"
-            >
+            <Link to="/register" className="text-[#2563EB] font-medium hover:underline">
               Regístrate aquí
             </Link>
           </p>
