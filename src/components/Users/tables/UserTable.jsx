@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import UserRow from "./UserRow";
-import EditUserPanel from "../form/EditUserPanel";
+
 
 export default function UserTable({ users }) {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -57,13 +57,7 @@ export default function UserTable({ users }) {
 
       </div>
 
-      {selectedUser && (
-        <EditUserPanel
-          open={true}
-          user={selectedUser}
-          onClose={() => setSelectedUser(null)}
-        />
-      )}
+   
     </>
   );
 }

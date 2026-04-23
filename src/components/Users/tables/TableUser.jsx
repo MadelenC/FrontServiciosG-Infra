@@ -3,7 +3,7 @@ import { useUserStore } from "../../../zustand/userStore";
 import SearchBar from "../search/SearchBar";
 import UserTable from "./UserTable";
 import Pagination from "./Pagination";
-import UserFormPanel from "../form/UserFormPanel";
+
 
 export default function TableUser() {
   const {
@@ -94,14 +94,7 @@ export default function TableUser() {
       {/* PAGINATION */}
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
-      {/* PANEL */}
-      <UserFormPanel
-        open={openPanel}
-        onClose={() => { setOpenPanel(false); setFormType(null); }}
-        formType={formType}
-        setFormType={setFormType}
-      />
-
+     
     </div>
   );
 }

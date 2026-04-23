@@ -9,9 +9,7 @@ import { ScrollToTop } from "./components/common/ScrollToTop";
 import { ProtectedRoute, PublicRoute } from "./auth/PrivateRoute";
 import NotFound from "./pages/OtherPage/NotFound";
 
-import Dashboard from "./pages/Dashboard/Dashboard";
-import UserHome from "./pages/UserList/UserHome";
-import UserProfiles from "./pages/Entities/EntitiesHome";
+
 
 import Videos from "./pages/UiElements/Videos";
 import Images from "./pages/UiElements/Images";
@@ -20,28 +18,18 @@ import Badges from "./pages/UiElements/Badges";
 import Avatars from "./pages/UiElements/Avatars";
 import Buttons from "./pages/UiElements/Buttons";
 
-import Calendar from "./pages/Trips/Calendar";
-import Travelrol from "./pages/Travelrol/travelTables";
-import FormElements from "./pages/Vehiculos/VehiculoHome";
-import Combustible from "./pages/combustible/Combustible";
-import Destinations from "./pages/Destinations/destinations";
-import Maps from "./pages/Maps/Maps";
-import Reservations from "./pages/Reservations/ReservationsHome";
-
-import TripsHome from "./pages/Trips/TripsHome";
-import CheckBudgetHome from "./pages/TravelBudget/CheckBudgetHome";
-import CashBudgetHome from "./pages/TravelBudget/CashBudgetHome";
-import DepartureHome from "./pages/DepartureAuthorization/DepartureHome";
-import TripReportHome from "./pages/TripReport/TripReportHome";
-import JobApplicationHome from "./pages/JobApplication/JobApplicationHome";
-
-import ApplicationHome from "./pages/Maintenance/ApplicationHome";
-import KardexHome from "./pages/Maintenance/KardexHome";
-
+import Dashboard from "./pages/Dashboard/Dashboard";
+import UserHome from "./pages/UserList/UserHome";
+import SeccionesHome from "./pages/Secciones/SeccionesHome";
 import MechanicHome from "./pages/MateriaOrder/MechanicHome";
 import DesktopHome from "./pages/MateriaOrder/DesktopHome";
+import ModifyHome from "./pages/ModifyRequets/ModifyHome";
+import ListHome from "./pages/WorkApproval/ListHome";
+import AcepHome from "./pages/WorkApproval/AcepHome";
+import RechHome from "./pages/WorkApproval/RechHome";
+import Reports from "./pages/WorkApproval/Reports";
+import TripReportHome from "./pages/TripReport/TripReportHome";
 
-import RepaymentHome from "./pages/RepaymentOfMaterial/RepaymentHome";
 
 import Home from "./pages/Home";
 
@@ -81,60 +69,57 @@ export default function App() {
           />
        {/* ================= MODULOS ================= */}
           <Route path="/usuarios" element={<UserHome />} />
-          <Route path="/entidades" element={<UserProfiles />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/vehiculos" element={<FormElements />} />
-          <Route path="/travel-rol" element={<Travelrol />} />
-          <Route path="/combustible" element={<Combustible />} />
-          <Route path="/destinos" element={<Destinations />} />
-          <Route path="/mapas" element={<Maps />} />
-          <Route path="/reservas" element={<Reservations />} />
 
-          {/* VIAJES */}
-          <Route path="/viajes">
-            <Route index element={<TripsHome />} />
-            <Route path="calendar" element={<Calendar />} />
-          </Route>
-
-          {/* PRESUPUESTOS */}
-          <Route path="/presupuestos">
-            <Route index element={<CheckBudgetHome />} />
-            <Route path="cheque" element={<CheckBudgetHome />} />
-            <Route path="caja" element={<CashBudgetHome />} />
-          </Route>
-
-          {/* AUTORIZACION */}
-          <Route path="/autorizacion" element={<DepartureHome />} />
-          <Route path="/informe" element={<TripReportHome />} />
-          <Route path="/Solicitud_Trabajo" element={<JobApplicationHome />} />
-
-          {/* ================= MANTENIMIENTO ================= */}
-          <Route path="/mantenimiento">
-            <Route
-              index
-              element={
-                <ProtectedRoute>
-                  <ApplicationHome />
-                </ProtectedRoute>
-              }
-            />
+          {/* =================Secciones ================= */}
+          <Route path="/secciones"  element={ <ProtectedRoute><SeccionesHome /> </ProtectedRoute>}></Route>
+          {/* Modificar Solicitud*/}
+          <Route
+            path="/solicitud"
+            element={
+              <ProtectedRoute>
+                < ModifyHome />
+              </ProtectedRoute>
+            }
+          />
+          {/* =================Aprobacion de trabajo ================= */}
+          <Route >
             <Route
               path="solicitudes"
               element={
                 <ProtectedRoute>
-                  <ApplicationHome />
+                  <ListHome />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="kardex"
+              path="aceptados"
               element={
                 <ProtectedRoute>
-                  <KardexHome />
+                  < AcepHome/>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="rechazados"
+              element={
+                <ProtectedRoute>
+                  < RechHome/>
+                </ProtectedRoute>
+              }
+            />
+             <Route
+              path="reporte"
+              element={
+                <ProtectedRoute>
+                  < Reports/>
                 </ProtectedRoute>
               }
             />
           </Route>
+
+
+          
+           
 
           {/* ================= PEDIDOS ================= */}
           <Route path="/pedido">
@@ -164,15 +149,7 @@ export default function App() {
             />
           </Route>
 
-          {/* DEVOLUCIONES */}
-          <Route
-            path="/devoluciones"
-            element={
-              <ProtectedRoute>
-                <RepaymentHome />
-              </ProtectedRoute>
-            }
-          />
+          
 
           {/* ================= UI ================= */}
           <Route path="/alerts" element={<Alerts />} />
