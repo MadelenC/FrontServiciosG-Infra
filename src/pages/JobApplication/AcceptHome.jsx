@@ -2,9 +2,9 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import PageMeta from "../../components/common/PageMeta";
 
-import TripReportTable from "../../components/TripReport/Tables/TripReportTable";
+import AcceptTable from "../../components/JobApplication/Tables/Acep/AcepTable";
 
-export default function TripReportHome() {
+export default function AcceptHome() {
   return (
     <>
       <PageMeta
@@ -16,7 +16,7 @@ export default function TripReportHome() {
 
       <div className="space-y-6">
         <ComponentCard title="Lista de Informes de Viajes">
-          <TripReportTable />
+          < AcceptTable />
         </ComponentCard>
       </div>
     </>

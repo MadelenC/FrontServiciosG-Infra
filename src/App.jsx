@@ -21,15 +21,20 @@ import Buttons from "./pages/UiElements/Buttons";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import UserHome from "./pages/UserList/UserHome";
 import SeccionesHome from "./pages/Secciones/SeccionesHome";
-import MechanicHome from "./pages/MateriaOrder/MechanicHome";
-import DesktopHome from "./pages/MateriaOrder/DesktopHome";
+
 import ModifyHome from "./pages/ModifyRequets/ModifyHome";
 import ListHome from "./pages/WorkApproval/ListHome";
 import AcepHome from "./pages/WorkApproval/AcepHome";
 import RechHome from "./pages/WorkApproval/RechHome";
 import Reports from "./pages/WorkApproval/Reports";
-import TripReportHome from "./pages/TripReport/TripReportHome";
 
+import PedHome from "./pages/OrderApproval/PedHome";
+import AceptHome from "./pages/OrderApproval/AceptHome";
+import RechaHome from "./pages/OrderApproval/RechaHome";
+
+import ListarHome from "./pages/JobApplication/ListarHome";
+import AcceptHome from "./pages/JobApplication/AcceptHome";
+import RechazarHome from "./pages/JobApplication/RechazarHome";
 
 import Home from "./pages/Home";
 
@@ -58,7 +63,7 @@ export default function App() {
         <Route element={<AppLayout />}>
 
 
-          {/* 🔥 DASHBOARD */}
+          {/* DASHBOARD */}
           <Route
             path="/dashboard"
             element={
@@ -117,33 +122,73 @@ export default function App() {
             />
           </Route>
 
-
-          
-           
-
           {/* ================= PEDIDOS ================= */}
           <Route path="/pedido">
             <Route
               index
               element={
                 <ProtectedRoute>
-                  <MechanicHome />
+                  <PedHome />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="mecanico"
+              path="pedido"
               element={
                 <ProtectedRoute>
-                  <MechanicHome />
+                  <PedHome  />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="escritorio"
+              path="aceptados"
               element={
                 <ProtectedRoute>
-                  <DesktopHome />
+                  <AceptHome  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="rechazados"
+              element={
+                <ProtectedRoute>
+                  <RechaHome />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+
+           {/* ================= Solicitud de trabajo================= */}
+          <Route path="/solicitud">
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  < ListarHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="solicitud"
+              element={
+                <ProtectedRoute>
+                  <ListarHome  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="aceptados"
+              element={
+                <ProtectedRoute>
+                  <AcceptHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="rechazados"
+              element={
+                <ProtectedRoute>
+                  <RechazarHome/>
                 </ProtectedRoute>
               }
             />

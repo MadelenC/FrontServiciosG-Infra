@@ -1,7 +1,7 @@
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import PageMeta from "../../components/common/PageMeta";
-import DesktopTable from "../../components/MaterialOrder/Tables/DesktopTable";
+import PedTable from "../../components/OrderApproval/Tables/Ped/PedTable";
 export default function Maps() {
   return (
     <>
@@ -12,7 +12,7 @@ export default function Maps() {
       <PageBreadcrumb pageTitle="" />
       <div className="space-y-6 justify-center">
         <ComponentCard title="Pedidos de Materiales">
-          <DesktopTable/>
+          <PedTable/>
         </ComponentCard>
       </div>
     </>

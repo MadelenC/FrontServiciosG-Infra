@@ -66,11 +66,20 @@ const navItems = [
 
     ] 
   },
-  {name: "Pedido de Material", 
+  {name: "Aprovacion de Pedidos", 
     icon: <BiPackage className="text-white" />, 
     subItems: [
-      { name: "Mecanico", path: "/pedido/mecanico", pro: false,icon:<BiWrench className="text-white"/> },
-      { name: "Escritorio/Demas", path: "/pedido/escritorio", pro: false, icon:<BiClipboard className="text-white"/> } 
+      { name: "Lista de pedidos", path: "/pedido", pro: false,icon:<BiWrench className="text-white"/> },
+      { name: "Lista de aceptados", path: "/pedido/aceptados", pro: false, icon:<BiClipboard className="text-white"/> }, 
+      { name: "Lista de rechazados", path: "/pedido/rechazados", pro: false, icon:<BiClipboard className="text-white"/> } 
+    ] 
+  },
+   {name: "Solicitud de Trabajo", 
+    icon: <BiPackage className="text-white" />, 
+    subItems: [
+      { name: "Listar", path: "/solicitud", pro: false,icon:<BiWrench className="text-white"/> },
+      { name: "Lista de aceptados", path: "/solicitud/aceptados", pro: false, icon:<BiClipboard className="text-white"/> }, 
+      { name: "Lista de rechazados", path: "/solicitud/rechazados", pro: false, icon:<BiClipboard className="text-white"/> } 
     ] 
   },
                    
