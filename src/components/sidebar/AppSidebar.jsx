@@ -26,15 +26,14 @@ const navItems = [
    //{ name: "Informe de viajes", icon: <FaFileLines className="text-white" />, subItems: [{ name: "Mostrar", path: "/informe", pro: false,icon:<FaListUl className="text-white " /> }] },
  
   { name: "Secciones", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Mostrar", path: "/secciones", pro: false, icon:<FaListUl className="text-white " />}] },
-  { name: "Modificar Solicitud", icon: <MdReplyAll  className="text-white" />, subItems: [{ name: "Listar Solicitudes", path: "/solicitud", pro: false,icon:<FaListUl className="text-white " /> }] },  
+  { name: "Modificar Solicitud", icon: <MdReplyAll  className="text-white" />, subItems: [{ name: "Listar Solicitudes", path: "/solicambiar", pro: false,icon:<FaListUl className="text-white " /> }] },  
   {name: "Aprobacion de Trabajo", 
     icon: <BiCog className="text-white" />, 
     subItems: [
       { name: "Listar Solicitudes de Trabajo", path: "/solicitudes", pro: false, icon: <LuClipboardCopy className="text-white"/> },
       { name: "Lista de Acepatdos", path: "/aceptados", pro: false, icon: <BiFile className="text-white"/>},
       {name: "Lista de Rechazados", path:"/rechazados", pro: false,icon: <BiFile className="text-white"/>},
-      {name:"Reporte", path:"/reporte", pro: false, icon: <BiFile className="text-white"/>},
-
+     
     ] 
   },
   {name: "Aprovacion de Pedidos", 

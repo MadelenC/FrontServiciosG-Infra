@@ -125,7 +125,7 @@ export default function TableUser() {
       {/* MODAL REPORTE */}
       {openReport && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-5 rounded-lg w-full max-w-md relative">
+          <div className="relative w-full max-w-md">
 
             <button
               onClick={() => setOpenReport(false)}

@@ -21,8 +21,7 @@ export default function UserTable({ users }) {
                 "Cédula",
                 "Celular",
                 "Tipo",
-                "Cargo",
-                "Acciones",
+                "Operaciones",
               ].map((head) => (
                 <th
                   key={head}

@@ -12,7 +12,7 @@ export default function EditUserPanel({ open, onClose, user }) {
 
   useEffect(() => {
     if (open) {
-      fetchEntidades(); // Solo traemos entidades cuando se abre el panel
+      fetchEntidades(); 
     }
   }, [open, fetchEntidades]);
 

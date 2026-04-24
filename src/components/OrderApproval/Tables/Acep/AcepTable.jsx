@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import PedRow from "./AcepRow";
+import AcepRow from "./AcepRow";
 import Pagination from "../Pagination";
 import SearchBar from "../../SearchBar/SearchBar";
 
@@ -9,7 +9,12 @@ import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 
 export default function AcepTable() {
 
-  const { orders, fetchOrders } = useOrderApprovalStore();
+  const {
+    orders,
+    fetchOrders,
+    editOrder  
+  } = useOrderApprovalStore();
+
   const { institutions, fetchInstitutions } = useInstitutionStore();
   const { maintenances, fetchMaintenances } = useMaintenanceStore();
 
@@ -30,7 +35,21 @@ export default function AcepTable() {
     setPage(1);
   }, [search, taller, institution]);
 
-  
+  //  CAMBIO DE ESTADO
+  const handleAction = async (action, item) => {
+
+    if (action === "reject") {
+      await editOrder(item.id, {
+        ...item,
+        aprobacion: "rechazado",   // 👈 AQUÍ CAMBIA
+      });
+    }
+
+    if (action === "info") {
+      console.log("ver info", item);
+    }
+  };
+
   const maintenanceMap = new Map(
     maintenances.map((m) => [String(m.id), m.descripcion])
   );
@@ -38,19 +57,18 @@ export default function AcepTable() {
   const getDescripcion = (id) =>
     maintenanceMap.get(String(id)) || "-";
 
-  
+  // SOLO ACEPTADOS
   const filtered = orders.filter((item) => {
 
     const searchText = search.toLowerCase();
 
     const institucionNombre =
-      item.institucion?.nombre?.toLowerCase() || "";
+      item.ins_id?.toString().toLowerCase() || "";
 
     const itemTaller =
       (item.taller || "").toLowerCase();
 
-    // SOLO aceptado
-    const isPending = item.aprobacion === "aceptado";
+    const isAccepted = item.aprobacion === "aceptado";
 
     const matchSearch =
       !search ||
@@ -65,7 +83,7 @@ export default function AcepTable() {
       !institution ||
       String(item.ins_id) === String(institution);
 
-    return isPending && matchSearch && matchTaller && matchInstitution;
+    return isAccepted && matchSearch && matchTaller && matchInstitution;
   });
 
   const totalPages = Math.ceil(filtered.length / limit);
@@ -78,7 +96,6 @@ export default function AcepTable() {
   return (
     <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
 
-      {/* SEARCH */}
       <div className="mb-4">
         <SearchBar
           search={search}
@@ -94,7 +111,6 @@ export default function AcepTable() {
         />
       </div>
 
-      {/* TABLE */}
       <div className="overflow-x-auto">
 
         <table className="w-full text-sm">
@@ -120,17 +136,18 @@ export default function AcepTable() {
           <tbody>
             {currentData.length > 0 ? (
               currentData.map((item, i) => (
-                <PedRow
+                <AcepRow
                   key={item.id}
                   item={item}
                   index={(page - 1) * limit + i + 1}
                   getDescripcion={getDescripcion}
+                  onAction={handleAction}
                 />
               ))
             ) : (
               <tr>
                 <td colSpan={7} className="text-center py-4">
-                  No hay registros pendientes
+                  No hay registros
                 </td>
               </tr>
             )}
@@ -140,7 +157,6 @@ export default function AcepTable() {
 
       </div>
 
-      {/* PAGINACIÓN */}
       <div className="flex justify-center mt-4">
         <Pagination
           page={page}

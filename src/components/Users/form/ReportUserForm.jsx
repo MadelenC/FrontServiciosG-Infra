@@ -40,19 +40,19 @@ export default function ReportUserForm({ onPrint }) {
         >
           <option value="">Todos</option>
           <option value="administrador">Administrador</option>
-          <option value="supervisor">Supervisor</option>
-          <option value="chofer">Chofer</option>
-          <option value="mecanico">Mecánico</option>
-          <option value="mensajero">Mensajero</option>
-          <option value="encargados">Encargados</option>
-          <option value="electricista">Electricista</option>
-          <option value="m. general">m. general</option>
-          <option value="carpintero">carpintero</option>
-          <option value="albañil">albañil</option>
+           <option value="encargados">Encargados</option>
+           <option value="mensajero">Mensajero</option>
+            <option value="electricista">Electricista</option>
+           <option value="m. general">m. general</option>
+           <option value="mantenimiento">mantenimiento</option>
+           <option value="carpintero">carpintero</option>
+           <option value="albañil">albañil</option>
           <option value="plomero">plomero</option>
           <option value="ser. general">ser. general</option>
-          <option value="jardineria">jardineria</option>
-          <option value="mantenimiento">mantenimiento</option>
+           <option value="jardineria">jardineria</option>
+          <option value="supervisor">Supervisor</option>
+          <option value="chofer">Chofer</option>
+        
           
         </select>
       </div>

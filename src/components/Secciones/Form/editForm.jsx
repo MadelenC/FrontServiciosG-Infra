@@ -5,7 +5,7 @@ export default function EditSeccionForm({
   isOpen,
   onClose,
   onSave,
-  onDelete, // 🔥 nuevo
+  onDelete, 
   initialData,
 }) {
   const [seccion, setSeccion] = useState("");
@@ -66,7 +66,7 @@ export default function EditSeccionForm({
     }
   };
 
-  // ELIMINAR 🔥
+  
   const handleDelete = async () => {
     if (!initialData?.id) return;
 

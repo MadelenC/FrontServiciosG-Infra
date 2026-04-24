@@ -9,7 +9,7 @@ import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 
 export default function PedTable() {
 
-  const { orders, fetchOrders } = useOrderApprovalStore();
+  const { orders, fetchOrders, editOrder } = useOrderApprovalStore();
   const { institutions, fetchInstitutions } = useInstitutionStore();
   const { maintenances, fetchMaintenances } = useMaintenanceStore();
 
@@ -30,6 +30,21 @@ export default function PedTable() {
     setPage(1);
   }, [search, taller, institution]);
 
+  // ✅ CAMBIO DE ESTADO REAL
+  const handleAction = async (action, item) => {
+
+    const newStatus =
+      action === "accept"
+        ? "aceptado"
+        : "rechazado";
+
+    await editOrder(item.id, {
+      ...item,
+      aprobacion: newStatus,
+    });
+
+  };
+
   // 🔥 MAPA DESCRIPCIÓN
   const maintenanceMap = new Map(
     maintenances.map((m) => [String(m.id), m.descripcion])
@@ -38,18 +53,17 @@ export default function PedTable() {
   const getDescripcion = (id) =>
     maintenanceMap.get(String(id)) || "-";
 
-  // 🔥 FILTRO SOLO PENDIENTES + SEARCH
+  // 🔥 SOLO PENDIENTES
   const filtered = orders.filter((item) => {
 
     const searchText = search.toLowerCase();
 
     const institucionNombre =
-      item.institucion?.nombre?.toLowerCase() || "";
+      item.ins_id?.toString().toLowerCase() || "";
 
     const itemTaller =
       (item.taller || "").toLowerCase();
 
-    // 🔴 SOLO PENDIENTES
     const isPending = item.aprobacion === "pendiente";
 
     const matchSearch =
@@ -124,6 +138,7 @@ export default function PedTable() {
                   key={item.id}
                   item={item}
                   index={(page - 1) * limit + i + 1}
+                  onAction={handleAction}
                   getDescripcion={getDescripcion}
                 />
               ))

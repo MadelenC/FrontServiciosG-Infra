@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useUserStore } from "../../../zustand/userStore";
-import { useAuthStore } from "../../../zustand/AuthUsers"; // 👈 NUEVO
+import { useAuthStore } from "../../../zustand/AuthUsers"; 
 
 export default function EncargadoForm({ onSubmit, onClose }) {
   const { users } = useUserStore(); 
-  const { user } = useAuthStore(); // 👈 NUEVO (usuario logueado)
+  const { user } = useAuthStore(); 
 
   const [formData, setFormData] = useState({
     nombres: "",
@@ -98,7 +98,7 @@ export default function EncargadoForm({ onSubmit, onClose }) {
       celular: formData.celular.trim(),
       email: formData.email.trim(),
 
-      // 🔥 AQUÍ ESTÁ EL INSERTADOR
+      //  INSERTADOR
       insertador:
         `${user?.nombres || ""} ${user?.apellidos || ""}`.trim() ||
         "DESCONOCIDO",

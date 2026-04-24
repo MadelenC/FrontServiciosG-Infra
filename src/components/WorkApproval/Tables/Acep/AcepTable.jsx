@@ -6,15 +6,26 @@ import SearchBar from "../../Search/SearchBar";
 import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 import { useInstitutionStore } from "../../../../zustand/useInstitutionStore";
 
+import WorkForm from "../../Form/WorkForm";
+
 export default function AcepTable() {
 
-  const { maintenances, fetchMaintenances } = useMaintenanceStore();
+  const {
+    maintenances,
+    fetchMaintenances,
+    editMaintenance
+  } = useMaintenanceStore();
+
   const { institutions, fetchInstitutions } = useInstitutionStore();
 
   const [search, setSearch] = useState("");
   const [taller, setTaller] = useState("");
   const [institution, setInstitution] = useState("");
   const [page, setPage] = useState(1);
+
+
+  const [openForm, setOpenForm] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const limit = 8;
 
@@ -27,7 +38,24 @@ export default function AcepTable() {
     setPage(1);
   }, [search, taller, institution]);
 
-  // 🔥 SOLO ACEPTADOS + SEARCH + FILTROS
+
+  const handleAction = async (action, item) => {
+
+   //ABRIR FORMULARIO (INFORME)
+    if (action === "accept") {
+      setSelectedItem(item);
+      setOpenForm(true);
+      return;
+    }
+
+    //  RECHAZAR
+    await editMaintenance(item.id, {
+      ...item,
+      aprobacion: "rechazado",
+    });
+  };
+
+  // SOLO ACEPTADOS
   const filtered = maintenances.filter((item) => {
 
     const isAccepted = item.aprobacion === "aceptado";
@@ -65,7 +93,7 @@ export default function AcepTable() {
   );
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
+    <div className="relative overflow-hidden rounded-xl border bg-white shadow-md p-4">
 
       {/* SEARCH */}
       <div className="mb-4">
@@ -85,7 +113,6 @@ export default function AcepTable() {
 
       {/* TABLE */}
       <div className="overflow-x-auto">
-
         <table className="w-full text-sm">
 
           <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
@@ -114,6 +141,7 @@ export default function AcepTable() {
                   key={item.id}
                   item={item}
                   index={(page - 1) * limit + i + 1}
+                  onAction={handleAction}
                 />
               ))
             ) : (
@@ -126,13 +154,37 @@ export default function AcepTable() {
           </tbody>
 
         </table>
-
       </div>
 
       {/* PAGINACIÓN */}
       <div className="flex justify-center mt-4">
-        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          setPage={setPage}
+        />
       </div>
+
+      {/* 🔥 MODAL FORM */}
+      {openForm && selectedItem && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+          <WorkForm
+            onClose={() => setOpenForm(false)}
+            onSubmit={async (data) => {
+
+              await editMaintenance(selectedItem.id, {
+                ...selectedItem,
+                informe: data.informe,
+              });
+
+              setOpenForm(false);
+              setSelectedItem(null);
+            }}
+          />
+
+        </div>
+      )}
 
     </div>
   );

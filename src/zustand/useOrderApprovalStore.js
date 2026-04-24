@@ -91,24 +91,26 @@ export const useOrderApprovalStore = create((set, get) => ({
 
  
   editOrder: async (id, data) => {
-    try {
-      const updated = await updateOrder(id, data);
+  try {
+    const updated = await updateOrder(id, data);
 
-      set({
-        orders: get().orders.map((o) =>
-          o.id === id ? updated : o
-        ),
-        currentOrder:
-          get().currentOrder?.id === id
-            ? updated
-            : get().currentOrder,
-      });
+    set({
+      orders: get().orders.map((o) =>
+        o.id === id
+          ? { ...o, ...updated }   // 👈 FIX IMPORTANTE
+          : o
+      ),
+      currentOrder:
+        get().currentOrder?.id === id
+          ? { ...get().currentOrder, ...updated }
+          : get().currentOrder,
+    });
 
-      return { ok: true };
-    } catch (err) {
-      return { ok: false, error: err.message || err };
-    }
-  },
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err.message || err };
+  }
+},
 
  
   removeOrder: async (id) => {

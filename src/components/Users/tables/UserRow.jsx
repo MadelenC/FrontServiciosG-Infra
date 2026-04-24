@@ -40,9 +40,7 @@ export default function UserRow({ user, onEdit }) {
         </Badge>
       </TableCell>
 
-      <TableCell className="border border-gray-200 dark:border-gray-700 px-3 py-2 capitalize text-gray-700 dark:text-gray-300">
-        {user.cargo}
-      </TableCell>
+      
 
       <TableCell className="border border-gray-200 dark:border-gray-700 px-3 py-2">
         <button
@@ -50,8 +48,10 @@ export default function UserRow({ user, onEdit }) {
           title="Editar usuario"
           onClick={() => onEdit(user)}
         >
+        
           <FaEdit size={14} />
         </button>
+        <p className="text center">  (sin permiso)</p>
       </TableCell>
 
     </TableRow>

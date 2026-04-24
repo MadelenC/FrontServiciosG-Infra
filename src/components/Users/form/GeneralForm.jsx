@@ -3,8 +3,8 @@ import { useUserStore } from "../../../zustand/userStore";
 import { useAuthStore } from "../../../zustand/AuthUsers"; // 👈 AGREGADO
 
 export default function GeneralForm({ onSubmit }) {
-  const { users } = useUserStore(); // 👈 se queda igual
-  const { user } = useAuthStore(); // 👈 usuario logueado
+  const { users } = useUserStore(); 
+  const { user } = useAuthStore(); 
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -57,7 +57,7 @@ export default function GeneralForm({ onSubmit }) {
     if (!apellido) newErrors.apellido = "Obligatorio";
     if (!cedula) newErrors.cedula = "Obligatorio";
 
-    // 🔥 VALIDACIÓN CÉDULA DUPLICADA
+    // VALIDACIÓN CÉDULA DUPLICADA
     const exists = users.some(
       (u) => String(u.cedula).trim() === cedula
     );
@@ -85,7 +85,7 @@ export default function GeneralForm({ onSubmit }) {
       celular,
       email: email || undefined,
 
-      // 🔥 INSERTADOR (USUARIO LOGUEADO)
+      //INSERTADOR (USUARIO LOGUEADO)
       insertador:
         `${user?.nombres || ""} ${user?.apellidos || ""}`.trim() ||
         "DESCONOCIDO",
@@ -139,8 +139,19 @@ export default function GeneralForm({ onSubmit }) {
           onChange={handleChange}
           className={inputBase}
         >
-          <option value="">Seleccione</option>
+          <option value="">Todos</option>
           <option value="administrador">Administrador</option>
+           <option value="encargados">Encargados</option>
+           <option value="mensajero">Mensajero</option>
+            <option value="electricista">Electricista</option>
+           <option value="m. general">m. general</option>
+           <option value="mantenimiento">mantenimiento</option>
+           <option value="carpintero">carpintero</option>
+           <option value="albañil">albañil</option>
+          <option value="plomero">plomero</option>
+          <option value="ser. general">ser. general</option>
+           <option value="jardineria">jardineria</option>
+          <option value="supervisor">Supervisor</option>
           <option value="chofer">Chofer</option>
         </select>
       </div>

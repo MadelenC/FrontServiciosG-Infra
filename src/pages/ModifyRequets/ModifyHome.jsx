@@ -2,7 +2,7 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import PageMeta from "../../components/common/PageMeta";
 import ModifyTable from "../../components/ModifyRequest/Tables/ModifyTable";
-export default function Maps() {
+export default function ModifyHome() {
   return (
     <>
       <PageMeta

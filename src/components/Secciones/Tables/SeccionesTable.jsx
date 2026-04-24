@@ -36,12 +36,12 @@ export default function SeccionesTable() {
     setPage(1);
   }, [search, institution]);
 
-  // 🔥 ORDEN: más nuevo → más viejo
+ 
   const sortedInstitutions = [...institutions].sort(
     (a, b) => b.id - a.id
   );
 
-  // 🔥 FILTRO
+
   const filtered = sortedInstitutions.filter((inst) => {
     const matchSearch =
       !search ||
@@ -60,9 +60,7 @@ export default function SeccionesTable() {
     page * limit
   );
 
-  // =========================
-  // CREATE
-  // =========================
+
   const handleSaveCreate = async (data) => {
     const res = await addInstitution(data);
 
@@ -74,17 +72,13 @@ export default function SeccionesTable() {
     return res;
   };
 
-  // =========================
-  // EDIT OPEN
-  // =========================
+ 
   const handleEdit = (inst) => {
     setSelectedSeccion(inst);
     setModalEditOpen(true);
   };
 
-  // =========================
-  // UPDATE
-  // =========================
+  
   const handleUpdate = async (data) => {
     const res = await editInstitution(selectedSeccion.id, data);
 

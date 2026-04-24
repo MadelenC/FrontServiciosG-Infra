@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import Select from "react-select";
 import { useUserStore } from "../../../zustand/userStore";
 import { useEntidadStore } from "../../../zustand/useEntidadStore";
 import { VscCheck } from "react-icons/vsc";
@@ -25,17 +26,18 @@ export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
     siglas: [],
   });
 
+  
   useEffect(() => {
     if (!user) return;
 
     setFormData({
-      nombres: user.nombres || "",
-      apellidos: user.apellidos || "",
+      nombres: user.nombres ?? "",
+      apellidos: user.apellidos ?? "",
       password: "",
-      email: user.email || "",
-      cedula: user.cedula || "",
-      celular: user.celular || "",
-      tipo: user.tipo || "",
+      email: user.email ?? "",
+      cedula: user.cedula ?? "",
+      celular: user.celular ?? "",
+      tipo: user.tipo ?? "",
     });
 
     setUserEntities({
@@ -46,22 +48,50 @@ export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
     });
   }, [user]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  
+  const handleChange = ({ target }) => {
+    setFormData(prev => ({
+      ...prev,
+      [target.name]: target.value,
+    }));
   };
 
-  const getUniqueOptions = (field) =>
-    [...new Set(entidades.map(e => e[field]).filter(Boolean))];
+ 
+  const options = useMemo(() => {
+    const build = (field) =>
+      [...new Set(entidades.map(e => e[field]).filter(Boolean))].map(v => ({
+        label: v,
+        value: v,
+      }));
+
+    return {
+      facultad: build("facultad"),
+      carrera: build("carrera"),
+      materia: build("materia"),
+      sigla: build("sigla"),
+    };
+  }, [entidades]);
+
+ 
+  const handleSelectChange = (field, selected) => {
+    setUserEntities(prev => ({
+      ...prev,
+      [field]: selected ? selected.map(s => s.value) : [],
+    }));
+  };
+
+  const getValue = (field) =>
+    userEntities[field].map(v => ({ label: v, value: v }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const entidadesPayload = userEntities.facultades.map(facultad => ({
         facultad,
-        carrera: userEntities.carreras[0] || null,
-        materia: userEntities.materias[0] || null,
-        sigla: userEntities.siglas[0] || null,
+        carrera: userEntities.carreras,
+        materia: userEntities.materias,
+        sigla: userEntities.siglas,
       }));
 
       await updateUser(user.id, {
@@ -70,129 +100,51 @@ export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
         entidades: entidadesPayload,
       });
 
-      onUpdate();
+      onUpdate?.();
     } catch (err) {
       console.error(err);
       alert("Error al actualizar usuario");
     }
   };
 
-  const MultiSelect = ({ label, options, value, onChange, chipColor }) => (
-    <div className="flex flex-col space-y-1">
-      <label className="text-xs font-semibold text-gray-900">{label}</label>
-      <select
-        multiple
-        value={value}
-        onChange={(e) =>
-          onChange([...e.target.selectedOptions].map(o => o.value))
-        }
-        className="border border-gray-300 rounded px-2 py-1 text-sm bg-gray-50 max-h-24 overflow-y-auto"
-        style={{ minWidth: "150px" }}
-      >
-        {options.map((op, i) => (
-          <option key={i} value={op}>{op}</option>
-        ))}
-      </select>
-      {value.length > 0 && (
-        <div className="flex flex-wrap gap-1 mt-1">
-          {value.map((item, i) => (
-            <span
-              key={i}
-              className={`${chipColor} px-2 py-0.5 rounded-full text-xs`}
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
-  );
 
   return (
-    <div className="fixed inset-0 top-11 bg-black bg-opacity-30 flex justify-center items-start overflow-auto p-12 z-50 max-h-[100vh]">
-      {/* Contenedor compacto del formulario */}
+    <div className="fixed inset-0 top-11 bg-black bg-opacity-30 flex justify-center items-start overflow-auto p-12 z-50">
+
       <form
         onSubmit={handleSubmit}
-        className="relative bg-white rounded-lg shadow-md p-12 max-w-xl w-full max-h-[80vh] overflow-y-auto"
+        className="relative bg-white rounded-lg shadow-md p-8 max-w-xl w-full max-h-[85vh] overflow-y-auto"
       >
-       {/* Botón cerrar */}
-        <button
+
+        {/* CLOSE */}
+         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-700 font-bold px-3 py-1 rounded hover:bg-gray-200"
-          aria-label="Cerrar formulario"
+          className="absolute top-3 right-3 px-3 py-1 hover:bg-gray-200 rounded"
         >
           X
         </button>
-        <h1 className="text-lg font-bold mb-4 text-center">Editar Usuario</h1>
+
+        <h1 className="text-lg font-bold mb-4 text-center">
+          Editar Usuario
+        </h1>
+
+        {/* FORM */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col">
-            <label className="text-xs font-semibold text-gray-700">Nombre</label>
-            <input
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
-              name="nombres"
-              value={formData.nombres}
-              onChange={handleChange}
-            />
-          </div>
+
+          <Input label="Nombre" name="nombres" value={formData.nombres} onChange={handleChange} />
+          <Input label="Apellido" name="apellidos" value={formData.apellidos} onChange={handleChange} />
+          <Input label="Password" name="password" type="password" value={formData.password} onChange={handleChange} />
+          <Input label="Email" name="email" value={formData.email} onChange={handleChange} />
+          <Input label="Cédula" name="cedula" value={formData.cedula} onChange={handleChange} />
+          <Input label="Celular" name="celular" value={formData.celular} onChange={handleChange} />
 
           <div className="flex flex-col">
-            <label className="text-xs font-semibold text-gray-700">Apellido</label>
-            <input
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
-              name="apellidos"
-              value={formData.apellidos}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs font-semibold text-gray-700">Password</label>
-            <input
-              type="password"
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs font-semibold text-gray-700">Email</label>
-            <input
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs font-semibold text-gray-700">Cédula</label>
-            <input
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
-              name="cedula"
-              value={formData.cedula}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs font-semibold text-gray-700">Celular</label>
-            <input
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
-              name="celular"
-              value={formData.celular}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs font-semibold text-gray-700">Tipo</label>
+            <label className="text-xs font-semibold">Tipo</label>
             <select
-              className="border border-gray-300 rounded px-2 py-1 text-sm bg-white"
               name="tipo"
               value={formData.tipo}
               onChange={handleChange}
+              className="border rounded px-2 py-1 text-sm"
             >
               <option value="">Seleccione...</option>
               <option value="encargado">Encargado</option>
@@ -205,68 +157,88 @@ export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 pt-4 " >
-          <MultiSelect
-            label="Facultad"
-            options={getUniqueOptions("facultad")}
-            value={userEntities.facultades}
-            onChange={(v) => setUserEntities(prev => ({ ...prev, facultades: v }))}
-            chipColor="bg-indigo-100 text-indigo-600"
-            
+        {/* SELECTS */}
+        <div className="grid grid-cols-2 gap-4 mt-4">
+
+          <SelectField
+            label="Facultades"
+            options={options.facultad}
+            value={getValue("facultades")}
+            onChange={(v) => handleSelectChange("facultades", v)}
           />
 
-          <MultiSelect
-            label="Carrera"
-            options={getUniqueOptions("carrera")}
-            value={userEntities.carreras}
-            onChange={(v) => setUserEntities(prev => ({ ...prev, carreras: v }))}
-            chipColor="bg-emerald-100 text-emerald-700"
+          <SelectField
+            label="Carreras"
+            options={options.carrera}
+            value={getValue("carreras")}
+            onChange={(v) => handleSelectChange("carreras", v)}
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4 mt-2">
-          <MultiSelect
-            label="Materia"
-            options={getUniqueOptions("materia")}
-            value={userEntities.materias}
-            onChange={(v) => setUserEntities(prev => ({ ...prev, materias: v }))}
-            chipColor="bg-amber-100 text-amber-700"
+
+          <SelectField
+            label="Materias"
+            options={options.materia}
+            value={getValue("materias")}
+            onChange={(v) => handleSelectChange("materias", v)}
           />
 
-          <MultiSelect
-            label="Sigla"
-            options={getUniqueOptions("sigla")}
-            value={userEntities.siglas}
-            onChange={(v) => setUserEntities(prev => ({ ...prev, siglas: v }))}
-            chipColor="bg-sky-100 text-sky-700"
-
+          <SelectField
+            label="Siglas"
+            options={options.sigla}
+            value={getValue("siglas")}
+            onChange={(v) => handleSelectChange("siglas", v)}
           />
         </div>
 
-        <div className="flex justify-between items-center mt-4 pt-2 border-t">
-         <button
-          type="submit"
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 rounded text-sm"
-        >
-          <VscCheck className="w-4 h-4 " />
-          <span>Actualizar</span>
-        </button>
+        {/* BUTTONS */}
+        <div className="flex justify-between mt-6 pt-3 border-t">
 
+          <button
+            type="submit"
+            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 rounded text-sm"
+          >
+            <VscCheck className="w-4 h-4" />
+            Actualizar
+          </button>
 
           <button
             type="button"
             onClick={onDelete}
             className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded text-sm"
           >
-           <LuTrash2 className="w-4 h-4" />
-           <span>Eliminar </span>
+            <LuTrash2 className="w-4 h-4" />
+            Eliminar
           </button>
+
         </div>
       </form>
     </div>
   );
 }
 
+/* COMPONENTES (igual pero limpio) */
+
+const Input = ({ label, ...props }) => (
+  <div className="flex flex-col">
+    <label className="text-xs font-semibold">{label}</label>
+    <input {...props} className="border rounded px-2 py-1 text-sm" />
+  </div>
+);
+
+const SelectField = ({ label, options, value, onChange }) => (
+  <div className="flex flex-col">
+    <label className="text-xs font-semibold mb-1">{label}</label>
+    <Select
+      isMulti
+      options={options}
+      value={value}
+      onChange={onChange}
+      className="text-sm"
+    />
+  </div>
+);
 
 
 

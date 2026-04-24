@@ -18,7 +18,7 @@ export default function CreateSeccionesForm({
     }
   }, [isOpen]);
 
-  // 🔥 VALIDACIÓN BASE
+  //  VALIDACIÓN BASE
   const validateNombre = (value) => {
     const text = value.trim();
 
@@ -32,11 +32,11 @@ export default function CreateSeccionesForm({
     return null;
   };
 
-  // 🔥 NORMALIZAR TEXTO
+  //  NORMALIZAR TEXTO
   const normalize = (text) =>
     (text || "").trim().toLowerCase();
 
-  // 🔥 INPUT CHANGE
+  // INPUT CHANGE
   const handleChange = (value) => {
     setNombre(value);
 
@@ -44,7 +44,7 @@ export default function CreateSeccionesForm({
     setError(err || "");
   };
 
-  // 🔥 VALIDACIÓN DUPLICADOS (SEPARADA Y FIABLE)
+  // VALIDACIÓN DUPLICADOS (SEPARADA Y FIABLE)
   const isDuplicate = (value) => {
     const val = normalize(value);
 
@@ -53,7 +53,7 @@ export default function CreateSeccionesForm({
     );
   };
 
-  // 🔥 SUBMIT
+  // SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -96,7 +96,7 @@ export default function CreateSeccionesForm({
     }
   };
 
-  // 🔥 estado del botón (UNIFICADO)
+  // estado del botón (UNIFICADO)
   const isValid =
     !validateNombre(nombre) &&
     !isDuplicate(nombre);

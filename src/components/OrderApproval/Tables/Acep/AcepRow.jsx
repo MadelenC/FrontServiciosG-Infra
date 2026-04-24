@@ -56,7 +56,7 @@ export default function AcepRow({
           onClick={() => onAction?.("reject", item)}
           className="px-3 py-1 rounded-md bg-red-100 text-red-700 hover:bg-red-200 text-xs font-semibold"
         >
-          Rechazado
+          Rechazar
         </button>
 
       </TableCell>

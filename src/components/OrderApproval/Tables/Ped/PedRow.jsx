@@ -49,14 +49,14 @@ export default function PedRow({
           onClick={() => onAction?.("info", item)}
           className="px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 text-xs font-semibold"
         >
-          Aceptado
+          Aceptar
         </button>
 
         <button
           onClick={() => onAction?.("reject", item)}
           className="px-3 py-1 rounded-md bg-red-100 text-red-700 hover:bg-red-200 text-xs font-semibold"
         >
-         Rechazado
+         Rechazar
         </button>
 
       </TableCell>

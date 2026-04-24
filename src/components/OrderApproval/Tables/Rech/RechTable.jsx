@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import PedRow from "./RechRow";
+import RechRow from "./RechRow";
 import Pagination from "../Pagination";
 import SearchBar from "../../SearchBar/SearchBar";
 
@@ -9,7 +9,12 @@ import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 
 export default function RechTable() {
 
-  const { orders, fetchOrders } = useOrderApprovalStore();
+  const {
+    orders,
+    fetchOrders,
+    editOrder  
+  } = useOrderApprovalStore();
+
   const { institutions, fetchInstitutions } = useInstitutionStore();
   const { maintenances, fetchMaintenances } = useMaintenanceStore();
 
@@ -30,7 +35,21 @@ export default function RechTable() {
     setPage(1);
   }, [search, taller, institution]);
 
-  
+  //  CAMBIO DE ESTADO
+  const handleAction = async (action, item) => {
+
+    if (action === "accept") {
+      await editOrder(item.id, {
+        ...item,
+        aprobacion: "aceptado",   // 👈 CAMBIA AQUÍ
+      });
+    }
+
+    if (action === "info") {
+      console.log("info", item);
+    }
+  };
+
   const maintenanceMap = new Map(
     maintenances.map((m) => [String(m.id), m.descripcion])
   );
@@ -38,19 +57,18 @@ export default function RechTable() {
   const getDescripcion = (id) =>
     maintenanceMap.get(String(id)) || "-";
 
-  
+  // SOLO RECHAZADOS
   const filtered = orders.filter((item) => {
 
     const searchText = search.toLowerCase();
 
     const institucionNombre =
-      item.institucion?.nombre?.toLowerCase() || "";
+      item.ins_id?.toString().toLowerCase() || "";
 
     const itemTaller =
       (item.taller || "").toLowerCase();
 
-    // SOLO aceptado
-    const isPending = item.aprobacion === "rechazado";
+    const isRejected = item.aprobacion === "rechazado";
 
     const matchSearch =
       !search ||
@@ -65,7 +83,7 @@ export default function RechTable() {
       !institution ||
       String(item.ins_id) === String(institution);
 
-    return isPending && matchSearch && matchTaller && matchInstitution;
+    return isRejected && matchSearch && matchTaller && matchInstitution;
   });
 
   const totalPages = Math.ceil(filtered.length / limit);
@@ -78,7 +96,6 @@ export default function RechTable() {
   return (
     <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
 
-      {/* SEARCH */}
       <div className="mb-4">
         <SearchBar
           search={search}
@@ -94,7 +111,6 @@ export default function RechTable() {
         />
       </div>
 
-      {/* TABLE */}
       <div className="overflow-x-auto">
 
         <table className="w-full text-sm">
@@ -120,17 +136,18 @@ export default function RechTable() {
           <tbody>
             {currentData.length > 0 ? (
               currentData.map((item, i) => (
-                <PedRow
+                <RechRow
                   key={item.id}
                   item={item}
                   index={(page - 1) * limit + i + 1}
                   getDescripcion={getDescripcion}
+                  onAction={handleAction}
                 />
               ))
             ) : (
               <tr>
                 <td colSpan={7} className="text-center py-4">
-                  No hay registros pendientes
+                  No hay registros rechazados
                 </td>
               </tr>
             )}
@@ -140,7 +157,6 @@ export default function RechTable() {
 
       </div>
 
-      {/* PAGINACIÓN */}
       <div className="flex justify-center mt-4">
         <Pagination
           page={page}

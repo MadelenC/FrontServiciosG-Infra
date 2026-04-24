@@ -23,10 +23,11 @@ import UserHome from "./pages/UserList/UserHome";
 import SeccionesHome from "./pages/Secciones/SeccionesHome";
 
 import ModifyHome from "./pages/ModifyRequets/ModifyHome";
+
 import ListHome from "./pages/WorkApproval/ListHome";
 import AcepHome from "./pages/WorkApproval/AcepHome";
 import RechHome from "./pages/WorkApproval/RechHome";
-import Reports from "./pages/WorkApproval/Reports";
+
 
 import PedHome from "./pages/OrderApproval/PedHome";
 import AceptHome from "./pages/OrderApproval/AceptHome";
@@ -77,9 +78,10 @@ export default function App() {
 
           {/* =================Secciones ================= */}
           <Route path="/secciones"  element={ <ProtectedRoute><SeccionesHome /> </ProtectedRoute>}></Route>
-          {/* Modificar Solicitud*/}
+         
+          {/*================ Modificar Solicitud===========================*/}
           <Route
-            path="/solicitud"
+            path="/solicambiar"
             element={
               <ProtectedRoute>
                 < ModifyHome />
@@ -112,14 +114,7 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
-             <Route
-              path="reporte"
-              element={
-                <ProtectedRoute>
-                  < Reports/>
-                </ProtectedRoute>
-              }
-            />
+             
           </Route>
 
           {/* ================= PEDIDOS ================= */}
