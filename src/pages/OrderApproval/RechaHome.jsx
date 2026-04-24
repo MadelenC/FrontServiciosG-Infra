@@ -11,7 +11,7 @@ export default function Maps() {
       />
       <PageBreadcrumb pageTitle="" />
       <div className="space-y-6 justify-center">
-        <ComponentCard title="Pedidos de Materiales">
+        <ComponentCard title="lista de rechazados">
           <RechTable />
         </ComponentCard>
       </div>
