@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import { getUsers, createUser, updateUser, deleteUser } from "../services/userService";
+import {
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "../services/userService";
 
 export const useUserStore = create((set, get) => ({
   users: [],
@@ -15,20 +20,39 @@ export const useUserStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const data = await getUsers();
-      set({ 
-        users: data || [], 
+
+      set({
+        users: data || [],
         totalPages: Math.ceil((data?.length || 0) / get().limit),
-        loading: false
+        loading: false,
       });
     } catch (err) {
-      set({ error: err.message || "Error al cargar usuarios", loading: false });
+      set({
+        error: err.message || "Error al cargar usuarios",
+        loading: false,
+      });
     }
   },
 
+  // 🔥 VALIDACIÓN DE CÉDULA AQUÍ (IMPORTANTE)
   createUser: async (userData) => {
     try {
+      const exists = get().users.some(
+        (u) =>
+          String(u.cedula).trim() ===
+          String(userData.cedula).trim()
+      );
+
+      if (exists) {
+        return { ok: false, error: "La cédula ya está registrada" };
+      }
+
       const newUser = await createUser(userData);
-      set({ users: [...get().users, newUser] });
+
+      set({
+        users: [...get().users, newUser],
+      });
+
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err.message || err };
@@ -38,9 +62,13 @@ export const useUserStore = create((set, get) => ({
   updateUser: async (id, updatedData) => {
     try {
       const updatedUser = await updateUser(id, updatedData);
+
       set({
-        users: get().users.map(u => u.id === id ? updatedUser : u)
+        users: get().users.map((u) =>
+          u.id === id ? updatedUser : u
+        ),
       });
+
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err.message || err };
@@ -50,9 +78,11 @@ export const useUserStore = create((set, get) => ({
   deleteUser: async (id) => {
     try {
       await deleteUser(id);
+
       set({
-        users: get().users.filter(u => u.id !== id)
+        users: get().users.filter((u) => u.id !== id),
       });
+
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err.message || err };
@@ -62,29 +92,6 @@ export const useUserStore = create((set, get) => ({
   setPage: (page) => set({ page }),
   setSearch: (term) => set({ search: term || "", page: 1 }),
   setRoleFilter: (role) => set({ roleFilter: role || "", page: 1 }),
-
-  get currentUsers() {
-    const { users, page, limit, search, roleFilter } = get();
-    const filtered = users
-      .filter(u => {
-        const term = (search || "").toLowerCase();
-        const matchesSearch =
-          String(u.nombres || "").toLowerCase().includes(term) ||
-          String(u.apellidos || "").toLowerCase().includes(term) ||
-          String(u.cedula || "").toLowerCase().includes(term) ||
-          String(u.celular || "").toLowerCase().includes(term);
-        const matchesRole = roleFilter ? u.tipo === roleFilter : true;
-        return matchesSearch && matchesRole;
-      })
-      .sort((a, b) => a.id - b.id);
-    return filtered.slice((page - 1) * limit, page * limit);
-  },
-
-    //SELECT: SOLO CHOFERES (para selects / formularios)
-  getDrivers: () => {
-    return get().users.filter(u => u.tipo === "chofer");
-  },
-
 }));
 
 

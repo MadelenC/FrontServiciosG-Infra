@@ -19,14 +19,33 @@ export default function SearchBar({
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Nombre N°..."
-        className="w-64 md:w-1/3 px-4 py-2 border rounded-lg"
+        className="
+          w-full md:w-1/3
+          px-4 py-1.5
+          border border-gray-300
+          rounded-md
+          text-sm
+          shadow-sm
+          focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400
+          transition
+        "
       />
 
       {/* TALLER */}
       <select
         value={taller}
         onChange={(e) => setTaller(e.target.value)}
-        className="w-full md:w-1/3 px-4 py-2 border rounded-lg"
+        className="
+          w-full md:w-1/3
+          px-4 py-1.5
+          border border-gray-300
+          rounded-md
+          text-sm
+          bg-white
+          shadow-sm
+          focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400
+          transition
+        "
       >
         <option value="">Seleccione taller</option>
 
@@ -41,7 +60,17 @@ export default function SearchBar({
       <select
         value={institution}
         onChange={(e) => setInstitution(e.target.value)}
-        className="w-full md:w-1/3 px-4 py-2 border rounded-lg"
+        className="
+          w-full md:w-1/3
+          px-4 py-1.5
+          border border-gray-300
+          rounded-md
+          text-sm
+          bg-white
+          shadow-sm
+          focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400
+          transition
+        "
       >
         <option value="">Seleccione institución</option>
 

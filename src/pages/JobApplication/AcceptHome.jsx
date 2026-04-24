@@ -15,7 +15,7 @@ export default function AcceptHome() {
       <PageBreadcrumb pageTitle="Lista de Informes de Viajes" />
 
       <div className="space-y-6">
-        <ComponentCard title="Lista de Informes de Viajes">
+        <ComponentCard title="Informe de Trabajos Aceptados">
           < AcceptTable />
         </ComponentCard>
       </div>

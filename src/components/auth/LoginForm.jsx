@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { TbLockPassword } from "react-icons/tb";
 import Button from "../ui/button/Button";
-import { useUserStore } from "../../zustand/AuthUsers";
+import {useAuthStore } from "../../zustand/AuthUsers";
 import { loginService } from "../../services/authService";
+
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -12,8 +13,8 @@ export default function LoginForm() {
   const params = new URLSearchParams(location.search);
   const module = params.get("module");
 
-  const setUser = useUserStore((state) => state.setUser);
-  const setToken = useUserStore((state) => state.setToken);
+  const setUser = useAuthStore((state) => state.setUser);
+  const setToken = useAuthStore((state) => state.setToken);
 
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);

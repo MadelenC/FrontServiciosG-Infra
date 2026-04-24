@@ -3,7 +3,7 @@ import { useRoleStore } from "../../../zustand/rolesStore";
 import { SlArrowDown } from "react-icons/sl";
 
 export default function SearchBar({ search, setSearch, roleFilter, setRoleFilter }) {
-  const { roles } = useRoleStore(); // Trae los roles desde el store
+  const { roles } = useRoleStore();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -19,24 +19,37 @@ export default function SearchBar({ search, setSearch, roleFilter, setRoleFilter
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row justify-start mb-4 gap-2 items-center">
-      
-   
-      <div className="relative w-full md:w-1/5" ref={dropdownRef}>
+    <div className="flex flex-col md:flex-row items-center gap-2">
+
+      {/* DROPDOWN ROLES */}
+      <div className="relative w-full md:w-1/4" ref={dropdownRef}>
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-left shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
+          className="
+            w-full flex items-center justify-between
+            px-3 py-1.5
+            border border-gray-300
+            rounded-md
+            bg-white
+            text-sm text-gray-700
+            focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400
+            transition
+          "
         >
-          {roleFilter
-            ? roleFilter.charAt(0).toUpperCase() + roleFilter.slice(1)
-            : "Buscar por roles"}
+          <span>
+            {roleFilter
+              ? roleFilter.charAt(0).toUpperCase() + roleFilter.slice(1)
+              : "Filtrar por rol"}
+          </span>
+          <SlArrowDown className="text-xs opacity-70" />
         </button>
 
         {dropdownOpen && (
-          <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
-            {/* Opción Todos */}
+          <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-sm max-h-60 overflow-auto text-sm">
             <li
-              className={`px-4 py-2 cursor-pointer hover:bg-blue-100 ${roleFilter === "" ? "bg-blue-100" : ""}`}
+              className={`px-3 py-1.5 cursor-pointer hover:bg-blue-50 ${
+                roleFilter === "" ? "bg-blue-50" : ""
+              }`}
               onClick={() => {
                 setRoleFilter("");
                 setDropdownOpen(false);
@@ -45,11 +58,12 @@ export default function SearchBar({ search, setSearch, roleFilter, setRoleFilter
               Todos
             </li>
 
-            {/* Lista de roles */}
             {roles.map((role) => (
               <li
                 key={role}
-                className={`px-4 py-2 cursor-pointer hover:bg-blue-100 ${roleFilter === role ? "bg-blue-100" : ""}`}
+                className={`px-3 py-1.5 cursor-pointer hover:bg-blue-50 ${
+                  roleFilter === role ? "bg-blue-50" : ""
+                }`}
                 onClick={() => {
                   setRoleFilter(role);
                   setDropdownOpen(false);
@@ -62,13 +76,21 @@ export default function SearchBar({ search, setSearch, roleFilter, setRoleFilter
         )}
       </div>
 
-      {/* Input de busqueda*/}
+      {/* INPUT BUSCADOR */}
       <input
         type="text"
-        placeholder="Buscar por nombre, apellido, cédula o celular..."
+        placeholder="Buscar usuario..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
+        className="
+          w-full md:w-1/2
+          px-3 py-1.5
+          border border-gray-300
+          rounded-md
+          text-sm
+          focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400
+          transition
+        "
       />
     </div>
   );

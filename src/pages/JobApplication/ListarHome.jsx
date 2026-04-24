@@ -12,10 +12,10 @@ export default function ListarHome() {
         description="Gestión de informes de viajes del sistema"
       />
 
-      <PageBreadcrumb pageTitle="Lista de Informes de Viajes" />
+      <PageBreadcrumb pageTitle="Registro de Solicitud" />
 
       <div className="space-y-6">
-        <ComponentCard title="Lista de Informes de Viajes">
+        <ComponentCard title="Registro de Solicitud">
           <ListTable />
         </ComponentCard>
       </div>

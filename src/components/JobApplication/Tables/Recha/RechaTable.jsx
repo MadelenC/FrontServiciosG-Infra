@@ -5,11 +5,13 @@ import SearchBar from "../../Search/SearchBar";
 
 import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 import { useInstitutionStore } from "../../../../zustand/useInstitutionStore";
+import { useAuthStore } from "../../../../zustand/AuthUsers";
 
 export default function RechaTable() {
 
   const { maintenances, fetchMaintenances } = useMaintenanceStore();
   const { institutions, fetchInstitutions } = useInstitutionStore();
+  const { user } = useAuthStore();
 
   const [search, setSearch] = useState("");
   const [taller, setTaller] = useState("");
@@ -27,10 +29,14 @@ export default function RechaTable() {
     setPage(1);
   }, [search, taller, institution]);
 
-  // 🔥 SOLO RECHAZADOS
+  // 🔥 SOLO RECHAZADOS DEL USUARIO LOGEADO
   const filtered = maintenances.filter((item) => {
 
-    const isRejected = item.aprobacion === "rechazado";
+    const isRejected =
+      item.aprobacion?.toLowerCase() === "rechazado";
+
+    const isOwner =
+      item.user?.id === user?.id;
 
     const searchText = search.toLowerCase();
 
@@ -54,7 +60,7 @@ export default function RechaTable() {
       !institution ||
       String(item.institucion?.id) === String(institution);
 
-    return isRejected && matchSearch && matchTaller && matchInstitution;
+    return isRejected && isOwner && matchSearch && matchTaller && matchInstitution;
   });
 
   const totalPages = Math.ceil(filtered.length / limit);
@@ -66,6 +72,7 @@ export default function RechaTable() {
 
   return (
     <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
+     
 
       {/* SEARCH */}
       <div className="mb-4">

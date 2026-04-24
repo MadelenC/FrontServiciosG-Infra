@@ -5,11 +5,13 @@ import SearchBar from "../../Search/SearchBar";
 
 import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 import { useInstitutionStore } from "../../../../zustand/useInstitutionStore";
+import { useAuthStore } from "../../../../zustand/AuthUsers";
 
 export default function AcepTable() {
 
   const { maintenances, fetchMaintenances } = useMaintenanceStore();
   const { institutions, fetchInstitutions } = useInstitutionStore();
+  const { user } = useAuthStore();
 
   const [search, setSearch] = useState("");
   const [taller, setTaller] = useState("");
@@ -27,10 +29,15 @@ export default function AcepTable() {
     setPage(1);
   }, [search, taller, institution]);
 
-  // 🔥 SOLO ACEPTADOS + SEARCH + FILTROS
+  // 🔥 SOLO ACEPTADOS DEL USUARIO LOGEADO
   const filtered = maintenances.filter((item) => {
 
-    const isAccepted = item.aprobacion === "aceptado";
+    const isAccepted =
+      item.aprobacion?.toLowerCase() === "aceptado";
+
+    // ✔ CORRECCIÓN IMPORTANTE (antes faltaba o estaba mal)
+    const isOwner =
+      item.user?.id === user?.id;
 
     const searchText = search.toLowerCase();
 
@@ -54,7 +61,7 @@ export default function AcepTable() {
       !institution ||
       String(item.institucion?.id) === String(institution);
 
-    return isAccepted && matchSearch && matchTaller && matchInstitution;
+    return isAccepted && isOwner && matchSearch && matchTaller && matchInstitution;
   });
 
   const totalPages = Math.ceil(filtered.length / limit);

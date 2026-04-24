@@ -15,42 +15,13 @@ import { SiOrganicmaps } from "react-icons/si";
 import { IoCalendarNumberOutline } from "react-icons/io5";
 
 const navItems = [
-  { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", subItems: [{ name: " Ver Lista", path: "/usuarios", pro: false, icon:<FaListUl className="text-white " /> }] },
- // { icon: <MdDomainAdd className="text-white" />, name: "Secciones", subItems: [{ name: " Ver Lista", path: "/entidades", pro: false,icon:<FaListUl className="text-white " /> }] },
-  //{ name: "Rol de Viajes", icon: <FaUsersGear className="text-white" />, subItems: [{ name: "Motrar", path: "/travel-rol", pro: false,icon:<FaListUl className="text-white " /> }] },
-  //{ name: "Vehiculos ", icon: <FaCarSide  className="text-white" />, subItems: [{ name: "Mostrar", path: "/vehiculos", pro: false,icon:<FaListUl className="text-white " /> }] },
-  //{ name: "Combustible", icon: <BsFillFuelPumpDieselFill className="text-white" />, subItems: [{ name: "Mostrar", path: "/combustible", pro: false,icon:<FaListUl className="text-white " /> }] },
-  //{ name: "Destinos", icon: <GiHorizonRoad className="text-white" />, subItems: [{ name: "Ver Lista ", path: "/destinos", pro: false,icon:<FaListUl className="text-white " /> }] },
-  //{ name: "Mapas", icon: <SiOrganicmaps className="text-white" />, 
-    //subItems: [
-      //{ name: " Ver lista", path: "/mapas", pro: false,
-      //   icon:<FaListUl className="text-white " />
-    //   }] },
-  //{ name: "Reservas", icon: <BsCardHeading className="text-white" />, 
-    //subItems: [
-      //{ name: "Listar", path: "/reservas", pro: false,
-        // icon:<FaListUl className="text-white " />
-      // }] },
- // {name: "Viajes", 
-   // icon: <MdTravelExplore className="text-white" />, 
-    //s<ubItems: [ 
-      //{ name: "Listar", path: "/viajes", pro: false, 
-        //icon:<FaListUl className="text-white " />
-      //},
-      //{ name: "Calendario", path: "/viajes/calendar", 
-        //pro: false, 
-        //icon: <IoCalendarNumberOutline className="text-white " /> } 
-    //] 
-  //},
- // { name: "Presupuestos de Viaje", icon: <FaMoneyBillTrendUp className="text-white" />,
-   //  subItems: [{ name: "Tipo A (cheque)", path: "/presupuestos", pro: false , icon:<FaMoneyCheckDollar className="text-white" /> },
-     //           { name: "Tipo B (caja)", path: "/presupuestos/caja", pro: false,icon:<FaCashRegister className="text-white"/> }
-       //       ] },
-  //{ name: "Autorizacion de Salidas",
-    //icon: <FaFilePen  className="text-white" />, 
-    //subItems: [{ name: "Ver Lista", path: "/autorizacion",
-   //pro: false,icon:<FaListUl className="text-white " />
-   //}] },
+  { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", 
+    subItems: 
+    [{ name: " Ver Lista", path: "/usuarios", pro: false, icon:<FaListUl className="text-white " /> },
+     
+    ] },
+ 
+      
  
    //{ name: "Informe de viajes", icon: <FaFileLines className="text-white" />, subItems: [{ name: "Mostrar", path: "/informe", pro: false,icon:<FaListUl className="text-white " /> }] },
  

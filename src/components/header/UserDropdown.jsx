@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUserStore } from "../../zustand/AuthUsers";
+import { useAuthStore } from "../../zustand/AuthUsers";
 import { SlLogin } from "react-icons/sl";
 
 export default function UserDropdown() {
   const navigate = useNavigate();
-  const { user, logout } = useUserStore(); 
+  const { user, logout } = useAuthStore(); 
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {

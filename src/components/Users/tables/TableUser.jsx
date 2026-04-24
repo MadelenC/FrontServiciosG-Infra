@@ -3,7 +3,9 @@ import { useUserStore } from "../../../zustand/userStore";
 import SearchBar from "../search/SearchBar";
 import UserTable from "./UserTable";
 import Pagination from "./Pagination";
-
+import UserFormPanel from "../form/UserFormPanel";
+import ReportUserForm from "../form/ReportUserForm";
+import { HiOutlineDocumentReport } from "react-icons/hi";
 
 export default function TableUser() {
   const {
@@ -22,6 +24,7 @@ export default function TableUser() {
   } = useUserStore();
 
   const [openPanel, setOpenPanel] = useState(false);
+  const [openReport, setOpenReport] = useState(false);
   const [formType, setFormType] = useState(null);
 
   useEffect(() => {
@@ -48,7 +51,7 @@ export default function TableUser() {
 
   if (loading)
     return (
-      <div className="p-6 text-center text-gray-500 dark:text-gray-400 animate-pulse">
+      <div className="p-6 text-center text-gray-500 animate-pulse">
         Cargando usuarios...
       </div>
     );
@@ -61,32 +64,46 @@ export default function TableUser() {
     );
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md transition-all p-4">
+    <div className="rounded-xl border border-gray-200 bg-white shadow-md p-5">
 
-      {/* BOTÓN */}
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={() => { setOpenPanel(true); setFormType(null); }}
-          className="flex items-center gap-3
-            bg-gradient-to-r from-blue-600 to-blue-500
-            hover:from-blue-700 hover:to-blue-600
-            text-white px-5 py-3 rounded-lg shadow-lg font-medium
-            focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2
-            transition-all duration-300
-            hover:scale-105 active:scale-95"
-        >
-          <span className="text-lg font-bold">＋</span>
-          Agregar Usuario
-        </button>
+      {/* TOOLBAR */}
+      <div className="flex items-center justify-between mb-5 gap-4 flex-wrap">
+
+        {/* SEARCH */}
+        <div className="flex-1 min-w-[250px]">
+          <SearchBar
+            search={search}
+            setSearch={setSearch}
+            roleFilter={roleFilter}
+            setRoleFilter={setRoleFilter}
+          />
+        </div>
+
+        {/* BOTONES */}
+        <div className="flex items-center gap-2">
+
+          {/* REPORTE */}
+          <button
+            onClick={() => setOpenReport(true)}
+            className="w-9 h-9 flex items-center justify-center rounded-md bg-orange-500 hover:bg-orange-600 text-white shadow-sm transition"
+            title="Reporte"
+          >
+            <HiOutlineDocumentReport className="text-lg text-white" />
+          </button>
+
+          {/* AGREGAR */}
+          <button
+            onClick={() => {
+              setOpenPanel(true);
+              setFormType(null);
+            }}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-sm text-sm"
+          >
+            ＋ Agregar Usuario
+          </button>
+
+        </div>
       </div>
-
-      {/* SEARCH */}
-      <SearchBar
-        search={search}
-        setSearch={setSearch}
-        roleFilter={roleFilter}
-        setRoleFilter={setRoleFilter}
-      />
 
       {/* TABLE */}
       <UserTable users={currentUsers} />
@@ -94,11 +111,43 @@ export default function TableUser() {
       {/* PAGINATION */}
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
-     
+      {/* PANEL USUARIO */}
+      <UserFormPanel
+        open={openPanel}
+        onClose={() => {
+          setOpenPanel(false);
+          setFormType(null);
+        }}
+        formType={formType}
+        setFormType={setFormType}
+      />
+
+      {/* MODAL REPORTE */}
+      {openReport && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-5 rounded-lg w-full max-w-md relative">
+
+            <button
+              onClick={() => setOpenReport(false)}
+              className="absolute top-2 right-3 text-gray-500"
+            >
+              ✕
+            </button>
+
+            <ReportUserForm
+              users={users}
+              onPrint={(tipo) => {
+                console.log("Reporte:", tipo);
+                setOpenReport(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
-
 
 
 
