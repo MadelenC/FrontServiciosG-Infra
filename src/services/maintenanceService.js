@@ -1,16 +1,46 @@
 import api from "../helpers/axiosClient";
 
-// 🔹 Traer todos los mantenimientos
-export const getMaintenances = async () => {
+
+export const getMaintenances =
+  async (params) => {
+
+    try {
+
+      const response =
+        await api.get(
+          "/mantenimiento",
+          {
+            params,
+          }
+        );
+
+      return response.data;
+
+    } catch (err) {
+
+      throw (
+        err.response?.data?.message
+        ||
+        "Error al obtener mantenimientos"
+      );
+
+    }
+
+};
+export const getTalleres = async () => {
+
   try {
-    const response = await api.get("/mantenimiento");
+    const response =await api.get("/mantenimiento/talleres");
     return response.data;
   } catch (err) {
-    throw err.response?.data?.message || "Error al obtener los mantenimientos";
+    throw (
+      err.response?.data?.message ||
+      "Error al obtener talleres"
+    );
   }
 };
 
-// 🔹 Traer un mantenimiento por ID
+
 export const getMaintenanceById = async (id) => {
   try {
     const response = await api.get(`/mantenimiento/${id}`);
@@ -20,7 +50,6 @@ export const getMaintenanceById = async (id) => {
   }
 };
 
-// 🔹 Crear mantenimiento
 export const createMaintenance = async (data) => {
   try {
     const response = await api.post("/mantenimiento", data);
@@ -30,7 +59,7 @@ export const createMaintenance = async (data) => {
   }
 };
 
-// 🔹 Actualizar mantenimiento
+
 export const updateMaintenance = async (id, data) => {
   try {
     const response = await api.put(`/mantenimiento/${id}`, data);
@@ -40,7 +69,7 @@ export const updateMaintenance = async (id, data) => {
   }
 };
 
-// 🔹 Eliminar mantenimiento
+
 export const deleteMaintenance = async (id) => {
   try {
     const response = await api.delete(`/mantenimiento/${id}`);

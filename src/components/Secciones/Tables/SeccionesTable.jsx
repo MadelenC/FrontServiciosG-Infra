@@ -10,59 +10,54 @@ import SearchBar from "../Search/SearchBar";
 
 export default function SeccionesTable() {
 
-  const {
-    institutions,
-    fetchInstitutions,
-    addInstitution,
-    editInstitution,
-      removeInstitution,
-  } = useInstitutionStore();
+ const {
+  institutions,
+  loading,
+  limit,
+  page,
+  totalPages,
+  search,
+  institution,
+  fetchInstitutions,
+  setPage,
+  setSearch,
+  setInstitution,
+  addInstitution,
+  editInstitution,
+  removeInstitution,
+} = useInstitutionStore();
 
-  const [search, setSearch] = useState("");
-  const [institution, setInstitution] = useState("");
-  const [page, setPage] = useState(1);
+  
 
   const [modalCreateOpen, setModalCreateOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [selectedSeccion, setSelectedSeccion] = useState(null);
 
-  const limit = 8;
+  
 
-  useEffect(() => {
+ useEffect(() => {
+
+  const timeout = setTimeout(() => {
+
     fetchInstitutions();
-  }, []);
 
-  useEffect(() => {
-    setPage(1);
-  }, [search, institution]);
+  }, 500);
 
-  // 🔥 ORDEN: más nuevo → más viejo
-  const sortedInstitutions = [...institutions].sort(
-    (a, b) => b.id - a.id
-  );
+  return () => clearTimeout(timeout);
 
-  // 🔥 FILTRO
-  const filtered = sortedInstitutions.filter((inst) => {
-    const matchSearch =
-      !search ||
-      inst.nombre?.toLowerCase().includes(search.toLowerCase());
+}, [
+  page,
+  search,
+  institution,
+  fetchInstitutions,
+]);
 
-    const matchInstitution =
-      !institution || String(inst.id) === String(institution);
+const currentData =institutions;
+const isInitialLoading =loading && institutions.length === 0;
 
-    return matchSearch && matchInstitution;
-  });
 
-  const totalPages = Math.ceil(filtered.length / limit);
+ 
 
-  const currentData = filtered.slice(
-    (page - 1) * limit,
-    page * limit
-  );
-
-  // =========================
-  // CREATE
-  // =========================
   const handleSaveCreate = async (data) => {
     const res = await addInstitution(data);
 
@@ -74,17 +69,13 @@ export default function SeccionesTable() {
     return res;
   };
 
-  // =========================
-  // EDIT OPEN
-  // =========================
+
   const handleEdit = (inst) => {
     setSelectedSeccion(inst);
     setModalEditOpen(true);
   };
 
-  // =========================
-  // UPDATE
-  // =========================
+
   const handleUpdate = async (data) => {
     const res = await editInstitution(selectedSeccion.id, data);
 
@@ -107,33 +98,39 @@ export default function SeccionesTable() {
   return res;
 };
 
-
+if (isInitialLoading)
+  return (
+    <div className="p-6 text-center">
+      Cargando instituciones...
+    </div>
+  );
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md p-4">
 
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-4">
+  
+      <div  className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4 w-full ">
 
         <SearchBar
+          search={search}
+          setSearch={setSearch}
           institution={institution}
           setInstitution={setInstitution}
           listaInstituciones={institutions}
         />
 
-        <button
+       <button
           onClick={() => setModalCreateOpen(true)}
-          className="flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500
-          hover:from-blue-700 hover:to-blue-600 text-white px-5 py-3 rounded-lg shadow-lg font-medium
-          transition-all duration-300 hover:scale-105 active:scale-95"
+          className=" inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-blue-600  to-blue-500 hover:from-blue-700
+            hover:to-blue-600 text-white text-sm font-medium rounded-lg shadow-md transition-all bduration-200 hover:scale-[1.02] active:scale-95"
         >
-          <FiPlus size={18} />
-          Agregar Institución
+          <FiPlus size={16} />
+          <span>Agregar Institución</span>
         </button>
 
       </div>
 
-      {/* TABLE */}
+   
       <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
 
         <table className="w-full text-sm bg-white dark:bg-gray-900">
@@ -174,19 +171,19 @@ export default function SeccionesTable() {
 
       </div>
 
-      {/* PAGINACIÓN */}
+    
       <div className="flex justify-center mt-4">
         <Pagination page={page} totalPages={totalPages} setPage={setPage} />
       </div>
 
-      {/* CREATE MODAL */}
+  
       <CreateSeccionesForm
         isOpen={modalCreateOpen}
         onClose={() => setModalCreateOpen(false)}
         onSave={handleSaveCreate}
       />
 
-      {/* EDIT MODAL */}
+  
       <EditSeccionForm
         isOpen={modalEditOpen}
         onClose={() => setModalEditOpen(false)}

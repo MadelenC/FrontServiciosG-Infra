@@ -9,34 +9,44 @@ import { useAuthStore } from "../../../../zustand/AuthUsers";
 
 import InsertForm from "../../Form/InsertForm";
 
-export default function ListTable({ onAction }) {
+export default function ListTable({onAction}) {
 
-  const { maintenances, fetchMaintenances, addMaintenance } =
-    useMaintenanceStore();
+  const {
+  maintenances,
+  fetchMaintenances,
+  addMaintenance,
+   editMaintenance,
+
+  search,
+  taller,
+  institution,
+  page,
+  limit,
+  totalPages,
+
+  setSearch,
+  setTaller,
+  setInstitution,
+  setPage,
+
+} = useMaintenanceStore();
 
   const { institutions, fetchInstitutions } =
     useInstitutionStore();
 
   const { user } = useAuthStore();
-
-  const [search, setSearch] = useState("");
-  const [taller, setTaller] = useState("");
-  const [institution, setInstitution] = useState("");
-  const [page, setPage] = useState(1);
   const [openForm, setOpenForm] = useState(false);
 
-  const limit = 8;
 
-  useEffect(() => {
-    fetchMaintenances();
-    fetchInstitutions();
-  }, []);
+ useEffect(() => {
+  fetchInstitutions();
+}, []);
+useEffect(() => {
+  fetchMaintenances();
+}, [page, search, taller, institution]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [search, taller, institution]);
+ 
 
-  // 🔥 SOLO instituciones que el usuario realmente usa en mantenimientos
   const institucionesUsuario = [
     ...new Map(
       maintenances
@@ -47,70 +57,37 @@ export default function ListTable({ onAction }) {
     ).values()
   ];
 
-  const sorted = [...maintenances].sort((a, b) => b.id - a.id);
+  const currentData = maintenances
+  .filter(
+    (item) =>
+      item.aprobacion?.toLowerCase() === "pendiente"
+  )
+  .sort((a, b) => b.id - a.id);
 
-  const filtered = sorted.filter((item) => {
+ const handleSave = async (data) => {
 
-    const isPending =
-      item.aprobacion?.toLowerCase() === "pendiente";
-
-    const isOwner =
-      item.user?.id === user?.id;
-
-    const searchText = search.toLowerCase();
-
-    const institucionNombre =
-      item.institucion?.nombre?.toLowerCase() || "";
-
-    const itemTaller =
-      (item.taller || "").toLowerCase();
-
-    const matchSearch =
-      !search ||
-      (item.descripcion || "").toLowerCase().includes(searchText) ||
-      itemTaller.includes(searchText) ||
-      institucionNombre.includes(searchText) ||
-      String(item.id_nro || "").includes(searchText);
-
-    const matchInstitution =
-      !institution ||
-      String(item.institucion?.id) === String(institution);
-
-    const matchTaller =
-      !taller ||
-      itemTaller === taller.toLowerCase();
-
-    return isPending && isOwner && matchSearch && matchInstitution && matchTaller;
+  const result = await addMaintenance({
+    ...data,
+    user_id: user?.id,
+    aprobacion: "pendiente",
   });
 
-  const totalPages = Math.ceil(filtered.length / limit);
+  if (result.ok) {
+    setOpenForm(false);
+  }
+};
 
-  const currentData = filtered.slice(
-    (page - 1) * limit,
-    page * limit
-  );
-
-  const handleSave = async (data) => {
-    await addMaintenance({
-      ...data,
-      user_id: user?.id,
-      aprobacion: "pendiente"
-    });
-
-    fetchMaintenances();
-  };
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
+    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-800">
 
-      {/* CONTADOR */}
       <div className="mb-2 text-sm text-gray-600">
         Tienes{" "}
-        <span className="font-bold">{filtered.length}</span>{" "}
+        <span className="font-bold">{currentData.length}</span>
         pendientes
       </div>
 
-      {/* SEARCH + BOTÓN */}
+
       <div className="flex items-center justify-between mb-4">
 
         <div className="flex-1">
@@ -132,14 +109,13 @@ export default function ListTable({ onAction }) {
 
       </div>
 
-      {/* TABLE */}
-      <div className="overflow-x-auto rounded-xl border shadow-sm">
+      <div className="overflow-x-auto rounded-xl border shadow-sm dark:border-gray-500">
         <table className="w-full text-sm">
 
           <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
             <tr>
               {["#", "Sección", "Descripción", "Taller", "Operación"].map((h) => (
-                <th key={h} className="border px-3 py-2 text-left">
+                <th key={h} className="border px-3 py-2 text-left dark:bg-gray-800 dark:text-gray-300">
                   {h}
                 </th>
               ))}
@@ -168,7 +144,7 @@ export default function ListTable({ onAction }) {
         </table>
       </div>
 
-      {/* PAGINACIÓN */}
+   
       <div className="flex justify-center mt-4">
         <Pagination
           page={page}
@@ -177,7 +153,7 @@ export default function ListTable({ onAction }) {
         />
       </div>
 
-      {/* FORM */}
+
       <InsertForm
         isOpen={openForm}
         onClose={() => setOpenForm(false)}

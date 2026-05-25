@@ -1,16 +1,49 @@
 import api from "../helpers/axiosClient";
 
-// 🔹 Traer todas las instituciones
-export const getInstitutions = async () => {
+
+export const getInstitutions = async ({
+  page,
+  limit,
+  search,
+  institution,
+}) => {
+
   try {
-    const response = await api.get("/institucion");
+
+    const response =
+      await api.get(
+        "/institucion",
+        {
+
+          params: {
+
+            page,
+
+            limit,
+
+            search,
+
+            institution,
+
+          },
+
+        }
+      );
+
     return response.data;
+
   } catch (err) {
-    throw err.response?.data?.message || "Error al obtener las instituciones";
+
+    throw (
+      err.response?.data?.message
+      || "Error al obtener instituciones"
+    );
+
   }
+
 };
 
-// 🔹 Traer una institución por ID
+
 export const getInstitutionById = async (id) => {
   try {
     const response = await api.get(`/institucion/${id}`);
@@ -20,7 +53,7 @@ export const getInstitutionById = async (id) => {
   }
 };
 
-// 🔹 Crear institución
+
 export const createInstitution = async (data) => {
   try {
     const response = await api.post("/institucion", data);
@@ -30,7 +63,7 @@ export const createInstitution = async (data) => {
   }
 };
 
-// 🔹 Actualizar institución
+
 export const updateInstitution = async (id, data) => {
   try {
     const response = await api.put(`/institucion/${id}`, data);
@@ -40,7 +73,7 @@ export const updateInstitution = async (id, data) => {
   }
 };
 
-// 🔹 Eliminar institución
+
 export const deleteInstitution = async (id) => {
   try {
     const response = await api.delete(`/institucion/${id}`);

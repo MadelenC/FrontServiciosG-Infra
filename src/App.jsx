@@ -35,6 +35,7 @@ import RechaHome from "./pages/OrderApproval/RechaHome";
 import ListarHome from "./pages/JobApplication/ListarHome";
 import AcceptHome from "./pages/JobApplication/AcceptHome";
 import RechazarHome from "./pages/JobApplication/RechazarHome";
+import Profile from "./pages/profile/Profile";
 
 import Home from "./pages/Home";
 
@@ -47,7 +48,7 @@ export default function App() {
       <Routes>
 
 <Route path="/" element={<Home />} />
-        {/* ================= AUTH ================= */}
+       
         <Route
           path="/signin"
           element={
@@ -59,11 +60,11 @@ export default function App() {
 
         <Route path="/signup" element={<SignUp />} />
 
-        {/* ================= APP LAYOUT ===========*/}
+      
         <Route element={<AppLayout />}>
 
 
-          {/* DASHBOARD */}
+      
           <Route
             path="/dashboard"
             element={
@@ -72,21 +73,30 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-       {/* ================= MODULOS ================= */}
+
+           <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+       
           <Route path="/usuarios" element={<UserHome />} />
 
-          {/* =================Secciones ================= */}
+         
           <Route path="/secciones"  element={ <ProtectedRoute><SeccionesHome /> </ProtectedRoute>}></Route>
-          {/* Modificar Solicitud*/}
+      
           <Route
-            path="/solicitud"
+            path="/modificar"
             element={
               <ProtectedRoute>
                 < ModifyHome />
               </ProtectedRoute>
             }
           />
-          {/* =================Aprobacion de trabajo ================= */}
+      
           <Route >
             <Route
               path="solicitudes"
@@ -122,7 +132,6 @@ export default function App() {
             />
           </Route>
 
-          {/* ================= PEDIDOS ================= */}
           <Route path="/pedido">
             <Route
               index
@@ -158,7 +167,7 @@ export default function App() {
             />
           </Route>
 
-           {/* ================= Solicitud de trabajo================= */}
+       
           <Route path="/solicitud">
             <Route
               index
@@ -196,7 +205,7 @@ export default function App() {
 
           
 
-          {/* ================= UI ================= */}
+  
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/avatars" element={<Avatars />} />
           <Route path="/badge" element={<Badges />} />
@@ -206,7 +215,7 @@ export default function App() {
 
         </Route>
 
-        {/* ================= NOT FOUND ================= */}
+
         <Route path="*" element={<NotFound />} />
 
       </Routes>

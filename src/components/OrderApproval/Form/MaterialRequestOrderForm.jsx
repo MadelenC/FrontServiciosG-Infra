@@ -29,7 +29,7 @@ export default function MaterialRequestOrderForm({ isOpen, onClose, onSave }) {
   };
 
   const handleRemoveItem = (index) => {
-    if (items.length === 1) return; // Siempre al menos una fila
+    if (items.length === 1) return;
     setItems(items.filter((_, i) => i !== index));
   };
 

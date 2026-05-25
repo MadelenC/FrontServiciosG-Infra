@@ -10,7 +10,7 @@ export default function TableRech({
 
       <table className="w-full text-sm">
 
-        {/* HEADER */}
+       
         <thead className="bg-gray-100">
           <tr>
             {[
@@ -30,7 +30,7 @@ export default function TableRech({
           </tr>
         </thead>
 
-        {/* BODY */}
+       
         <tbody>
           {data.length > 0 ? (
             data.map((item, index) => (

@@ -1,74 +1,96 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState} from "react";
 import RechRow from "./RechRow";
 import Pagination from "../Pagination";
 import SearchBar from "../../Search/SearchBar";
 
 import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 import { useInstitutionStore } from "../../../../zustand/useInstitutionStore";
+import InformeRechazadoForm from "../../Form/RechForm";
 
 export default function RechTable() {
 
-  const { maintenances, fetchMaintenances } = useMaintenanceStore();
-  const { institutions, fetchInstitutions } = useInstitutionStore();
+  const {
+    maintenances,
+    fetchMaintenances,
+    editMaintenance,
+    page,
+    totalPages,
+    search,
+    taller,
+    institution,
+    setPage,
+    setSearch,
+    setTaller,
+    setInstitution,
+  } = useMaintenanceStore();
 
-  const [search, setSearch] = useState("");
-  const [taller, setTaller] = useState("");
-  const [institution, setInstitution] = useState("");
-  const [page, setPage] = useState(1);
+  const {
+    institutions,
+    fetchInstitutions
+  } = useInstitutionStore();
 
-  const limit = 8;
-
+  
   useEffect(() => {
-    fetchMaintenances();
+
+    fetchMaintenances({
+      aprobacion: "rechazado",
+    });
+
     fetchInstitutions();
-  }, []);
 
-  useEffect(() => {
-    setPage(1);
-  }, [search, taller, institution]);
+  }, [page, search, taller, institution]);
 
-  // 🔥 SOLO RECHAZADOS
-  const filtered = maintenances.filter((item) => {
 
-    const isRejected = item.aprobacion === "rechazado";
+  const [openForm, setOpenForm] = useState(false);
+const [selectedItem, setSelectedItem] = useState(null);
 
-    const searchText = search.toLowerCase();
+  const handleAction = async (  action,  item ) => {
 
-    const institucionNombre =
-      item.institucion?.nombre?.toLowerCase() || "";
+      if (action === "informe") {
+    setSelectedItem(item);
+    setOpenForm(true);
+    return;
+  }
 
-    const itemTaller =
-      (item.taller || "").toLowerCase();
+    let nuevoEstado = "";
 
-    const matchSearch =
-      !search ||
-      (item.descripcion || "").toLowerCase().includes(searchText) ||
-      itemTaller.includes(searchText) ||
-      institucionNombre.includes(searchText) ||
-      String(item.id_nro || "").includes(searchText);
+    if (action === "reject") {
+      nuevoEstado = "aceptado";
+    }
 
-    const matchTaller =
-      !taller || itemTaller === taller.toLowerCase();
+    const result =
+      await editMaintenance(
+        item.id,
+        {
+          aprobacion: nuevoEstado,
+        }
+      );
 
-    const matchInstitution =
-      !institution ||
-      String(item.institucion?.id) === String(institution);
+    
+    if (result.ok) {
 
-    return isRejected && matchSearch && matchTaller && matchInstitution;
+      fetchMaintenances({
+        aprobacion: "rechazado",
+      });
+
+    }
+
+  };
+  const handleRegisterInforme = async (data) => {
+  await editMaintenance(selectedItem.id, {
+    informe: data.informe,   
   });
 
-  const totalPages = Math.ceil(filtered.length / limit);
+  fetchMaintenances({ aprobacion: "rechazado" });
+};
 
-  const currentData = filtered.slice(
-    (page - 1) * limit,
-    page * limit
-  );
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
 
-      {/* SEARCH */}
+    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-800">
+
       <div className="mb-4">
+
         <SearchBar
           search={search}
           setSearch={setSearch}
@@ -77,19 +99,28 @@ export default function RechTable() {
           institution={institution}
           setInstitution={setInstitution}
           listaTalleres={[
-            ...new Set(maintenances.map(m => m.taller).filter(Boolean))
-          ].map((t, i) => ({ id: i, nombre: t }))}
+            ...new Set(
+              maintenances
+                .map(m => m.taller)
+                .filter(Boolean)
+            )
+          ].map((t, i) => ({
+            id: i,
+            nombre: t
+          }))}
           listaInstituciones={institutions}
         />
+
       </div>
 
-      {/* TABLE */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto dark:bg-gray-800">
 
         <table className="w-full text-sm">
 
-          <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
+          <thead className="bg-gradient-to-r from-blue-50 to-blue-100 dark:border-gray-500">
+
             <tr>
+
               {[
                 "#",
                 "N°",
@@ -100,38 +131,72 @@ export default function RechTable() {
                 "Informe",
                 "Operaciones"
               ].map((h) => (
-                <th key={h} className="border px-3 py-2 text-left">
+
+                <th
+                  key={h}
+                  className="border px-3 py-2 text-left dark:bg-gray-800 dark:text-gray-300"
+                >
                   {h}
                 </th>
+
               ))}
+
             </tr>
+
           </thead>
 
           <tbody>
-            {currentData.length > 0 ? (
-              currentData.map((item, i) => (
+
+            {maintenances.length > 0 ? (
+
+              maintenances.map((item, i) => (
+
                 <RechRow
                   key={item.id}
                   item={item}
-                  index={(page - 1) * limit + i + 1}
+                  index={i + 1}
+                  onAction={handleAction}
                 />
+
               ))
+
             ) : (
+
               <tr>
-                <td colSpan={8} className="text-center py-4">
+
+                <td
+                  colSpan={8}
+                  className="text-center py-4"
+                >
                   No hay registros
                 </td>
+
               </tr>
+
             )}
+
           </tbody>
 
         </table>
 
+        {openForm && (
+          <InformeRechazadoForm
+            item={selectedItem}
+            onClose={() => setOpenForm(false)}
+            onRegister={handleRegisterInforme}
+          />
+        )}
+
       </div>
 
-      {/* PAGINACIÓN */}
       <div className="flex justify-center mt-4">
-        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          setPage={setPage}
+        />
+
       </div>
 
     </div>

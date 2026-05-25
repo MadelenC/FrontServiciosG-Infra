@@ -11,18 +11,18 @@ export default function SearchBar({
   listaInstituciones = [],
 }) {
   return (
-    <div className="flex flex-col md:flex-row gap-2 mb-4 items-center">
+    <div className="flex flex-col md:flex-row gap-2 mb-4 items-center ">
 
-      {/* SEARCH GLOBAL */}
+     
       <input
         type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Buscar..."
-        className="w-full md:w-1/3 px-4 py-2 border rounded-lg"
+        className="w-full md:w-1/3 px-4 py-2 border rounded-lg "
       />
 
-      {/* TALLER */}
+  
       <select
         value={taller}
         onChange={(e) => setTaller(e.target.value)}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import PedRow from "./RechRow";
 import Pagination from "../Pagination";
 import SearchBar from "../../SearchBar/SearchBar";
@@ -9,14 +9,21 @@ import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 
 export default function RechTable() {
 
-  const { orders, fetchOrders } = useOrderApprovalStore();
+  const {
+    orders,
+    fetchOrders,
+     editOrder, 
+    page,
+    setPage,
+    totalPages
+  } = useOrderApprovalStore();
+
   const { institutions, fetchInstitutions } = useInstitutionStore();
   const { maintenances, fetchMaintenances } = useMaintenanceStore();
 
   const [search, setSearch] = useState("");
   const [taller, setTaller] = useState("");
   const [institution, setInstitution] = useState("");
-  const [page, setPage] = useState(1);
 
   const limit = 8;
 
@@ -31,54 +38,51 @@ export default function RechTable() {
   }, [search, taller, institution]);
 
   
-  const maintenanceMap = new Map(
-    maintenances.map((m) => [String(m.id), m.descripcion])
-  );
-
-  const getDescripcion = (id) =>
-    maintenanceMap.get(String(id)) || "-";
-
-  
-  const filtered = orders.filter((item) => {
-
+  const filtered = useMemo(() => {
     const searchText = search.toLowerCase();
 
-    const institucionNombre =
-      item.institucion?.nombre?.toLowerCase() || "";
+    return orders.filter((item) => {
 
-    const itemTaller =
-      (item.taller || "").toLowerCase();
+      const isRejected = item.aprobacion === "rechazado";
 
-    // SOLO aceptado
-    const isPending = item.aprobacion === "rechazado";
+      const institucionNombre =
+        item.institucion?.nombre?.toLowerCase() || "";
 
-    const matchSearch =
-      !search ||
-      String(item.id || "").includes(searchText) ||
-      institucionNombre.includes(searchText) ||
-      itemTaller.includes(searchText);
+      const itemTaller =
+        (item.taller || "").toLowerCase();
 
-    const matchTaller =
-      !taller || itemTaller === taller.toLowerCase();
+      const matchSearch =
+        !search ||
+        String(item.id || "").includes(searchText) ||
+        institucionNombre.includes(searchText) ||
+        itemTaller.includes(searchText);
 
-    const matchInstitution =
-      !institution ||
-      String(item.ins_id) === String(institution);
+      const matchTaller =
+        !taller || itemTaller === taller.toLowerCase();
 
-    return isPending && matchSearch && matchTaller && matchInstitution;
-  });
+      const matchInstitution =
+        !institution ||
+        String(item.ins_id) === String(institution);
 
-  const totalPages = Math.ceil(filtered.length / limit);
+      return isRejected && matchSearch && matchTaller && matchInstitution;
+    });
+  }, [orders, search, taller, institution]);
 
-  const currentData = filtered.slice(
-    (page - 1) * limit,
-    page * limit
-  );
+  const currentData = useMemo(() => {
+    return filtered.slice((page - 1) * limit, page * limit);
+  }, [filtered, page]);
+
+  const handleAction = async (action, item) => {
+    if (action === "accept") {
+      await editOrder(item.id, {
+        aprobacion: "aceptado",
+      });
+    }
+  };
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
+    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-800">
 
-      {/* SEARCH */}
       <div className="mb-4">
         <SearchBar
           search={search}
@@ -94,9 +98,7 @@ export default function RechTable() {
         />
       </div>
 
-      {/* TABLE */}
       <div className="overflow-x-auto">
-
         <table className="w-full text-sm">
 
           <thead className="bg-blue-50">
@@ -110,7 +112,10 @@ export default function RechTable() {
                 "Aprobación",
                 "Operaciones"
               ].map((h) => (
-                <th key={h} className="border px-3 py-2 text-left">
+                <th
+                  key={h}
+                  className="border px-3 py-2 text-left dark:bg-gray-800 dark:text-gray-300"
+                >
                   {h}
                 </th>
               ))}
@@ -124,23 +129,21 @@ export default function RechTable() {
                   key={item.id}
                   item={item}
                   index={(page - 1) * limit + i + 1}
-                  getDescripcion={getDescripcion}
+                  onAction={handleAction}   
                 />
               ))
             ) : (
               <tr>
                 <td colSpan={7} className="text-center py-4">
-                  No hay registros pendientes
+                  No hay registros rechazados
                 </td>
               </tr>
             )}
           </tbody>
 
         </table>
-
       </div>
 
-      {/* PAGINACIÓN */}
       <div className="flex justify-center mt-4">
         <Pagination
           page={page}

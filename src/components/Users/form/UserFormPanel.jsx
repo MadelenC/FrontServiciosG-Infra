@@ -22,13 +22,13 @@ export default function UserFormPanel({ open, onClose, formType, setFormType }) 
   const panelWidth = formType ? "w-full max-w-lg" : "w-80";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
+    <div className="fixed inset-0 z-50 flex items-center justify-center  bg-black/40 backdrop-blur-sm">
       
       <div
         className={`${panelWidth} relative bg-white rounded-2xl shadow-2xl
                     p-6 transition-all duration-300`}
       >
-        {/* Botón cerrar */}
+        
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-700 font-bold px-3 py-1 rounded hover:bg-gray-200"
@@ -37,7 +37,7 @@ export default function UserFormPanel({ open, onClose, formType, setFormType }) 
           X
         </button>
 
-        {/* Selector de formulario */}
+       
         {formType === null && (
           <div className="flex flex-col items-center gap-5 py-6">
             <h1 className="text-lg font-semibold text-gray-800">
@@ -52,7 +52,7 @@ export default function UserFormPanel({ open, onClose, formType, setFormType }) 
                          hover:from-indigo-700 hover:to-indigo-600
                          transition shadow-md"
             >
-            {/* Selector de formulario    Registro General*/}Agregar Personal
+            Agregar Personal
             </button>
 
             <button

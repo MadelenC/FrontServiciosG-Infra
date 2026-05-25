@@ -17,16 +17,10 @@ import { IoCalendarNumberOutline } from "react-icons/io5";
 const navItems = [
   { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", 
     subItems: 
-    [{ name: " Ver Lista", path: "/usuarios", pro: false, icon:<FaListUl className="text-white " /> },
-     
-    ] },
- 
-      
- 
-   //{ name: "Informe de viajes", icon: <FaFileLines className="text-white" />, subItems: [{ name: "Mostrar", path: "/informe", pro: false,icon:<FaListUl className="text-white " /> }] },
- 
+    [{ name: " Ver Lista", path: "/usuarios", pro: false, icon:<FaListUl className="text-white " /> },] },
+
   { name: "Secciones", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Mostrar", path: "/secciones", pro: false, icon:<FaListUl className="text-white " />}] },
-  { name: "Modificar Solicitud", icon: <MdReplyAll  className="text-white" />, subItems: [{ name: "Listar Solicitudes", path: "/solicitud", pro: false,icon:<FaListUl className="text-white " /> }] },  
+  { name: "Modificar Solicitud", icon: <MdReplyAll  className="text-white" />, subItems: [{ name: "Listar Solicitudes", path: "/modificar", pro: false,icon:<FaListUl className="text-white " /> }] },  
   {name: "Aprobacion de Trabajo", 
     icon: <BiCog className="text-white" />, 
     subItems: [
@@ -216,7 +210,7 @@ const AppSidebar = () => {
                           : ""
                       }`}
                     >
-                      {/* ICONO */}
+                     
                       {subItem.icon && (
                         <span className="flex items-center justify-center w-5 h-5 text-white/80 group-hover:text-white transition">
                           {React.isValidElement(subItem.icon) ? (
@@ -227,12 +221,11 @@ const AppSidebar = () => {
                         </span>
                       )}
 
-                      {/* TEXTO */}
+              
                       <span className="text-sm leading-none">
                         {subItem.name}
                       </span>
-
-                      {/* BADGES */}
+ 
                       <span className="ml-auto flex gap-1">
                         {subItem.new && (
                           <span className="text-xs px-1.5 py-0.5 rounded bg-green-500/20 text-green-300">
@@ -257,18 +250,48 @@ const AppSidebar = () => {
   );
 
   return (
-    <aside
-      className={`
-        fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 
-        bg-[#1e1f4b] text-white border-r border-[#151735]
-        dark:bg-[#11121f] dark:border-[#1a1a2c]
-        h-screen transition-all duration-300 ease-in-out z-50
-        ${isExpanded || isMobileOpen ? "w-[290px]" : isHovered ? "w-[290px]" : "w-[90px]"}
-        ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 font-sans
-      `}
-      onMouseEnter={() => !isExpanded && setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+   <aside
+  className={`
+    fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0
+
+    bg-gradient-to-br
+    from-[#2b2f77]
+    via-[#202452]
+    to-[#13152e]
+
+    dark:bg-none
+    dark:bg-[#11121f]
+
+    text-white
+
+    border-r
+    border-white/10
+    dark:border-[#1a1a2c]
+
+    h-screen
+    transition-all
+    duration-300
+    ease-in-out
+    z-50
+
+    ${
+      isExpanded || isMobileOpen
+        ? "w-[290px]"
+        : isHovered
+        ? "w-[290px]"
+        : "w-[90px]"
+    }
+
+    ${
+      isMobileOpen
+        ? "translate-x-0"
+        : "-translate-x-full"
+    }
+
+    lg:translate-x-0
+    font-sans
+  `}
+>
       <div className={`py-6 flex justify-center pl-0 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-center"}`}>
         <Link to="/">
           {isExpanded || isHovered || isMobileOpen ? (

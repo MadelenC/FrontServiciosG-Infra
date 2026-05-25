@@ -18,7 +18,7 @@ export default function CreateSeccionesForm({
     }
   }, [isOpen]);
 
-  // 🔥 VALIDACIÓN BASE
+ 
   const validateNombre = (value) => {
     const text = value.trim();
 
@@ -32,11 +32,11 @@ export default function CreateSeccionesForm({
     return null;
   };
 
-  // 🔥 NORMALIZAR TEXTO
+
   const normalize = (text) =>
     (text || "").trim().toLowerCase();
 
-  // 🔥 INPUT CHANGE
+
   const handleChange = (value) => {
     setNombre(value);
 
@@ -44,7 +44,7 @@ export default function CreateSeccionesForm({
     setError(err || "");
   };
 
-  // 🔥 VALIDACIÓN DUPLICADOS (SEPARADA Y FIABLE)
+ 
   const isDuplicate = (value) => {
     const val = normalize(value);
 
@@ -53,20 +53,16 @@ export default function CreateSeccionesForm({
     );
   };
 
-  // 🔥 SUBMIT
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const value = nombre;
-
-    // 1. validación base
     const err = validateNombre(value);
     if (err) {
       setError(err);
       return;
     }
-
-    // 2. duplicados
     if (isDuplicate(value)) {
       const msg = "Esta institución ya existe";
       setError(msg);
@@ -95,8 +91,6 @@ export default function CreateSeccionesForm({
       setSaving(false);
     }
   };
-
-  // 🔥 estado del botón (UNIFICADO)
   const isValid =
     !validateNombre(nombre) &&
     !isDuplicate(nombre);
@@ -104,26 +98,26 @@ export default function CreateSeccionesForm({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-5">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-5">
 
-      <div className="bg-white w-full max-w-xl rounded-xl shadow-2xl relative">
-         {/* cerrar */}
+      <div className="bg-white w-full max-w-xl rounded-xl shadow-2xl relative dark:bg-gray-700">
+        
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 px-3 py-1 hover:bg-gray-200 rounded"
+          className="absolute top-3 right-3 px-3 py-1 hover:bg-gray-200 rounded dark:text-gray-200 dark:hover:bg-gray-800"
         >
           X
         </button>
 
-        <h2 className="text-2xl font-bold text-center mt-6">
+        <h2 className="text-2xl font-bold text-center mt-6 dark:text-gray-400">
           Registro de Instituciones
         </h2>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
 
-          {/* INPUT */}
+         
           <div>
-            <label className="block mb-1 font-semibold">
+            <label className="block mb-1 font-semibold dark:text-gray-400">
               Nombre de la institución
             </label>
 
@@ -131,19 +125,19 @@ export default function CreateSeccionesForm({
               type="text"
               value={nombre}
               onChange={(e) => handleChange(e.target.value)}
-              className={`w-full border px-3 py-2 rounded-md transition
+              className={`w-full border px-3 py-2 rounded-md transition dark:bg-gray-400 dark:text-gray-900
                 ${error ? "border-red-500" : "border-gray-300"}`}
               placeholder="Ej: Carrera de Derecho"
             />
 
             {error && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-500 text-sm mt-1 ">
                 {error}
               </p>
             )}
           </div>
 
-          {/* BOTÓN */}
+    
           <div className="flex justify-end">
             <button
               type="submit"

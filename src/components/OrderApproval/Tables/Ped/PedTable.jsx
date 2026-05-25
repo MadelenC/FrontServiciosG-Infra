@@ -9,16 +9,20 @@ import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 
 export default function PedTable() {
 
-  const { orders, fetchOrders } = useOrderApprovalStore();
+  const {
+    orders,
+    fetchOrders,
+    page,
+    setPage,
+    totalPages
+  } = useOrderApprovalStore();
+
   const { institutions, fetchInstitutions } = useInstitutionStore();
   const { maintenances, fetchMaintenances } = useMaintenanceStore();
 
   const [search, setSearch] = useState("");
   const [taller, setTaller] = useState("");
   const [institution, setInstitution] = useState("");
-  const [page, setPage] = useState(1);
-
-  const limit = 8;
 
   useEffect(() => {
     fetchOrders();
@@ -30,55 +34,28 @@ export default function PedTable() {
     setPage(1);
   }, [search, taller, institution]);
 
-  // 🔥 MAPA DESCRIPCIÓN
-  const maintenanceMap = new Map(
-    maintenances.map((m) => [String(m.id), m.descripcion])
+  
+  const filteredOrders = orders.filter(
+    (item) => item.aprobacion === "pendiente"
   );
+  const handleAction = async (action, item) => {
+  if (action === "reject") {
+    await editOrder(item.id, {
+      aprobacion: "rechazado",
+    });
+  }
 
-  const getDescripcion = (id) =>
-    maintenanceMap.get(String(id)) || "-";
-
-  // 🔥 FILTRO SOLO PENDIENTES + SEARCH
-  const filtered = orders.filter((item) => {
-
-    const searchText = search.toLowerCase();
-
-    const institucionNombre =
-      item.institucion?.nombre?.toLowerCase() || "";
-
-    const itemTaller =
-      (item.taller || "").toLowerCase();
-
-    // 🔴 SOLO PENDIENTES
-    const isPending = item.aprobacion === "pendiente";
-
-    const matchSearch =
-      !search ||
-      String(item.id || "").includes(searchText) ||
-      institucionNombre.includes(searchText) ||
-      itemTaller.includes(searchText);
-
-    const matchTaller =
-      !taller || itemTaller === taller.toLowerCase();
-
-    const matchInstitution =
-      !institution ||
-      String(item.ins_id) === String(institution);
-
-    return isPending && matchSearch && matchTaller && matchInstitution;
-  });
-
-  const totalPages = Math.ceil(filtered.length / limit);
-
-  const currentData = filtered.slice(
-    (page - 1) * limit,
-    page * limit
-  );
+  if (action === "accept") {
+    await editOrder(item.id, {
+      aprobacion: "aceptado",
+    });
+  }
+};
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
+    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-800">
 
-      {/* SEARCH */}
+     
       <div className="mb-4">
         <SearchBar
           search={search}
@@ -94,10 +71,9 @@ export default function PedTable() {
         />
       </div>
 
-      {/* TABLE */}
+     
       <div className="overflow-x-auto">
-
-        <table className="w-full text-sm">
+        <table className="w-full text-sm dark:text-gray-400">
 
           <thead className="bg-blue-50">
             <tr>
@@ -110,7 +86,10 @@ export default function PedTable() {
                 "Aprobación",
                 "Operaciones"
               ].map((h) => (
-                <th key={h} className="border px-3 py-2 text-left">
+                <th
+                  key={h}
+                  className="border px-3 py-2 text-left dark:bg-gray-800"
+                >
                   {h}
                 </th>
               ))}
@@ -118,13 +97,13 @@ export default function PedTable() {
           </thead>
 
           <tbody>
-            {currentData.length > 0 ? (
-              currentData.map((item, i) => (
+            {filteredOrders.length > 0 ? (
+              filteredOrders.map((item, i) => (
                 <PedRow
                   key={item.id}
                   item={item}
-                  index={(page - 1) * limit + i + 1}
-                  getDescripcion={getDescripcion}
+                  index={i + 1}
+                  onAction={handleAction}
                 />
               ))
             ) : (
@@ -137,10 +116,9 @@ export default function PedTable() {
           </tbody>
 
         </table>
-
       </div>
 
-      {/* PAGINACIÓN */}
+     
       <div className="flex justify-center mt-4">
         <Pagination
           page={page}

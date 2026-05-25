@@ -1,43 +1,71 @@
 import api from "../helpers/axiosClient";
 
-// Traer todos los usuarios
-export const getUsers = async () => {
+
+export const getUsers = async ({
+  page,
+  limit,
+  search,
+  roleFilter,
+}) => {
   try {
-    const response = await api.get("/users");
+    const response = await api.get("/users", {
+      params: {
+        page,
+        limit,
+        search,
+        role: roleFilter,
+      },
+    });
+
     return response.data;
   } catch (err) {
-    throw err.response?.data?.message || "Error al obtener usuarios";
+    throw new Error(
+      err.response?.data?.message ||
+      "Error al obtener usuarios"
+    );
   }
 };
 
-// Crear usuario
+
 export const createUser = async (userData) => {
-  console.log(userData);
   try {
     const response = await api.post("/users", userData);
     return response.data;
   } catch (err) {
-    throw err.response?.data?.message || "Error al crear usuario";
+    console.log("CREATE USER ERROR:", err.response?.data || err);
+
+    throw new Error(
+      err.response?.data?.message ||
+      "Error al crear usuario"
+    );
   }
 };
 
-// Actualizar usuario
 export const updateUser = async (id, userData) => {
   try {
     const response = await api.put(`/users/${id}`, userData);
     return response.data;
   } catch (err) {
-    throw err.response?.data?.message || "Error al actualizar usuario";
+    console.log("UPDATE USER ERROR:", err.response?.data || err);
+
+    throw new Error(
+      err.response?.data?.message ||
+      "Error al actualizar usuario"
+    );
   }
 };
 
-// Eliminar usuario
+
 export const deleteUser = async (id) => {
   try {
     const response = await api.delete(`/users/${id}`);
     return response.data;
   } catch (err) {
-    throw err.response?.data?.message || "Error al eliminar usuario";
+    console.log("DELETE USER ERROR:", err.response?.data || err);
+
+    throw new Error(
+      err.response?.data?.message ||
+      "Error al eliminar usuario"
+    );
   }
 };
-

@@ -1,40 +1,89 @@
 import { create } from "zustand";
+
 import {
   getUsers,
   createUser,
-  updateUser,
+  updateUser as updateUserService,
   deleteUser,
 } from "../services/userService";
 
-export const useUserStore = create((set, get) => ({
-  users: [],
-  loading: true,
-  error: null,
-  page: 1,
-  limit: 8,
-  totalPages: 1,
-  search: "",
-  roleFilter: "",
-
-  fetchUsers: async () => {
-    set({ loading: true, error: null });
-    try {
-      const data = await getUsers();
-
+export const useUserStore =
+  create((set, get) => ({
+    users: [],
+    loading: true,
+    error: null,
+    page: 1,
+    limit: 8,
+    totalPages: 1,
+    search: "",
+    roleFilter: "",
+    fetchUsers: async () => {
       set({
-        users: data || [],
-        totalPages: Math.ceil((data?.length || 0) / get().limit),
-        loading: false,
+        loading: true,
+        error: null,
       });
-    } catch (err) {
-      set({
-        error: err.message || "Error al cargar usuarios",
-        loading: false,
-      });
-    }
-  },
+      try {
+        const {
+          page,
+          limit,
+          search,
+          roleFilter,
+        } = get();
 
-  // 🔥 VALIDACIÓN DE CÉDULA AQUÍ (IMPORTANTE)
+        const data =
+          await getUsers({
+            page,
+            limit,
+            search,
+            roleFilter,
+          });
+        set({
+          users:
+            data.users || [],
+          totalPages:
+            data.totalPages || 1,
+          loading: false,
+        });
+      } catch (err) {
+
+        set({
+
+          error:
+            err.message
+            || "Error al cargar usuarios",
+
+          loading: false,
+
+        });
+
+      }
+
+    },
+    fetchUsersReport: async (tipo = "") => {
+
+  try {
+
+    const data =
+      await getUsers({
+        page: 1,
+        limit: 10000,
+        search: "",
+        roleFilter: tipo,
+      });
+
+    return data.users || [];
+
+  } catch (err) {
+
+    console.log(err);
+
+    return [];
+
+  }
+
+},
+
+
   createUser: async (userData) => {
     try {
       const exists = get().users.some(
@@ -59,21 +108,26 @@ export const useUserStore = create((set, get) => ({
     }
   },
 
-  updateUser: async (id, updatedData) => {
-    try {
-      const updatedUser = await updateUser(id, updatedData);
+updateUser: async (id, updatedData) => {
+  try {
+    const response = await updateUserService(id, updatedData);
 
-      set({
-        users: get().users.map((u) =>
-          u.id === id ? updatedUser : u
-        ),
-      });
+    await get().fetchUsers();
 
-      return { ok: true };
-    } catch (err) {
-      return { ok: false, error: err.message || err };
-    }
-  },
+    return {
+      ok: true,
+      data: response ?? null,
+      error: null
+    };
+
+  } catch (err) {
+    return {
+      ok: false,
+      data: null,
+      error: err?.response?.data?.message || err.message || "Error al actualizar"
+    };
+  }
+},
 
   deleteUser: async (id) => {
     try {

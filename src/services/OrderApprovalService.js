@@ -1,12 +1,20 @@
 import api from "../helpers/axiosClient";
 
 
-export const getOrders = async () => {
+export const getOrders = async (params) => {
   try {
-    const response = await api.get("/pedidoserv");
+    const response = await api.get( "/pedidoserv",
+      {
+        params,
+      }
+    );
+
     return response.data;
   } catch (err) {
-    throw err.response?.data?.message || "Error al obtener órdenes";
+    throw (
+      err.response?.data?.message
+      || "Error al obtener órdenes"
+    );
   }
 };
 

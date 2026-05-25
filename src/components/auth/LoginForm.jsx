@@ -1,23 +1,32 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+
 import { TbLockPassword } from "react-icons/tb";
+
 import Button from "../ui/button/Button";
-import {useAuthStore } from "../../zustand/AuthUsers";
+
+import { useAuthStore } from "../../zustand/AuthUsers";
+
 import { loginService } from "../../services/authService";
 
-
 export default function LoginForm() {
+
   const navigate = useNavigate();
+
   const location = useLocation();
 
   const params = new URLSearchParams(location.search);
+
   const module = params.get("module");
 
-  const setUser = useAuthStore((state) => state.setUser);
-  const setToken = useAuthStore((state) => state.setToken);
+  const setUser =
+    useAuthStore((state) => state.setUser);
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const setToken =
+    useAuthStore((state) => state.setToken);
+
+  const [showPassword, setShowPassword] =
+    useState(false);
 
   const [formData, setFormData] = useState({
     cedula: "",
@@ -25,155 +34,303 @@ export default function LoginForm() {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    try {
-      const res = await loginService(formData);
+  e.preventDefault();
 
-      setUser(res.user);
-      setToken(res.token);
+  try {
 
-      console.log("MODULE:", module);
+  
+    if (module !== "servicios") {
 
-      
-      if (!module) {
-        navigate("/");
-        return;
-      }
+      alert("Módulo no disponible");
 
-      switch (module) {
-        case "mantenimiento":
-          navigate("/dashboard");
-          break;
+      navigate("/");
 
-        case "viajes":
-          navigate("/viajes");
-          break;
+      return;
 
-        case "servicios":
-          navigate("/servicios");
-          break;
-
-        default:
-          navigate("/");
-      }
-
-    } catch (err) {
-      console.log(err.response);
-      alert(err.response?.message || "Error al iniciar sesión");
     }
-  };
+
+    const res =
+      await loginService(formData);
+
+    setUser(res.user);
+
+    setToken(res.token);
+
+  
+    navigate("/dashboard");
+
+  } catch (err) {
+
+    alert(
+      err.response?.message ||
+      "Error al iniciar sesión"
+    );
+
+  }
+
+};
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 bg-[#F3F4F6]">
 
-      <div className="w-full max-w-md">
+    <div className="
+      min-h-screen
+      relative
+      flex items-center
+      justify-center
+      overflow-hidden
+    ">
+      <img
+        src="https://infraestructura.uatf.edu.bo/img/tres.jpg"
+        alt="UATF"
+        className="
+          absolute inset-0
+          w-full h-full
+          object-cover
+        "
+      />
 
-        {/* HEADER */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
-            Iniciar sesión
-          </h1>
-          <p className="mt-2 text-sm text-gray-500">
-            Ingresa tu CI y contraseña para continuar
-          </p>
-        </div>
+      <div className="
+        absolute inset-0
+        bg-black/90
+      " />
 
-        {/* FORM */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+     
+      <div className="
+        absolute
+        top-0 left-0
+        w-full h-full
+        bg-gradient-to-br
+        from-indigo-900/20
+        via-black/20
+        to-black/40
+      " />
 
-          {/* CÉDULA */}
-          <div>
-            <label className="text-sm text-gray-700">
-              Cédula de Identidad
-            </label>
+   
 
-            <input
-              name="cedula"
-              type="text"
-              value={formData.cedula}
-              onChange={handleChange}
-              placeholder="12345678"
-              required
-              className="mt-1 w-full px-4 py-3 rounded-xl
-              bg-white border border-gray-300
-              text-gray-900 placeholder:text-gray-400
-              focus:outline-none focus:ring-2 focus:ring-[#2563EB]
-              focus:border-[#2563EB]
-              transition"
-            />
-          </div>
+      <div className="
+        relative z-10
+        w-full max-w-md 
+        mx-5
+      ">
 
-          {/* PASSWORD */}
-          <div>
-            <label className="text-sm text-gray-700">
-              Contraseña
-            </label>
+        <div className="
+        backdrop-blur-2xl
+        bg-[#0F172A]/75
+        border border-white/10
+        shadow-2xl
+        rounded-[32px]
+        p-3
+      ">
+       
 
-            <div className="relative mt-1">
-              <input
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                required
-                className="w-full px-4 py-3 rounded-xl
-                bg-white border border-gray-300
-                text-gray-900 placeholder:text-gray-400
-                focus:outline-none focus:ring-2 focus:ring-[#2563EB]
-                focus:border-[#2563EB]
-                transition"
+          <div className="flex justify-center">
+
+            <div className="
+              w-28 h-28
+              rounded-full
+              overflow-hidden
+              border-4 border-white/30
+              shadow-2xl
+              bg-white
+            ">
+
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzIA0oXO4nlNelb3xVEbIz4kbVTczb4UIGfA&s"
+                alt="Logo"
+                className="
+                  w-full h-full
+                  object-cover
+                "
               />
 
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2
-                text-gray-400 hover:text-[#2563EB] transition"
-              >
-                <TbLockPassword className="size-5" />
-              </button>
             </div>
+
           </div>
 
-          {/* CHECKBOX */}
-          <label className="flex items-center gap-2 text-sm text-gray-600">
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={(e) => setIsChecked(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 accent-[#2563EB]"
-            />
-            Mantener sesión activa
-          </label>
+          <div className=" text-center  mt-6 mb-8  ">
+            <h1 className=" text-3xl  font-bold text-white  ">
+              Bienvenido
+            </h1>
+            <p className=" mt-2 text-sm text-white/70  ">
+              Sistema Administrativo U.A.T.F.
+            </p>
 
-          {/* BUTTON */}
-          <Button
-            type="submit"
-            className="w-full py-3 rounded-xl
-            bg-[#2563EB] text-white
-            hover:bg-[#1D4ED8]
-            active:scale-[0.99]
-            transition"
-          >
-            Iniciar sesión
-          </Button>
+          </div>
 
-          {/* FOOTER */}
-          <p className="text-center text-sm text-gray-500">
-            ¿No tienes cuenta?{" "}
-            <Link to="/register" className="text-[#2563EB] font-medium hover:underline">
-              Regístrate aquí
-            </Link>
-          </p>
+          <form onSubmit={handleSubmit} className="space-y-5"  >
+            <div>
+              <label className="  text-sm  text-white/80 ">
+                Cédula de Identidad
+              </label>
 
-        </form>
+              <input
+                name="cedula"
+                type="text"
+                value={formData.cedula}
+                onChange={handleChange}
+                placeholder="12345678"
+                required
+                className="
+                  mt-2
+                  w-full
+                  px-4 py-3
+                  rounded-2xl
+
+                  bg-white/10
+                  border border-white/15
+
+                  text-white
+                  placeholder:text-white/40
+
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-indigo-500
+
+                  transition
+                "
+              />
+
+            </div>
+
+           
+
+            <div>
+
+              <label className="
+                text-sm
+                text-white/80
+              ">
+                Contraseña
+              </label>
+
+              <div className="
+                relative
+                mt-2
+              ">
+
+                <input
+                  name="password"
+                  type={
+                    showPassword
+                    ? "text"
+                    : "password"
+                  }
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  required
+                  className="
+                    w-full
+                    px-4 py-3
+                    rounded-2xl
+
+                    bg-white/10
+                    border border-white/15
+
+                    text-white
+                    placeholder:text-white/40
+
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-indigo-500
+
+                    transition
+                  "
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowPassword(!showPassword)
+                  }
+                  className="
+                    absolute
+                    right-4 top-1/2
+                    -translate-y-1/2
+
+                    text-white/50
+                    hover:text-white
+                  "
+                >
+
+                  <TbLockPassword
+                    className="size-5"
+                  />
+
+                </button>
+
+              </div>
+
+            </div>
+
+            
+
+            <Button
+              type="submit"
+              className="
+                w-full
+                py-3
+                rounded-2xl
+
+                bg-indigo-600
+                hover:bg-indigo-700
+
+                text-white
+                font-semibold
+
+                shadow-lg
+                shadow-indigo-500/30
+
+                transition-all
+                duration-300
+              "
+            >
+
+              Iniciar sesión
+
+            </Button>
+
+            
+
+            <p className="
+              text-center
+              text-sm
+              text-white/60
+            ">
+
+              ¿No tienes cuenta?{" "}
+
+              <Link
+                to="/signup"
+                className="
+                  text-indigo-300
+                  hover:text-white
+                  transition
+                "
+              >
+                Regístrate
+              </Link>
+
+            </p>
+
+          </form>
+
+        </div>
+
       </div>
+
     </div>
+
   );
+
 }

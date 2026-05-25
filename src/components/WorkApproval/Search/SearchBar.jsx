@@ -27,11 +27,11 @@ export default function SearchBar({
           text-sm
           shadow-sm
           focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400
-          transition
+          transition dark:bg-gray-300
         "
       />
 
-      {/* TALLER */}
+      
       <select
         value={taller}
         onChange={(e) => setTaller(e.target.value)}
@@ -44,7 +44,7 @@ export default function SearchBar({
           bg-white
           shadow-sm
           focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400
-          transition
+          transition dark:bg-gray-400
         "
       >
         <option value="">Seleccione taller</option>
@@ -56,7 +56,7 @@ export default function SearchBar({
         ))}
       </select>
 
-      {/* INSTITUCIÓN */}
+      
       <select
         value={institution}
         onChange={(e) => setInstitution(e.target.value)}
@@ -69,7 +69,7 @@ export default function SearchBar({
           bg-white
           shadow-sm
           focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400
-          transition
+          transition dark:bg-gray-400
         "
       >
         <option value="">Seleccione institución</option>

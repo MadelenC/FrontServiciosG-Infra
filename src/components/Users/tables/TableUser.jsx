@@ -7,6 +7,8 @@ import UserFormPanel from "../form/UserFormPanel";
 import ReportUserForm from "../form/ReportUserForm";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 
+
+
 export default function TableUser() {
   const {
     users = [],
@@ -27,34 +29,34 @@ export default function TableUser() {
   const [openReport, setOpenReport] = useState(false);
   const [formType, setFormType] = useState(null);
 
-  useEffect(() => {
+
+useEffect(() => {
+
+  const timeout = setTimeout(() => {
+
     fetchUsers();
-  }, [fetchUsers]);
 
-  const sortedUsers = [...users].sort((a, b) => a.id - b.id);
+  }, 500);
 
-  const currentUsers = sortedUsers
-    .filter((u) => {
-      const term = (search || "").toLowerCase();
+  return () => clearTimeout(timeout);
 
-      const matchesSearch =
-        String(u.nombres || "").toLowerCase().includes(term) ||
-        String(u.apellidos || "").toLowerCase().includes(term) ||
-        String(u.cedula || "").toLowerCase().includes(term) ||
-        String(u.celular || "").toLowerCase().includes(term);
+}, [
+  page,
+  search,
+  roleFilter,
+  fetchUsers,
+]);
 
-      const matchesRole = roleFilter ? u.tipo === roleFilter : true;
+ const currentUsers = users;
+ const isInitialLoading =
+  loading && users.length === 0;
 
-      return matchesSearch && matchesRole;
-    })
-    .slice((page - 1) * limit, page * limit);
-
-  if (loading)
-    return (
-      <div className="p-6 text-center text-gray-500 animate-pulse">
-        Cargando usuarios...
-      </div>
-    );
+if (isInitialLoading)
+  return (
+    <div className="p-6 text-center text-gray-500 animate-pulse">
+      Cargando usuarios...
+    </div>
+  );
 
   if (error)
     return (
@@ -64,12 +66,12 @@ export default function TableUser() {
     );
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white shadow-md p-5">
+    <div className="rounded-xl border border-gray-200 bg-white shadow-md p-5 dark:bg-gray-900 ">
 
-      {/* TOOLBAR */}
+  
       <div className="flex items-center justify-between mb-5 gap-4 flex-wrap">
 
-        {/* SEARCH */}
+       
         <div className="flex-1 min-w-[250px]">
           <SearchBar
             search={search}
@@ -79,10 +81,10 @@ export default function TableUser() {
           />
         </div>
 
-        {/* BOTONES */}
+      
         <div className="flex items-center gap-2">
 
-          {/* REPORTE */}
+      
           <button
             onClick={() => setOpenReport(true)}
             className="w-9 h-9 flex items-center justify-center rounded-md bg-orange-500 hover:bg-orange-600 text-white shadow-sm transition"
@@ -91,7 +93,7 @@ export default function TableUser() {
             <HiOutlineDocumentReport className="text-lg text-white" />
           </button>
 
-          {/* AGREGAR */}
+         
           <button
             onClick={() => {
               setOpenPanel(true);
@@ -105,13 +107,12 @@ export default function TableUser() {
         </div>
       </div>
 
-      {/* TABLE */}
       <UserTable users={currentUsers} />
 
-      {/* PAGINATION */}
+    
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
-      {/* PANEL USUARIO */}
+      
       <UserFormPanel
         open={openPanel}
         onClose={() => {
@@ -122,24 +123,16 @@ export default function TableUser() {
         setFormType={setFormType}
       />
 
-      {/* MODAL REPORTE */}
+      
       {openReport && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-5 rounded-lg w-full max-w-md relative">
 
-            <button
-              onClick={() => setOpenReport(false)}
-              className="absolute top-2 right-3 text-gray-500"
-            >
-              ✕
-            </button>
+           
 
             <ReportUserForm
               users={users}
-              onPrint={(tipo) => {
-                console.log("Reporte:", tipo);
-                setOpenReport(false);
-              }}
+              onClose={() => setOpenReport(false)}
             />
           </div>
         </div>

@@ -1,106 +1,120 @@
 import { useState, useEffect } from "react";
+
 import PedRow from "./AcepRow";
 import Pagination from "../Pagination";
 import SearchBar from "../../SearchBar/SearchBar";
 
 import { useOrderApprovalStore } from "../../../../zustand/useOrderApprovalStore";
 import { useInstitutionStore } from "../../../../zustand/useInstitutionStore";
-import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 
 export default function AcepTable() {
 
-  const { orders, fetchOrders } = useOrderApprovalStore();
-  const { institutions, fetchInstitutions } = useInstitutionStore();
-  const { maintenances, fetchMaintenances } = useMaintenanceStore();
+  const {
+    orders,
+    fetchOrders,
+    editOrder,
+
+    page,
+    setPage,
+
+    totalPages,
+
+    setSearch: setStoreSearch,
+    setTaller: setStoreTaller,
+    setInstitution: setStoreInstitution,
+
+  } = useOrderApprovalStore();
+
+  const {
+    institutions,
+    fetchInstitutions,
+  } = useInstitutionStore();
 
   const [search, setSearch] = useState("");
   const [taller, setTaller] = useState("");
   const [institution, setInstitution] = useState("");
-  const [page, setPage] = useState(1);
 
-  const limit = 8;
+  
 
   useEffect(() => {
-    fetchOrders();
     fetchInstitutions();
-    fetchMaintenances();
   }, []);
 
+
+
   useEffect(() => {
-    setPage(1);
+
+    setStoreSearch(search);
+    setStoreTaller(taller);
+    setStoreInstitution(institution);
+
   }, [search, taller, institution]);
 
-  
-  const maintenanceMap = new Map(
-    maintenances.map((m) => [String(m.id), m.descripcion])
+  useEffect(() => {
+
+    fetchOrders();
+
+  }, [page, search, taller, institution]);
+
+ 
+
+  const filteredOrders = orders.filter(
+    (item) => item.aprobacion === "aceptado"
   );
 
-  const getDescripcion = (id) =>
-    maintenanceMap.get(String(id)) || "-";
 
-  
-  const filtered = orders.filter((item) => {
+  const handleAction = async (action, item) => {
+  if (action === "reject") {
+    await editOrder(item.id, {
+      aprobacion: "rechazado",
+    });
 
-    const searchText = search.toLowerCase();
-
-    const institucionNombre =
-      item.institucion?.nombre?.toLowerCase() || "";
-
-    const itemTaller =
-      (item.taller || "").toLowerCase();
-
-    // SOLO aceptado
-    const isPending = item.aprobacion === "aceptado";
-
-    const matchSearch =
-      !search ||
-      String(item.id || "").includes(searchText) ||
-      institucionNombre.includes(searchText) ||
-      itemTaller.includes(searchText);
-
-    const matchTaller =
-      !taller || itemTaller === taller.toLowerCase();
-
-    const matchInstitution =
-      !institution ||
-      String(item.ins_id) === String(institution);
-
-    return isPending && matchSearch && matchTaller && matchInstitution;
-  });
-
-  const totalPages = Math.ceil(filtered.length / limit);
-
-  const currentData = filtered.slice(
-    (page - 1) * limit,
-    page * limit
-  );
+  }
+};
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
 
-      {/* SEARCH */}
+    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-800">
+
+    
+
       <div className="mb-4">
+
         <SearchBar
+
           search={search}
           setSearch={setSearch}
+
           taller={taller}
           setTaller={setTaller}
+
           institution={institution}
           setInstitution={setInstitution}
+
           listaTalleres={[
-            ...new Set(orders.map(o => o.taller).filter(Boolean))
+            ...new Set(
+              orders
+                .map((o) => o.taller)
+                .filter(Boolean)
+            ),
           ]}
+
           listaInstituciones={institutions}
+
         />
+
       </div>
 
       {/* TABLE */}
+
       <div className="overflow-x-auto">
 
-        <table className="w-full text-sm">
+        <table className="w-full text-sm dark:text-gray-400 border">
 
-          <thead className="bg-blue-50">
+          <thead className="bg-blue-50 dark:bg-gray-800">
+
             <tr>
+
               {[
                 "#",
                 "N°",
@@ -108,47 +122,71 @@ export default function AcepTable() {
                 "Descripción",
                 "Taller",
                 "Aprobación",
-                "Operaciones"
+                "Operaciones",
               ].map((h) => (
-                <th key={h} className="border px-3 py-2 text-left">
+
+                <th
+                  key={h}
+                  className="border px-3 py-2 text-left dark:bg-gray-800"
+                >
                   {h}
                 </th>
+
               ))}
+
             </tr>
+
           </thead>
 
           <tbody>
-            {currentData.length > 0 ? (
-              currentData.map((item, i) => (
+
+            {filteredOrders.length > 0 ? (
+
+              filteredOrders.map((item, i) => (
+
                 <PedRow
                   key={item.id}
                   item={item}
-                  index={(page - 1) * limit + i + 1}
-                  getDescripcion={getDescripcion}
+                  index={(page - 1) * 8 + i + 1}
+                  onAction={handleAction}
                 />
+
               ))
+
             ) : (
+
               <tr>
-                <td colSpan={7} className="text-center py-4">
-                  No hay registros pendientes
+
+                <td
+                  colSpan={7}
+                  className="text-center py-4"
+                >
+                  No hay registros aceptados
                 </td>
+
               </tr>
+
             )}
+
           </tbody>
 
         </table>
 
       </div>
 
-      {/* PAGINACIÓN */}
+    
+
       <div className="flex justify-center mt-4">
+
         <Pagination
           page={page}
           totalPages={totalPages}
           setPage={setPage}
         />
+
       </div>
 
     </div>
+
   );
 }

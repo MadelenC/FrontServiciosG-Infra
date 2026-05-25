@@ -34,7 +34,7 @@ export default function UserRow({ user, onEdit }) {
         {user.celular}
       </TableCell>
 
-      <TableCell className="border border-gray-200 dark:border-gray-700 px-3 py-2">
+      <TableCell className="border border-gray-200 dark:border-gray-700 px-3 py-2 dark:text-gray-300">
         <Badge size="sm" color={badgeColor} className="px-2 py-1 text-xs">
           {user.tipo}
         </Badge>

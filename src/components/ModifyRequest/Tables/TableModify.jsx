@@ -14,7 +14,7 @@ export default function TableRepayment({
           <tr>
             {["#", "N°", "Sección", "Descripción", "Taller", "Operación"].map(
               (h) => (
-                <th key={h} className="border px-3 py-2 text-left">
+                <th key={h} className="border px-3 py-2 text-left dark:bg-gray-800">
                   {h}
                 </th>
               )

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useUserStore } from "../../../zustand/userStore";
-import { useAuthStore } from "../../../zustand/AuthUsers"; // 👈 AGREGADO
+import { useAuthStore } from "../../../zustand/AuthUsers"; 
 
 export default function GeneralForm({ onSubmit }) {
-  const { users } = useUserStore(); // 👈 se queda igual
-  const { user } = useAuthStore(); // 👈 usuario logueado
+  const { users } = useUserStore();
+  const { user } = useAuthStore(); 
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -57,7 +57,7 @@ export default function GeneralForm({ onSubmit }) {
     if (!apellido) newErrors.apellido = "Obligatorio";
     if (!cedula) newErrors.cedula = "Obligatorio";
 
-    // 🔥 VALIDACIÓN CÉDULA DUPLICADA
+    
     const exists = users.some(
       (u) => String(u.cedula).trim() === cedula
     );
@@ -85,7 +85,6 @@ export default function GeneralForm({ onSubmit }) {
       celular,
       email: email || undefined,
 
-      // 🔥 INSERTADOR (USUARIO LOGUEADO)
       insertador:
         `${user?.nombres || ""} ${user?.apellidos || ""}`.trim() ||
         "DESCONOCIDO",
@@ -94,15 +93,14 @@ export default function GeneralForm({ onSubmit }) {
 
   return (
     <form
-      className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full"
+      className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full "
       onSubmit={handleSubmit}
     >
-      {/* TITULO */}
       <h3 className="md:col-span-3 text-center font-bold text-gray-600">
         Registro General
       </h3>
 
-      {/* CAMPOS */}
+     
       {["nombre", "apellido", "password", "cedula", "celular"].map(
         (field) => (
           <div key={field} className="flex flex-col">
@@ -129,7 +127,6 @@ export default function GeneralForm({ onSubmit }) {
         )
       )}
 
-      {/* TIPO */}
       <div className="flex flex-col">
         <label className="text-xs text-gray-600">Tipo</label>
 
@@ -140,12 +137,22 @@ export default function GeneralForm({ onSubmit }) {
           className={inputBase}
         >
           <option value="">Seleccione</option>
-          <option value="administrador">Administrador</option>
-          <option value="chofer">Chofer</option>
+          <option value="administradorserv">Administrador</option>
+          <option value="encargadoserv">Encargado</option>
+          <option value="mensajero">mensajero</option>
+          <option value="electricista">Operario</option>
+          <option value="mgeneral">m. general</option>
+          <option value="supervisor">supervisor</option>
+          <option value="mantenimiento">mantenimiento</option>
+          <option value="carpintero">carpintero</option>
+          <option value="seguridad">seguridad</option>
+          <option value="albañil">albañil</option>
+          <option value="plomero">plomero</option>
+          <option value="sergeneral">ser. generales</option>
         </select>
       </div>
 
-      {/* CARGO */}
+      
       <div className="flex flex-col">
         <label className="text-xs text-gray-600">Cargo</label>
 

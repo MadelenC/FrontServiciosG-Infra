@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import {
   BarChart,
   Bar,
@@ -8,63 +10,85 @@ import {
   CartesianGrid,
 } from "recharts";
 
-const data = [
-  { name: "Ene", viajes: 40 },
-  { name: "Feb", viajes: 25 },
-  { name: "Mar", viajes: 60 },
-  { name: "Abr", viajes: 35 },
-  { name: "May", viajes: 80 },
-  { name: "Jun", viajes: 55 },
-];
+import { useOrderApprovalStore }
+from "../../zustand/useOrderApprovalStore";
 
 export default function DashboardChart() {
+
+  const { orders } =
+    useOrderApprovalStore();
+
+  const data = useMemo(() => {
+
+    const grouped = {};
+
+    orders.forEach((o) => {
+
+      const taller =
+        o.taller || "Sin taller";
+
+      grouped[taller] =
+        (grouped[taller] || 0) + 1;
+
+    });
+
+    return Object.entries(grouped)
+      .map(([name, total]) => ({
+        name,
+        total,
+      }));
+
+  }, [orders]);
+
   return (
+
     <div className="
       bg-white dark:bg-gray-900
-      border border-gray-100 dark:border-gray-800
-      p-6 rounded-2xl shadow-sm
+      border border-gray-200 dark:border-gray-800
+      rounded-2xl p-6 shadow-sm
     ">
 
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-5">
 
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-          Viajes por mes
+        <h2 className="
+          text-lg font-semibold
+          text-gray-800 dark:text-white
+        ">
+          Solicitudes por Taller
         </h2>
-
-        <span className="text-xs text-gray-400">
-          2026
-        </span>
 
       </div>
 
-      {/* CHART */}
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer
+        width="100%"
+        height={320}
+      >
+
         <BarChart data={data}>
 
-          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-
-          <XAxis dataKey="name" stroke="#9CA3AF" />
-          <YAxis stroke="#9CA3AF" />
-
-          <Tooltip
-            contentStyle={{
-              borderRadius: "12px",
-              border: "none",
-              backgroundColor: "#111827",
-              color: "#fff"
-            }}
+          <CartesianGrid
+            strokeDasharray="3 3"
+            opacity={0.2}
           />
 
+          <XAxis dataKey="name" />
+
+          <YAxis />
+
+          <Tooltip />
+
           <Bar
-            dataKey="viajes"
+            dataKey="total"
             fill="#4F46E5"
             radius={[8, 8, 0, 0]}
           />
 
         </BarChart>
+
       </ResponsiveContainer>
 
     </div>
+
   );
+
 }

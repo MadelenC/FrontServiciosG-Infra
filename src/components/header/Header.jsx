@@ -17,7 +17,7 @@ const Header = ({ onClick, onToggle }) => {
         
         <div className="flex items-center justify-between w-full gap-2 px-3 py-3 sm:gap-4 lg:justify-normal lg:px-0 lg:py-4">
           
-          {/* Hamburger button */}
+          
           <button
             className="block w-10 h-10 text-white lg:hidden"
             onClick={onToggle}

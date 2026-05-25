@@ -13,37 +13,65 @@ export const useOrderApprovalStore = create((set, get) => ({
   currentOrder: null,
   loading: false,
   error: null,
+  page: 1,
+  limit: 8,
+  totalPages: 1,
+
+  search: "",
+  taller: "",
+  institution: "",
 
 
   fetchOrders: async () => {
-    set({ loading: true, error: null });
-
-    try {
-      const data = await getOrders();
-
-      const mapped = data.map((o) => ({
+  set({
+    loading: true,
+    error: null,
+  });
+  try {
+    const {
+      page,
+      limit,
+      search,
+      taller,
+      institution,
+    } = get();
+    const data =
+      await getOrders({
+        page,
+        limit,
+        search,
+        taller,
+        institution,
+      });
+    const mapped =
+      data.orders.map((o) => ({
         id: o.id,
         man_id: o.man_id,
         ins_id: o.ins_id,
         taller: o.taller,
-
         estado: o.estado,
         aprobacion: o.aprobacion,
-
         encargado: o.encargado,
         jefe: o.jefe,
-
         user_id: o.user_id,
-
+        descripcion: o.descripcion,
         created_at: o.created_at,
         updated_at: o.updated_at,
       }));
+    set({
+      orders: mapped,
+      totalPages: data.totalPages || 1,
+      loading: false,
+    });
+  } catch (err) {
+    set({
+      error: err.message || err,
+      loading: false,
+    });
 
-      set({ orders: mapped, loading: false });
-    } catch (err) {
-      set({ error: err.message || err, loading: false });
-    }
-  },
+  }
+
+},
 
   
   fetchOrderById: async (id) => {
@@ -90,25 +118,17 @@ export const useOrderApprovalStore = create((set, get) => ({
   },
 
  
-  editOrder: async (id, data) => {
-    try {
-      const updated = await updateOrder(id, data);
+editOrder: async (id, data) => {
+  await updateOrder(id, data);
 
-      set({
-        orders: get().orders.map((o) =>
-          o.id === id ? updated : o
-        ),
-        currentOrder:
-          get().currentOrder?.id === id
-            ? updated
-            : get().currentOrder,
-      });
-
-      return { ok: true };
-    } catch (err) {
-      return { ok: false, error: err.message || err };
-    }
-  },
+  set({
+    orders: get().orders.map((o) =>
+      o.id === id
+        ? { ...o, ...data }
+        : o
+    ),
+  });
+},
 
  
   removeOrder: async (id) => {
@@ -135,4 +155,25 @@ export const useOrderApprovalStore = create((set, get) => ({
       loading: false,
       error: null,
     }),
+
+    setPage: (page) =>
+  set({ page }),
+
+setSearch: (search) =>
+  set({
+    search,
+    page: 1,
+  }),
+
+setTaller: (taller) =>
+  set({
+    taller,
+    page: 1,
+  }),
+
+setInstitution: (institution) =>
+  set({
+    institution,
+    page: 1,
+  }),
 }));

@@ -8,16 +8,22 @@ export const useAuthStore = create(
         user: null,
         token: null,
 
-        // Guardar usuario
+        
         setUser: (user) => set({ user }),
 
-        // Guardar token
+      
         setToken: (token) => set({ token }),
 
-        // Limpiar sesión
-        logout: () => {
-          set({ user: null, token: null });
-        },
+      
+        updateUser: (data) =>
+          set({
+            user: {
+              ...get().user,
+              ...data,
+            },
+          }),
+
+        logout: () => set({ user: null, token: null }),
       }),
       {
         name: "auth-storage",

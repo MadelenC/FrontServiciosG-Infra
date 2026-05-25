@@ -12,16 +12,34 @@ export default function EditUserPanel({ open, onClose, user }) {
 
   useEffect(() => {
     if (open) {
-      fetchEntidades(); // Solo traemos entidades cuando se abre el panel
+      fetchEntidades();
     }
   }, [open, fetchEntidades]);
 
   if (!open) return null;
 
-  const handleUpdate = async (updatedData) => {
-    await updateUser(user.id, updatedData);
+ const handleUpdate = async (updatedData) => {
+  try {
+    const result = await updateUser(user.id, updatedData);
+
+    if (!result.ok) {
+      alert(result.error || "Error al actualizar usuario");
+      return { ok: false, error: result.error };
+    }
+
     onClose();
-  };
+
+
+    return result;
+
+  } catch (err) {
+    console.error(err);
+    return {
+      ok: false,
+      error: "Error inesperado"
+    };
+  }
+};
 
   const handleDelete = async () => {
     if (window.confirm("¿Desea eliminar este usuario?")) {
@@ -33,11 +51,10 @@ export default function EditUserPanel({ open, onClose, user }) {
   return (
     <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-5">
       <div className="w-full max-w-lg bg-white p-6 rounded-md shadow-lg relative max-h-[90vh] overflow-y-auto">
-        {/* Botón cerrar */}
+
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-700 font-bold px-3 py-1 rounded hover:bg-gray-200"
-          aria-label="Cerrar formulario"
         >
           X
         </button>
@@ -54,9 +71,6 @@ export default function EditUserPanel({ open, onClose, user }) {
     </div>
   );
 }
-
-
-
 
 
 

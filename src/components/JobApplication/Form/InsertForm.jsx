@@ -17,7 +17,7 @@ export default function InsertForm({
 
   const [errors, setErrors] = useState({});
 
-  // reset al abrir
+  
   useEffect(() => {
     if (!isOpen) return;
 

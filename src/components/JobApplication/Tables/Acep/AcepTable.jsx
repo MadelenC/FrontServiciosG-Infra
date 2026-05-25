@@ -29,13 +29,12 @@ export default function AcepTable() {
     setPage(1);
   }, [search, taller, institution]);
 
-  // 🔥 SOLO ACEPTADOS DEL USUARIO LOGEADO
+  
   const filtered = maintenances.filter((item) => {
 
     const isAccepted =
       item.aprobacion?.toLowerCase() === "aceptado";
 
-    // ✔ CORRECCIÓN IMPORTANTE (antes faltaba o estaba mal)
     const isOwner =
       item.user?.id === user?.id;
 
@@ -72,9 +71,9 @@ export default function AcepTable() {
   );
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4">
+    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-900">
 
-      {/* SEARCH */}
+      
       <div className="mb-4">
         <SearchBar
           search={search}
@@ -90,8 +89,7 @@ export default function AcepTable() {
         />
       </div>
 
-      {/* TABLE */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto dark:border-gray-600">
 
         <table className="w-full text-sm">
 
@@ -107,7 +105,7 @@ export default function AcepTable() {
                 "Informe",
                 "Operaciones"
               ].map((h) => (
-                <th key={h} className="border px-3 py-2 text-left">
+                <th key={h} className="border px-3 py-2 text-left dark:bg-gray-800 dark:text-gray-400">
                   {h}
                 </th>
               ))}

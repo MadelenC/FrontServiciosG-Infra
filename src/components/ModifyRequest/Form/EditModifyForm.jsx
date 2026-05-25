@@ -33,7 +33,7 @@ export default function EditMaintenanceForm({
 
   if (!isOpen) return null;
 
-  // 🔥 VALIDACIÓN CENTRAL
+ 
   const validate = (data) => {
     const err = {};
 
@@ -55,7 +55,7 @@ export default function EditMaintenanceForm({
     return err;
   };
 
-  // 🔥 HANDLE CHANGE
+  
   const handleChange = (e) => {
     const newForm = {
       ...form,
@@ -66,7 +66,7 @@ export default function EditMaintenanceForm({
     setErrors(validate(newForm));
   };
 
-  // 🔥 SUBMIT
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -86,8 +86,7 @@ export default function EditMaintenanceForm({
       toast.error("Error al actualizar");
     }
   };
-
-  // 🔥 DELETE
+ 
   const handleDelete = async () => {
     if (confirm("¿Seguro que deseas eliminar este registro?")) {
       try {
@@ -101,36 +100,28 @@ export default function EditMaintenanceForm({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
 
-      <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-xl shadow-lg p-6 relative">
-
-        {/* CERRAR */}
+      <div className="bg-white dark:bg-gray-700 w-full max-w-lg rounded-xl shadow-lg p-6 relative">
         <button
           onClick={onClose}
           className="absolute top-3 right-3 px-3 py-1 hover:bg-gray-200 rounded"
         >
           X
         </button>
-
-        {/* TÍTULO */}
         <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
           Actualización de Datos
         </h2>
-
         <form onSubmit={handleSubmit} className="space-y-4">
-
-          {/* INSTITUCIÓN */}
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium mb-1 dark:text-gray-200">
               Unidad solicitante
             </label>
-
             <select
               name="institucion_id"
               value={form.institucion_id}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded-lg dark:text-gray-500"
             >
               <option value="">Seleccione institución</option>
               {listaInstituciones.map((inst) => (
@@ -147,9 +138,8 @@ export default function EditMaintenanceForm({
             )}
           </div>
 
-          {/* TALLER */}
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium mb-1 dark:text-gray-200">
               Taller
             </label>
 
@@ -157,7 +147,7 @@ export default function EditMaintenanceForm({
               name="taller"
               value={form.taller}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded-lg dark:text-gray-500"
             >
               <option value="">Seleccione taller</option>
               {listaTalleres.map((t, i) => (
@@ -174,9 +164,9 @@ export default function EditMaintenanceForm({
             )}
           </div>
 
-          {/* DESCRIPCIÓN */}
+        
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium mb-1 dark:text-gray-200">
               Descripción del trabajo
             </label>
 
@@ -185,7 +175,7 @@ export default function EditMaintenanceForm({
               value={form.descripcion}
               onChange={handleChange}
               rows="3"
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded-lg dark:text-gray-500"
             />
 
             {errors.descripcion && (
@@ -195,9 +185,9 @@ export default function EditMaintenanceForm({
             )}
           </div>
 
-          {/* RESPONSABLE */}
+ 
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium mb-1 dark:text-gray-200">
               Responsable
             </label>
 
@@ -206,7 +196,7 @@ export default function EditMaintenanceForm({
               name="responsable"
               value={form.responsable}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg"
+              className="w-full px-4 py-2 border rounded-lg dark:text-gray-500"
             />
 
             {errors.responsable && (
@@ -216,7 +206,7 @@ export default function EditMaintenanceForm({
             )}
           </div>
 
-          {/* BOTONES */}
+    
           <div className="flex justify-end gap-2 pt-4">
 
             <button

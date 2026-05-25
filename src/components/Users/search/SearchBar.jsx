@@ -6,8 +6,10 @@ export default function SearchBar({ search, setSearch, roleFilter, setRoleFilter
   const { roles } = useRoleStore();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const uniqueRoles =
+  [...new Set(roles)];
 
-  // Cerrar dropdown si se hace click fuera
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -21,7 +23,7 @@ export default function SearchBar({ search, setSearch, roleFilter, setRoleFilter
   return (
     <div className="flex flex-col md:flex-row items-center gap-2">
 
-      {/* DROPDOWN ROLES */}
+      
       <div className="relative w-full md:w-1/4" ref={dropdownRef}>
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -58,10 +60,10 @@ export default function SearchBar({ search, setSearch, roleFilter, setRoleFilter
               Todos
             </li>
 
-            {roles.map((role) => (
+            {uniqueRoles.map((role, i) => (
               <li
-                key={role}
-                className={`px-3 py-1.5 cursor-pointer hover:bg-blue-50 ${
+                key={`${role}-${i}`}
+                className={`px-3 py-1.5 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-400 ${
                   roleFilter === role ? "bg-blue-50" : ""
                 }`}
                 onClick={() => {
@@ -76,7 +78,7 @@ export default function SearchBar({ search, setSearch, roleFilter, setRoleFilter
         )}
       </div>
 
-      {/* INPUT BUSCADOR */}
+     
       <input
         type="text"
         placeholder="Buscar usuario..."

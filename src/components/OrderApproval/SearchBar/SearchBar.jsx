@@ -69,7 +69,7 @@ export default function SearchBar({
           bg-white
           shadow-sm
           focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400
-          transition
+          transition dark:bg-gray-300
         "
       >
         <option value="">Seleccione institución</option>

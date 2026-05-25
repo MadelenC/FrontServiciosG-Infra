@@ -8,19 +8,19 @@ export default function SeccionesRow({
   onEdit,
 }) {
   return (
-    <TableRow className="border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+    <TableRow className="border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors dark:text-gray-400">
 
-      {/* # */}
+
       <TableCell className="border px-3 py-2">
         {institution?.id || "-"}
       </TableCell>
 
-      {/* NOMBRE */}
+    
       <TableCell className="border px-3 py-2">
         {institution?.nombre || "-"}
       </TableCell>
 
-      {/* OPERACIONES */}
+   
       <TableCell className="border px-3 py-2">
         <div className="flex items-center gap-2">
 
