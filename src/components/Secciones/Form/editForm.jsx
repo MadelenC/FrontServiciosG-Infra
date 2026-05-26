@@ -137,21 +137,19 @@ export default function EditSeccionForm({
             <button
               type="submit"
               disabled={saving}
-              className="px-5 bg-blue-600 text-white py-2.5 rounded-md w-auto "
+              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md"
             >
               {saving ? "Actualizando..." : "Actualizar"}
             </button>
 
-          
             <button
               type="button"
               onClick={handleDelete}
               disabled={deleting}
-              className=" px-5 bg-red-600 text-white py-2.5 rounded-md w-auto"
+              className="px-3 py-1.5 text-sm bg-red-600 text-white rounded-md"
             >
               {deleting ? "Eliminando..." : "Eliminar"}
             </button>
-
           </div>
 
         </form>

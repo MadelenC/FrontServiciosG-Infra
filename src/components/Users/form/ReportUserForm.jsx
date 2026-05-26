@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import UsersReportButton
 from "../../pdf-buttons/UsersReportButton";
-export default function ReportUserForm( onClose ) {
+export default function ReportUserForm( { onClose } ) {
 
   const [tipoUsuario, setTipoUsuario] = useState("");
 
@@ -12,6 +12,7 @@ export default function ReportUserForm( onClose ) {
      
     <div className=" relative w-full max-w-md mx-auto bg-white p-5 rounded-lg shadow-md border border-gray-200 dark:bg-gray-700">
       <button
+           type="button"
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-700 font-bold px-3 py-1 rounded hover:bg-gray-200 dark:text-gray-300"
         >

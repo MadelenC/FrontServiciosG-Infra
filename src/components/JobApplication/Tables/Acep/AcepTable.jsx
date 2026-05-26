@@ -22,7 +22,7 @@ export default function AcepTable() {
 
   useEffect(() => {
     fetchMaintenances();
-    fetchInstitutions();
+  
   }, []);
 
   useEffect(() => {
