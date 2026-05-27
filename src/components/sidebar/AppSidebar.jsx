@@ -27,7 +27,7 @@ const navItems = [
       { name: "Listar Solicitudes de Trabajo", path: "/solicitudes", pro: false, icon: <LuClipboardCopy className="text-white"/> },
       { name: "Lista de Acepatdos", path: "/aceptados", pro: false, icon: <BiFile className="text-white"/>},
       {name: "Lista de Rechazados", path:"/rechazados", pro: false,icon: <BiFile className="text-white"/>},
-      {name:"Reporte", path:"/reporte", pro: false, icon: <BiFile className="text-white"/>},
+    
 
     ] 
   },

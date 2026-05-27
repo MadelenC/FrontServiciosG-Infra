@@ -7,6 +7,8 @@ import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 import { useInstitutionStore } from "../../../../zustand/useInstitutionStore";
 import { useAuthStore } from "../../../../zustand/AuthUsers";
 
+import InformeForm from "../../Form/InformeForm";
+
 export default function AcepTable() {
 
   const {
@@ -36,13 +38,19 @@ export default function AcepTable() {
   const [taller, setTaller] = useState("");
   const [institution, setInstitution] = useState("");
 
-  
+  const [openForm, setOpenForm] = useState(false);
+
+  const [selectedItem, setSelectedItem] =
+    useState(null);
+
   useEffect(() => {
+
     setAprobacion("aceptado");
+
     fetchInstitutions();
+
   }, []);
 
-  
   useEffect(() => {
 
     setStoreSearch(search);
@@ -51,30 +59,52 @@ export default function AcepTable() {
 
   }, [search, taller, institution]);
 
-  
   useEffect(() => {
 
     fetchMaintenances();
 
   }, [page, search, taller, institution]);
 
-  
   const filtered = maintenances.filter(
-  (item) =>
-    item.aprobacion?.toLowerCase() === "aceptado"
-);
+    (item) =>
+      item.aprobacion?.toLowerCase() === "aceptado"
+  );
 
-const handleAction = async (action, item) => {
+  const handleAction = async (action, item) => {
 
-  if (action === "reject") {
+    // rechazar
+    if (action === "reject") {
 
-    await editMaintenance(item.id, {
-      aprobacion: "rechazado",
+      await editMaintenance(item.id, {
+        aprobacion: "rechazado",
+      });
+
+    }
+
+    // abrir informe
+    if (action === "informe") {
+
+      setSelectedItem(item);
+
+      setOpenForm(true);
+
+    }
+
+  };
+
+  // guardar informe
+  const handleSaveInforme = async (data) => {
+
+    await editMaintenance(selectedItem.id, {
+      informe: data.tarea,
     });
 
-  }
+    fetchMaintenances();
 
-};
+    setOpenForm(false);
+
+    setSelectedItem(null);
+  };
 
   return (
 
@@ -129,7 +159,10 @@ const handleAction = async (action, item) => {
 
                 <th
                   key={h}
-                  className="border px-3 py-2 text-left dark:bg-gray-800 dark:text-gray-400"
+                  className="
+                    border px-3 py-2 text-left
+                    dark:bg-gray-800 dark:text-gray-400
+                  "
                 >
                   {h}
                 </th>
@@ -186,7 +219,15 @@ const handleAction = async (action, item) => {
 
       </div>
 
-    </div>
+      <InformeForm
+        isOpen={openForm}
+        onClose={() => {
+          setOpenForm(false);
+          setSelectedItem(null);
+        }}
+        onSave={handleSaveInforme}
+      />
 
+    </div>
   );
 }

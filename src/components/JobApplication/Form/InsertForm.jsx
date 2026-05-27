@@ -134,7 +134,7 @@ export default function InsertForm({
 
       <div className="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 relative">
 
-        {/* cerrar */}
+        
         <button
           onClick={onClose}
           className="absolute top-3 right-3 px-3 py-1 hover:bg-gray-200 rounded"
@@ -148,7 +148,7 @@ export default function InsertForm({
 
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/* UNIDAD SOLICITANTE */}
+    
           <div>
             <label className="block text-sm font-medium mb-1">
               Unidad solicitante
@@ -182,7 +182,7 @@ export default function InsertForm({
             )}
           </div>
 
-          {/*  TALLER */}
+    
           <div>
             <label className="block text-sm font-medium mb-1">
               Taller
@@ -210,7 +210,7 @@ export default function InsertForm({
             )}
           </div>
 
-          {/*  DESCRIPCIÓN */}
+  
           <div>
             <label className="block text-sm font-medium mb-1">
               Descripción del trabajo a realizar
@@ -230,7 +230,7 @@ export default function InsertForm({
             )}
           </div>
 
-          {/*  RESPONSABLE */}
+
           <div>
             <label className="block text-sm font-medium mb-1">
               Responsable
@@ -250,7 +250,7 @@ export default function InsertForm({
             )}
           </div>
 
-          {/* BOTÓN */}
+   
           <button
             type="submit"
             className="px-4 py-2 bg-blue-600 text-white rounded-lg w-full"

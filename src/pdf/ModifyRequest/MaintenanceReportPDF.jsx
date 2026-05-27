@@ -18,39 +18,18 @@ export default function MaintenanceReportPDF({
     <Document>
 
       <Page
-        size="A4"
+        size="LETTER"
         style={{
-          padding: 20,
-          fontSize: 9,
+          padding: 15,
+          fontSize: 8,
         }}
       >
 
         <MaintenanceReportSection item={item} />
 
-        <View
-          style={{
-            marginVertical: 15,
-            borderTop: 1,
-          }}
-        />
-
         <MaintenanceReportSection item={item} />
 
-        <View
-          style={{
-            marginVertical: 15,
-            borderTop: 1,
-          }}
-        />
-
         <MaintenanceReportSection item={item} />
-
-         <View
-          style={{
-            marginVertical: 15,
-            borderTop: 1,
-          }}
-        />
 
         <MaintenanceReportSection item={item} />
 

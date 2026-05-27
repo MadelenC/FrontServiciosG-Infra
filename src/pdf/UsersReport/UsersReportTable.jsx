@@ -16,7 +16,7 @@ export default function UsersReportTable({
         border: 1,
       }}
     >
-
+      
       
 
       <View

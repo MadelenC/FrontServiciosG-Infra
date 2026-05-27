@@ -46,7 +46,7 @@ export default function AcepRow({ item, index, onAction }) {
       <TableCell className="flex items-center justify-center gap-2">
 
         <button
-          onClick={() => onAction?.("accept", item)}
+          onClick={() => onAction?.("informe", item)}
           className="px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 text-xs font-semibold transition"
         >
           Informe

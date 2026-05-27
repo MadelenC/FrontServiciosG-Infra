@@ -7,6 +7,8 @@ import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 import { useInstitutionStore } from "../../../../zustand/useInstitutionStore";
 import { useAuthStore } from "../../../../zustand/AuthUsers";
 
+import InformeForm from "../../Form/InformeForm";
+
 export default function RechaTable() {
 
   const {
@@ -25,71 +27,140 @@ export default function RechaTable() {
   const [search, setSearch] = useState("");
   const [taller, setTaller] = useState("");
   const [institution, setInstitution] = useState("");
+
   const [page, setPage] = useState(1);
+
+  const [openForm, setOpenForm] =
+    useState(false);
+
+  const [selectedItem, setSelectedItem] =
+    useState(null);
 
   const limit = 8;
 
   useEffect(() => {
+
     fetchMaintenances();
+
     fetchInstitutions();
+
   }, []);
 
   useEffect(() => {
+
     setPage(1);
+
   }, [search, taller, institution]);
 
-
   const filtered = maintenances.filter(
-  (item) =>
-    item.aprobacion?.toLowerCase() === "rechazado"
-);
+    (item) =>
+      item.aprobacion?.toLowerCase() ===
+      "rechazado"
+  );
 
-  const totalPages = Math.ceil(filtered.length / limit);
+  const totalPages =
+    Math.ceil(filtered.length / limit);
 
   const currentData = filtered.slice(
     (page - 1) * limit,
     page * limit
   );
 
- 
-  
+  const handleAction = async (
+    action,
+    item
+  ) => {
 
-  const handleAction = async (action, item) => {
+    // aceptar nuevamente
+    if (action === "accept") {
 
-  if (action === "accept") {
+      await editMaintenance(item.id, {
+        aprobacion: "aceptado",
+      });
 
-    await editMaintenance(item.id, {
-      aprobacion: "aceptado",
-    });
+      fetchMaintenances();
 
-  }
-fetchMaintenances();
-};
+    }
+
+    // abrir informe
+    if (action === "informe") {
+
+      setSelectedItem(item);
+
+      setOpenForm(true);
+
+    }
+
+  };
+
+  // guardar informe
+  const handleSaveInforme = async (
+    data
+  ) => {
+
+    await editMaintenance(
+      selectedItem.id,
+      {
+        informe: data.tarea,
+      }
+    );
+
+    fetchMaintenances();
+
+    setOpenForm(false);
+
+    setSelectedItem(null);
+
+  };
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-800">
+
+    <div className="
+      overflow-hidden rounded-xl border
+      bg-white shadow-md p-4
+      dark:bg-gray-800
+    ">
 
       <div className="mb-4">
+
         <SearchBar
           search={search}
           setSearch={setSearch}
+
           taller={taller}
           setTaller={setTaller}
+
           institution={institution}
           setInstitution={setInstitution}
+
           listaTalleres={[
-            ...new Set(maintenances.map(m => m.taller).filter(Boolean))
-          ].map((t, i) => ({ id: i, nombre: t }))}
+            ...new Set(
+              maintenances
+                .map((m) => m.taller)
+                .filter(Boolean)
+            )
+          ].map((t, i) => ({
+            id: i,
+            nombre: t,
+          }))}
+
           listaInstituciones={institutions}
         />
+
       </div>
 
       <div className="overflow-x-auto">
 
         <table className="w-full text-sm">
 
-          <thead className="bg-gradient-to-r from-blue-50 to-blue-100 dark:text-gray-300">
+          <thead className="
+            bg-gradient-to-r
+            from-blue-50 to-blue-100
+            dark:text-gray-300
+          ">
+
             <tr>
+
               {[
                 "#",
                 "N°",
@@ -100,30 +171,55 @@ fetchMaintenances();
                 "Informe",
                 "Operaciones"
               ].map((h) => (
-                <th key={h} className="border px-3 py-2 text-left dark:bg-gray-800">
+
+                <th
+                  key={h}
+                  className="
+                    border px-3 py-2 text-left
+                    dark:bg-gray-800
+                  "
+                >
                   {h}
                 </th>
+
               ))}
+
             </tr>
+
           </thead>
 
           <tbody>
+
             {currentData.length > 0 ? (
+
               currentData.map((item, i) => (
+
                 <RechRow
                   key={item.id}
                   item={item}
-                  index={(page - 1) * limit + i + 1}
+                  index={
+                    (page - 1) * limit + i + 1
+                  }
                   onAction={handleAction}
                 />
+
               ))
+
             ) : (
+
               <tr>
-                <td colSpan={8} className="text-center py-4">
+
+                <td
+                  colSpan={8}
+                  className="text-center py-4"
+                >
                   No hay registros rechazados
                 </td>
+
               </tr>
+
             )}
+
           </tbody>
 
         </table>
@@ -131,12 +227,26 @@ fetchMaintenances();
       </div>
 
       <div className="flex justify-center mt-4">
+
         <Pagination
           page={page}
           totalPages={totalPages}
           setPage={setPage}
         />
+
       </div>
+
+      <InformeForm
+        isOpen={openForm}
+        onClose={() => {
+
+          setOpenForm(false);
+
+          setSelectedItem(null);
+
+        }}
+        onSave={handleSaveInforme}
+      />
 
     </div>
   );

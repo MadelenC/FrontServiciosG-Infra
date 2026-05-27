@@ -12,15 +12,15 @@ const { fetchUsersReport } = useUserStore();
 
   try {
 
-    // TRAER TODOS LOS USUARIOS
+
     const users = await fetchUsersReport(tipo);
 
-    // IMPORTAR PDF
+
     const { default: UsersReportPDF } = await import(
       "../../Pdf/UsersReport/UsersReportPDF"
     );
 
-    // GENERAR PDF
+
     const blob = await pdf(
       <UsersReportPDF
         users={users}
@@ -28,7 +28,6 @@ const { fetchUsersReport } = useUserStore();
       />
     ).toBlob();
 
-    // DESCARGAR
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement("a");

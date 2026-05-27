@@ -1,10 +1,8 @@
 import React from "react";
 
-import {
-  View,
-  Text,
-} from "@react-pdf/renderer";
-
+import { View,  Text,Image  } from "@react-pdf/renderer";
+import Logo1 from "../../pdf/assets/modi.png";
+import Logo2 from "../../pdf/assets/logoUATF.png";
 export default function MaintenanceReportSection({
   item,
 }) {
@@ -18,19 +16,18 @@ export default function MaintenanceReportSection({
       }}
     >
 
-      {/* ENCABEZADO */}
 
       <View
         style={{
           flexDirection: "row",
-          backgroundColor: "#bfbfbf",
+          backgroundColor: "#f0f9fd",
           borderBottom: 1,
           alignItems: "center",
           minHeight: 34,
         }}
       >
 
-        {/* IZQUIERDA */}
+
 
         <View
           style={{
@@ -56,26 +53,23 @@ export default function MaintenanceReportSection({
             DEPTO. INFRAESTRUCTURA
           </Text>
 
+          
+
         </View>
-
-        {/* CENTRO */}
-
-        <View
-          style={{
-            width: "45%",
-            alignItems: "center",
-          }}
-        >
-
-          <Text
+        <Image
+            src={Logo1}
             style={{
-              fontSize: 9,
-              fontWeight: "bold",
+              width: 30,
+              height: 20,
             }}
-          >
+          />
+
+  
+
+        <View style={{  width: "45%",  alignItems: "center", }} >
+          <Text style={{   fontSize: 9,  fontWeight: "bold",  }}>
             SOLICITUD DE
           </Text>
-
           <Text
             style={{
               fontSize: 9,
@@ -87,7 +81,13 @@ export default function MaintenanceReportSection({
 
         </View>
 
-        {/* DERECHA */}
+              <Image
+            src={Logo2}
+            style={{
+              width: 20,
+              height: 20,
+            }}
+          />
 
         <View
           style={{
@@ -120,7 +120,7 @@ export default function MaintenanceReportSection({
 
       </View>
 
-      {/* DATOS */}
+
 
       <View
         style={{
@@ -129,7 +129,7 @@ export default function MaintenanceReportSection({
         }}
       >
 
-        {/* FILA 1 */}
+     
 
         <View
           style={{
@@ -139,7 +139,7 @@ export default function MaintenanceReportSection({
           }}
         >
 
-          {/* IZQUIERDA */}
+
 
           <View
             style={{
