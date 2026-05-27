@@ -13,6 +13,8 @@ export default function RechTable() {
     maintenances,
     fetchMaintenances,
     editMaintenance,
+    allTalleres,
+    fetchAllTalleres,
     page,
     totalPages,
     search,
@@ -24,21 +26,26 @@ export default function RechTable() {
     setInstitution,
   } = useMaintenanceStore();
 
-  const {
-    institutions,
-    fetchInstitutions
-  } = useInstitutionStore();
-
+const {allInstitutions, fetchAllInstitutions} = useInstitutionStore();
   
-  useEffect(() => {
+ useEffect(() => {
 
-    fetchMaintenances({
-      aprobacion: "rechazado",
-    });
+  fetchAllInstitutions();
+  fetchAllTalleres();
 
-    fetchInstitutions();
+  setPage(1);
+  setSearch("");
+  setTaller("");
+  setInstitution("");
 
-  }, [page, search, taller, institution]);
+}, []);
+useEffect(() => {
+
+  fetchMaintenances({
+    aprobacion: "rechazado",
+  });
+
+}, [page, search, taller, institution]);
 
 
   const [openForm, setOpenForm] = useState(false);
@@ -98,17 +105,8 @@ const [selectedItem, setSelectedItem] = useState(null);
           setTaller={setTaller}
           institution={institution}
           setInstitution={setInstitution}
-          listaTalleres={[
-            ...new Set(
-              maintenances
-                .map(m => m.taller)
-                .filter(Boolean)
-            )
-          ].map((t, i) => ({
-            id: i,
-            nombre: t
-          }))}
-          listaInstituciones={institutions}
+          listaTalleres={allTalleres}
+          listaInstituciones={allInstitutions}
         />
 
       </div>

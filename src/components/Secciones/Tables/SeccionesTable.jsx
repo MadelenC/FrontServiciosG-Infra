@@ -12,6 +12,7 @@ export default function SeccionesTable() {
 
  const {
   institutions,
+   allInstitutions,
   loading,
   limit,
   page,
@@ -19,6 +20,7 @@ export default function SeccionesTable() {
   search,
   institution,
   fetchInstitutions,
+  fetchAllInstitutions,
   setPage,
   setSearch,
   setInstitution,
@@ -33,7 +35,9 @@ export default function SeccionesTable() {
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [selectedSeccion, setSelectedSeccion] = useState(null);
 
-  
+  useEffect(() => {
+  fetchAllInstitutions();
+}, []);
 
  useEffect(() => {
 
@@ -116,7 +120,7 @@ if (isInitialLoading)
           setSearch={setSearch}
           institution={institution}
           setInstitution={setInstitution}
-          listaInstituciones={institutions}
+          listaInstituciones={allInstitutions}
         />
 
        <button

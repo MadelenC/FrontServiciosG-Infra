@@ -33,14 +33,14 @@ export default function InsertForm({
 
   if (!isOpen) return null;
 
-  // VALIDACIÓN COMPLETA
+  
   const validate = (data) => {
     const err = {};
 
     const responsableRegex =
       /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 
-    // institución (validación contra lista real)
+    
     if (!data.institucion_id) {
       err.institucion_id = "Seleccione institución";
     } else {
@@ -52,7 +52,7 @@ export default function InsertForm({
       }
     }
 
-    // taller (validación contra lista real)
+  
     if (!data.taller) {
       err.taller = "Seleccione taller";
     } else {
@@ -64,7 +64,7 @@ export default function InsertForm({
       }
     }
 
-    // descripción
+
     const descripcion = data.descripcion?.trim() || "";
 
     if (!descripcion) {
@@ -75,7 +75,7 @@ export default function InsertForm({
       err.descripcion = "Máximo 300 caracteres";
     }
 
-    // responsable
+    
     const responsable = data.responsable?.trim() || "";
 
     if (!responsable) {
@@ -91,7 +91,7 @@ export default function InsertForm({
     return err;
   };
 
-  // cambio de inputs
+
   const handleChange = (e) => {
     const newForm = {
       ...form,
@@ -102,7 +102,7 @@ export default function InsertForm({
     setErrors(validate(newForm));
   };
 
-  // submit
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -123,6 +123,7 @@ export default function InsertForm({
 
       toast.success("Registrado correctamente");
       onClose();
+      
     } catch (error) {
       toast.error("Error al registrar");
     }

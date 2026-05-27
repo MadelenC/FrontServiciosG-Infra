@@ -26,7 +26,7 @@ export default function SeccionesRow({
 
           <button
             onClick={() => onEdit?.(institution)}
-            className="p-2 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200"
+            className="p-2 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 text-center justify-center"
             title="editar"
           >
             <FaEdit size={14} />

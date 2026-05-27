@@ -13,6 +13,7 @@ export const useMaintenanceStore =
 
     maintenances: [],
     talleres: [],
+    allTalleres: [],
     loading: false,
     error: null,
     page: 1,
@@ -71,6 +72,32 @@ fetchTalleres: async () => {
     console.log(err);
   }
 },
+
+fetchAllTalleres: async () => {
+
+      try {
+
+        const data =
+          await getTalleres();
+
+        const mapped = data.map(
+          (t, index) => ({
+            id: index + 1,
+            nombre: t.taller,
+          })
+        );
+
+        set({
+          allTalleres: mapped,
+        });
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+
+    },
 
  
     addMaintenance: async (data) => {
@@ -183,4 +210,12 @@ fetchTalleres: async () => {
     setInstitution: (institution) =>set({ institution, page: 1,  }),
     setAprobacion: (aprobacion) =>
   set({ aprobacion, page: 1 }),
+
+    resetFilters: () =>
+  set({
+    page: 1,
+    search: "",
+    taller: "",
+    institution: "",
+  }),
 }));

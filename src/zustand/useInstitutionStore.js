@@ -195,4 +195,11 @@ export const useInstitutionStore =
         page: 1,
       }),
 
+      resetFilters: () =>
+      set({
+        page: 1,
+        search: "",
+        institution: "",
+      }),
+
 }));

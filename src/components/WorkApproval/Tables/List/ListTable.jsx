@@ -13,6 +13,8 @@ export default function ListTable() {
     maintenances,
     fetchMaintenances,
     editMaintenance,
+    allTalleres,
+  fetchAllTalleres,
     page,
     totalPages,
     search,
@@ -26,14 +28,23 @@ export default function ListTable() {
 
   const {
     institutions,
-    fetchInstitutions
+    fetchInstitutions,
+    allInstitutions,
+    fetchAllInstitutions
   } = useInstitutionStore();
 
   useEffect(() => {
 
-    fetchInstitutions();
+  //fetchInstitutions();
+  fetchAllInstitutions();
+  fetchAllTalleres();
 
-  }, []);
+  setPage(1);
+  setSearch("");
+  setTaller("");
+  setInstitution("");
+
+}, []);
 
 
   useEffect(() => {
@@ -67,7 +78,7 @@ export default function ListTable() {
         }
       );
 
-    // RECARGAR TABLA
+    
     if (result.ok) {
 
       fetchMaintenances({
@@ -91,17 +102,8 @@ export default function ListTable() {
           setTaller={setTaller}
           institution={institution}
           setInstitution={setInstitution}
-          listaTalleres={[
-            ...new Set(
-              maintenances
-                .map(m => m.taller)
-                .filter(Boolean)
-            )
-          ].map((t, i) => ({
-            id: i,
-            nombre: t
-          }))}
-          listaInstituciones={institutions}
+          listaTalleres={allTalleres}
+          listaInstituciones={allInstitutions}
         />
 
       </div>

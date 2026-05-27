@@ -28,6 +28,7 @@ export default function ListTable({onAction}) {
   setTaller,
   setInstitution,
   setPage,
+  setAprobacion,
 
 } = useMaintenanceStore();
 
@@ -38,12 +39,36 @@ export default function ListTable({onAction}) {
   const [openForm, setOpenForm] = useState(false);
 
 
- useEffect(() => {
-  fetchInstitutions();
+  useEffect(() => {
+  setAprobacion("pendiente");
 }, []);
+
+
+ 
 useEffect(() => {
   fetchMaintenances();
 }, [page, search, taller, institution]);
+
+  const handleAction = async (action, item) => {
+
+  if (action === "reject") {
+
+    await editMaintenance(item.id, {
+      aprobacion: "rechazado",
+    });
+
+    fetchMaintenances();
+  }
+
+  if (action === "accept") {
+
+    await editMaintenance(item.id, {
+      aprobacion: "aceptado",
+    });
+
+    fetchMaintenances();
+  }
+};
 
  
 
@@ -57,13 +82,7 @@ useEffect(() => {
     ).values()
   ];
 
-  const currentData = maintenances
-  .filter(
-    (item) =>
-      item.aprobacion?.toLowerCase() === "pendiente"
-  )
-  .sort((a, b) => b.id - a.id);
-
+const currentData = maintenances;
  const handleSave = async (data) => {
 
   const result = await addMaintenance({
@@ -129,7 +148,7 @@ useEffect(() => {
                   key={item.id}
                   item={item}
                   index={(page - 1) * limit + i + 1}
-                  onAction={onAction}
+                  onAction={handleAction}
                 />
               ))
             ) : (

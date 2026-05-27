@@ -294,57 +294,56 @@ export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
 
   
     <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        Facultad
-      </label>
+  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+    Facultad
+  </label>
 
-      <Select
-        isMulti
-        options={getUniqueOptions("facultad").map((item) => ({
-          value: item,
-          label: item,
-        }))}
-        value={(userEntities.facultades || []).map((item) => ({
-          value: item,
-          label: item,
-        }))}
-        onChange={(selected) =>
-          setUserEntities((prev) => ({
-            ...prev,
-            facultades: selected.map((s) => s.value),
-          }))
-        }
-        styles={customStyles}
-        placeholder="Seleccionar facultades"
-      />
-    </div>
+  <input
+    list="facultades-list"
+    value={userEntities.facultad || ""}
+    onChange={(e) =>
+      setUserEntities((prev) => ({
+        ...prev,
+        facultad: e.target.value,
+      }))
+    }
+    placeholder="Escribir o seleccionar"
+    className="border p-2 rounded text-sm  dark:bg-gray-200/40 dark:border-gray-200"
+    
+  />
+
+  <datalist id="facultades-list">
+    {getUniqueOptions("facultad").map((item) => (
+      <option key={item} value={item} />
+    ))}
+  </datalist>
+</div>
 
     
     <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        Carrera
-      </label>
+  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+    Carrera
+  </label>
 
-      <Select
-        isMulti
-        options={getUniqueOptions("carrera").map((item) => ({
-          value: item,
-          label: item,
-        }))}
-        value={userEntities.carreras.map((item) => ({
-          value: item,
-          label: item,
-        }))}
-        onChange={(selected) =>
-          setUserEntities((prev) => ({
-            ...prev,
-            carreras: selected.map((s) => s.value),
-          }))
-        }
-        styles={customStyles}
-        placeholder="Seleccionar carreras"
-      />
-    </div>
+  <input
+    list="carreras-list"
+    value={userEntities.carrera || ""}
+    onChange={(e) =>
+      setUserEntities((prev) => ({
+        ...prev,
+        carrera: e.target.value,
+      }))
+    }
+    placeholder="Escribir o seleccionar"
+    className="border p-2 rounded text-sm  dark:bg-gray-200/40 dark:border-gray-200"
+  />
+
+  <datalist id="carreras-list">
+    {getUniqueOptions("carrera").map((item) => (
+      <option key={item} value={item} />
+    ))}
+  </datalist>
+</div>
 
   </div>
 
@@ -353,67 +352,48 @@ export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
 
 
     <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        Materia
-      </label>
+  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+    Materia
+  </label>
 
-      <Select
-        isMulti
-        options={getUniqueOptions("materia").map((item) => ({
-          value: item,
-          label: item,
-        }))}
-        value={userEntities.materias.map((item) => ({
-          value: item,
-          label: item,
-        }))}
-        onChange={(selected) =>
-          setUserEntities((prev) => ({
-            ...prev,
-            materias: selected.map((s) => s.value),
-          }))
-        }
-        styles={customStyles}
-        placeholder="Seleccionar materias"
-      />
-    </div>
+  <input
+    list="materias-list"
+    value={userEntities.materia || ""}
+    onChange={(e) =>
+      setUserEntities((prev) => ({
+        ...prev,
+        materia: e.target.value,
+      }))
+    }
+    placeholder="Escribir o seleccionar"
+    className="border p-2 rounded text-sm  dark:bg-gray-200/40 dark:border-gray-200"
+  />
+
+  <datalist id="materias-list">
+    {getUniqueOptions("materia").map((item) => (
+      <option key={item} value={item} />
+    ))}
+  </datalist>
+</div>
 
 
     <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        Sigla
-      </label>
+  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+    Sigla
+  </label>
 
-      <select
-        className="
-          w-full rounded-2xl
-          border border-gray-200 dark:border-gray-700
-          bg-white dark:bg-gray-900
-          px-4 py-3
-          text-gray-700 dark:text-gray-200
-          shadow-sm
-          focus:outline-none
-          focus:ring-2
-          focus:ring-sky-500
-          focus:border-sky-500
-          transition-all
-        "
-        value={userEntities.sigla}
-        onChange={(e) =>
-          setUserEntities((prev) => ({
-            ...prev,
-            sigla: e.target.value,
-          }))
-        }
-      >
-        <option value="">Seleccionar sigla</option>
-
-        {getUniqueOptions("sigla").map((item) => (
-          <option key={item} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
+  <input
+    type="text"
+    value={userEntities.sigla || ""}
+    onChange={(e) =>
+      setUserEntities((prev) => ({
+        ...prev,
+        sigla: e.target.value,
+      }))
+    }
+    placeholder="Ingresar sigla"
+    className="border p-2 rounded text-sm  dark:bg-gray-200/40 dark:border-gray-200"
+    />
     </div>
 
   </div>

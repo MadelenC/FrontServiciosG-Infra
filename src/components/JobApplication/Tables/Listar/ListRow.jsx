@@ -31,8 +31,26 @@ export default function ListRow({ item, index, onAction }) {
       <TableCell className="border px-3 py-2 flex gap-2 justify-center">
             <JobReportButton item={item} />
 
-      
       </TableCell>
+
+      <TableCell className="flex items-center justify-center gap-2">
+      
+              <button
+                onClick={() => onAction?.("accept", item)}
+                className="px-3 py-1 rounded-md bg-blue-10 text-blue-700 hover:bg-blue-200 text-xs font-semibold"
+              >
+                Aceptado
+              </button>
+      
+              <button
+                onClick={() => onAction?.("reject", item)}
+                className="px-3 py-1 rounded-md bg-red-10 text-red-700 hover:bg-red-200 text-xs font-semibold"
+              >
+               Rechazado
+              </button>
+      
+            </TableCell>
+
     </TableRow>
   );
 }

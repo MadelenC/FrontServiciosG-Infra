@@ -20,9 +20,11 @@ export const useOrderApprovalStore = create((set, get) => ({
   search: "",
   taller: "",
   institution: "",
+  aprobacion: "",
+  
 
 
-  fetchOrders: async () => {
+  fetchOrders: async (filters = {}) => {
   set({
     loading: true,
     error: null,
@@ -34,7 +36,11 @@ export const useOrderApprovalStore = create((set, get) => ({
       search,
       taller,
       institution,
-    } = get();
+      aprobacion,
+    } = {
+  ...get(),
+  ...filters,
+};
     const data =
       await getOrders({
         page,
@@ -42,6 +48,7 @@ export const useOrderApprovalStore = create((set, get) => ({
         search,
         taller,
         institution,
+        aprobacion,
       });
     const mapped =
       data.orders.map((o) => ({
@@ -174,6 +181,12 @@ setTaller: (taller) =>
 setInstitution: (institution) =>
   set({
     institution,
+    page: 1,
+  }),
+
+  setAprobacion: (aprobacion) =>
+  set({
+    aprobacion,
     page: 1,
   }),
 }));

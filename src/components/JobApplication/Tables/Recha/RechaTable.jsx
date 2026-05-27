@@ -9,8 +9,17 @@ import { useAuthStore } from "../../../../zustand/AuthUsers";
 
 export default function RechaTable() {
 
-  const { maintenances, fetchMaintenances } = useMaintenanceStore();
-  const { institutions, fetchInstitutions } = useInstitutionStore();
+  const {
+    maintenances,
+    fetchMaintenances,
+    editMaintenance,
+  } = useMaintenanceStore();
+
+  const {
+    institutions,
+    fetchInstitutions,
+  } = useInstitutionStore();
+
   const { user } = useAuthStore();
 
   const [search, setSearch] = useState("");
@@ -29,38 +38,11 @@ export default function RechaTable() {
     setPage(1);
   }, [search, taller, institution]);
 
-  const filtered = maintenances.filter((item) => {
 
-    const isRejected =
-      item.aprobacion?.toLowerCase() === "rechazado";
-
-    const isOwner =
-      item.user?.id === user?.id;
-
-    const searchText = search.toLowerCase();
-
-    const institucionNombre =
-      item.institucion?.nombre?.toLowerCase() || "";
-
-    const itemTaller =
-      (item.taller || "").toLowerCase();
-
-    const matchSearch =
-      !search ||
-      (item.descripcion || "").toLowerCase().includes(searchText) ||
-      itemTaller.includes(searchText) ||
-      institucionNombre.includes(searchText) ||
-      String(item.id_nro || "").includes(searchText);
-
-    const matchTaller =
-      !taller || itemTaller === taller.toLowerCase();
-
-    const matchInstitution =
-      !institution ||
-      String(item.institucion?.id) === String(institution);
-
-    return isRejected && isOwner && matchSearch && matchTaller && matchInstitution;
-  });
+  const filtered = maintenances.filter(
+  (item) =>
+    item.aprobacion?.toLowerCase() === "rechazado"
+);
 
   const totalPages = Math.ceil(filtered.length / limit);
 
@@ -69,11 +51,24 @@ export default function RechaTable() {
     page * limit
   );
 
+ 
+  
+
+  const handleAction = async (action, item) => {
+
+  if (action === "accept") {
+
+    await editMaintenance(item.id, {
+      aprobacion: "aceptado",
+    });
+
+  }
+fetchMaintenances();
+};
+
   return (
     <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-800">
-     
 
-    
       <div className="mb-4">
         <SearchBar
           search={search}
@@ -89,7 +84,6 @@ export default function RechaTable() {
         />
       </div>
 
-      
       <div className="overflow-x-auto">
 
         <table className="w-full text-sm">
@@ -120,12 +114,13 @@ export default function RechaTable() {
                   key={item.id}
                   item={item}
                   index={(page - 1) * limit + i + 1}
+                  onAction={handleAction}
                 />
               ))
             ) : (
               <tr>
                 <td colSpan={8} className="text-center py-4">
-                  No hay registros
+                  No hay registros rechazados
                 </td>
               </tr>
             )}
@@ -135,9 +130,12 @@ export default function RechaTable() {
 
       </div>
 
-      {/* PAGINACIÓN */}
       <div className="flex justify-center mt-4">
-        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          setPage={setPage}
+        />
       </div>
 
     </div>

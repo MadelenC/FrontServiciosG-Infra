@@ -13,6 +13,8 @@ export default function AcepTable() {
     maintenances,
     fetchMaintenances,
     editMaintenance,
+     allTalleres,
+    fetchAllTalleres,
     page,
     totalPages,
     search,
@@ -24,9 +26,21 @@ export default function AcepTable() {
     setInstitution,
   } = useMaintenanceStore();
 
-  const {  institutions,  fetchInstitutions } = useInstitutionStore();
+  const { allInstitutions,fetchAllInstitutions} = useInstitutionStore();
   const [openForm, setOpenForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+
+  useEffect(() => {
+
+  fetchAllInstitutions();
+  fetchAllTalleres();
+
+  setPage(1);
+  setSearch("");
+  setTaller("");
+  setInstitution("");
+
+}, []);
 
 
   useEffect(() => {
@@ -91,17 +105,8 @@ const handleAction = async (  action,   item ) => {
           setTaller={setTaller}
           institution={institution}
           setInstitution={setInstitution}
-          listaTalleres={[
-            ...new Set(
-              maintenances
-                .map(m => m.taller)
-                .filter(Boolean)
-            )
-          ].map((t, i) => ({
-            id: i,
-            nombre: t
-          }))}
-          listaInstituciones={institutions}
+          listaTalleres={allTalleres}
+          listaInstituciones={allInstitutions}
         />
 
       </div>

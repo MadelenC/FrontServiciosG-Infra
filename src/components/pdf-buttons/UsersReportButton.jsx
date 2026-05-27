@@ -68,7 +68,7 @@ const { fetchUsersReport } = useUserStore();
       "
     >
       <div className="flex items-center gap-2">
-        <FiPrinter />
+        <FiPrinter  /> 
         {title}
       </div>
     </button>

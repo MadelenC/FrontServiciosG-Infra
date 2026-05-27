@@ -6,6 +6,7 @@ import SearchBar from "../../SearchBar/SearchBar";
 
 import { useOrderApprovalStore } from "../../../../zustand/useOrderApprovalStore";
 import { useInstitutionStore } from "../../../../zustand/useInstitutionStore";
+import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 
 export default function AcepTable() {
 
@@ -22,31 +23,38 @@ export default function AcepTable() {
     setSearch: setStoreSearch,
     setTaller: setStoreTaller,
     setInstitution: setStoreInstitution,
+    setAprobacion,
 
   } = useOrderApprovalStore();
 
   const {
-    institutions,
-    fetchInstitutions,
+    allInstitutions,
+    fetchAllInstitutions,
   } = useInstitutionStore();
+
+  const {
+    allTalleres,
+    fetchAllTalleres,
+  } = useMaintenanceStore();
 
   const [search, setSearch] = useState("");
   const [taller, setTaller] = useState("");
   const [institution, setInstitution] = useState("");
 
-  
-
   useEffect(() => {
-    fetchInstitutions();
+
+    fetchAllInstitutions();
+    fetchAllTalleres();
+
   }, []);
-
-
 
   useEffect(() => {
 
     setStoreSearch(search);
     setStoreTaller(taller);
     setStoreInstitution(institution);
+
+    setAprobacion("aceptado");
 
   }, [search, taller, institution]);
 
@@ -56,27 +64,21 @@ export default function AcepTable() {
 
   }, [page, search, taller, institution]);
 
- 
-
-  const filteredOrders = orders.filter(
-    (item) => item.aprobacion === "aceptado"
-  );
-
-
   const handleAction = async (action, item) => {
-  if (action === "reject") {
-    await editOrder(item.id, {
-      aprobacion: "rechazado",
-    });
 
-  }
-};
+    if (action === "reject") {
+
+      await editOrder(item.id, {
+        aprobacion: "rechazado",
+      });
+
+      fetchOrders();
+    }
+  };
 
   return (
 
     <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-800">
-
-    
 
       <div className="mb-4">
 
@@ -91,21 +93,13 @@ export default function AcepTable() {
           institution={institution}
           setInstitution={setInstitution}
 
-          listaTalleres={[
-            ...new Set(
-              orders
-                .map((o) => o.taller)
-                .filter(Boolean)
-            ),
-          ]}
+          listaTalleres={allTalleres}
 
-          listaInstituciones={institutions}
+          listaInstituciones={allInstitutions}
 
         />
 
       </div>
-
-      {/* TABLE */}
 
       <div className="overflow-x-auto">
 
@@ -140,9 +134,9 @@ export default function AcepTable() {
 
           <tbody>
 
-            {filteredOrders.length > 0 ? (
+            {orders.length > 0 ? (
 
-              filteredOrders.map((item, i) => (
+              orders.map((item, i) => (
 
                 <PedRow
                   key={item.id}
@@ -173,8 +167,6 @@ export default function AcepTable() {
         </table>
 
       </div>
-
-    
 
       <div className="flex justify-center mt-4">
 

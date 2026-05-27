@@ -9,84 +9,103 @@ import { useAuthStore } from "../../../../zustand/AuthUsers";
 
 export default function AcepTable() {
 
-  const { maintenances, fetchMaintenances } = useMaintenanceStore();
-  const { institutions, fetchInstitutions } = useInstitutionStore();
+  const {
+    maintenances,
+    fetchMaintenances,
+    editMaintenance,
+    page,
+    limit,
+    totalPages,
+
+    setPage,
+    setSearch: setStoreSearch,
+    setTaller: setStoreTaller,
+    setInstitution: setStoreInstitution,
+    setAprobacion,
+
+  } = useMaintenanceStore();
+
+  const {
+    institutions,
+    fetchInstitutions,
+  } = useInstitutionStore();
+
   const { user } = useAuthStore();
 
   const [search, setSearch] = useState("");
   const [taller, setTaller] = useState("");
   const [institution, setInstitution] = useState("");
-  const [page, setPage] = useState(1);
 
-  const limit = 8;
-
-  useEffect(() => {
-    fetchMaintenances();
   
+  useEffect(() => {
+    setAprobacion("aceptado");
+    fetchInstitutions();
   }, []);
 
+  
   useEffect(() => {
-    setPage(1);
+
+    setStoreSearch(search);
+    setStoreTaller(taller);
+    setStoreInstitution(institution);
+
   }, [search, taller, institution]);
 
   
-  const filtered = maintenances.filter((item) => {
+  useEffect(() => {
 
-    const isAccepted =
-      item.aprobacion?.toLowerCase() === "aceptado";
+    fetchMaintenances();
 
-    const isOwner =
-      item.user?.id === user?.id;
+  }, [page, search, taller, institution]);
 
-    const searchText = search.toLowerCase();
+  
+  const filtered = maintenances.filter(
+  (item) =>
+    item.aprobacion?.toLowerCase() === "aceptado"
+);
 
-    const institucionNombre =
-      item.institucion?.nombre?.toLowerCase() || "";
+const handleAction = async (action, item) => {
 
-    const itemTaller =
-      (item.taller || "").toLowerCase();
+  if (action === "reject") {
 
-    const matchSearch =
-      !search ||
-      (item.descripcion || "").toLowerCase().includes(searchText) ||
-      itemTaller.includes(searchText) ||
-      institucionNombre.includes(searchText) ||
-      String(item.id_nro || "").includes(searchText);
+    await editMaintenance(item.id, {
+      aprobacion: "rechazado",
+    });
 
-    const matchTaller =
-      !taller || itemTaller === taller.toLowerCase();
+  }
 
-    const matchInstitution =
-      !institution ||
-      String(item.institucion?.id) === String(institution);
-
-    return isAccepted && isOwner && matchSearch && matchTaller && matchInstitution;
-  });
-
-  const totalPages = Math.ceil(filtered.length / limit);
-
-  const currentData = filtered.slice(
-    (page - 1) * limit,
-    page * limit
-  );
+};
 
   return (
+
     <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-900">
 
-      
       <div className="mb-4">
+
         <SearchBar
           search={search}
           setSearch={setSearch}
+
           taller={taller}
           setTaller={setTaller}
+
           institution={institution}
           setInstitution={setInstitution}
+
           listaTalleres={[
-            ...new Set(maintenances.map(m => m.taller).filter(Boolean))
-          ].map((t, i) => ({ id: i, nombre: t }))}
+            ...new Set(
+              maintenances
+                .map((m) => m.taller)
+                .filter(Boolean)
+            )
+          ].map((t, i) => ({
+            id: i,
+            nombre: t,
+          }))}
+
           listaInstituciones={institutions}
         />
+
       </div>
 
       <div className="overflow-x-auto dark:border-gray-600">
@@ -94,7 +113,9 @@ export default function AcepTable() {
         <table className="w-full text-sm">
 
           <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
+
             <tr>
+
               {[
                 "#",
                 "N°",
@@ -103,42 +124,69 @@ export default function AcepTable() {
                 "Taller",
                 "Aprobación",
                 "Informe",
-                "Operaciones"
+                "Operaciones",
               ].map((h) => (
-                <th key={h} className="border px-3 py-2 text-left dark:bg-gray-800 dark:text-gray-400">
+
+                <th
+                  key={h}
+                  className="border px-3 py-2 text-left dark:bg-gray-800 dark:text-gray-400"
+                >
                   {h}
                 </th>
+
               ))}
+
             </tr>
+
           </thead>
 
           <tbody>
-            {currentData.length > 0 ? (
-              currentData.map((item, i) => (
+
+            {filtered.length > 0 ? (
+
+              filtered.map((item, i) => (
+
                 <AcepRow
                   key={item.id}
                   item={item}
                   index={(page - 1) * limit + i + 1}
+                  onAction={handleAction}
                 />
+
               ))
+
             ) : (
+
               <tr>
-                <td colSpan={8} className="text-center py-4">
-                  No hay registros
+
+                <td
+                  colSpan={8}
+                  className="text-center py-4"
+                >
+                  No hay registros aceptados
                 </td>
+
               </tr>
+
             )}
+
           </tbody>
 
         </table>
 
       </div>
 
-      {/* PAGINACIÓN */}
       <div className="flex justify-center mt-4">
-        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          setPage={setPage}
+        />
+
       </div>
 
     </div>
+
   );
 }

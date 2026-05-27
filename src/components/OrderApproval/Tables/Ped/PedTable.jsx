@@ -12,32 +12,57 @@ export default function PedTable() {
   const {
     orders,
     fetchOrders,
+    editOrder,
     page,
     setPage,
     totalPages
   } = useOrderApprovalStore();
+  const {
+    allInstitutions,
+    fetchAllInstitutions
+  } = useInstitutionStore();
 
-  const { institutions, fetchInstitutions } = useInstitutionStore();
-  const { maintenances, fetchMaintenances } = useMaintenanceStore();
+  const {
+    allTalleres,
+    fetchAllTalleres
+  } = useMaintenanceStore();
+
 
   const [search, setSearch] = useState("");
   const [taller, setTaller] = useState("");
   const [institution, setInstitution] = useState("");
 
-  useEffect(() => {
-    fetchOrders();
-    fetchInstitutions();
-    fetchMaintenances();
+    useEffect(() => {
+
+    fetchAllInstitutions();
+    fetchAllTalleres();
+
   }, []);
+
+ 
+useEffect(() => {
+
+  fetchOrders({
+    aprobacion: "pendiente",
+    search,
+    taller,
+    institution,
+    page,
+  });
+
+}, [
+  page,
+  search,
+  taller,
+  institution
+]);
 
   useEffect(() => {
     setPage(1);
   }, [search, taller, institution]);
 
   
-  const filteredOrders = orders.filter(
-    (item) => item.aprobacion === "pendiente"
-  );
+  
   const handleAction = async (action, item) => {
   if (action === "reject") {
     await editOrder(item.id, {
@@ -64,10 +89,8 @@ export default function PedTable() {
           setTaller={setTaller}
           institution={institution}
           setInstitution={setInstitution}
-          listaTalleres={[
-            ...new Set(orders.map(o => o.taller).filter(Boolean))
-          ]}
-          listaInstituciones={institutions}
+          listaTalleres={allTalleres}
+          listaInstituciones={allInstitutions}
         />
       </div>
 
@@ -97,8 +120,8 @@ export default function PedTable() {
           </thead>
 
           <tbody>
-            {filteredOrders.length > 0 ? (
-              filteredOrders.map((item, i) => (
+            {orders.length > 0 ? (
+              orders.map((item, i) => (
                 <PedRow
                   key={item.id}
                   item={item}

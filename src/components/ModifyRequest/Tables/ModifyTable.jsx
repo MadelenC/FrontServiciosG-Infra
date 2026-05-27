@@ -10,7 +10,7 @@ import useDebounce from "../../../hooks/useDebounce";
 export default function ModifyTable() {
   const {maintenances,loading, page,totalPages,search,taller,fetchTalleres,talleres,
     institution,fetchMaintenances, setPage,setSearch, setTaller,setInstitution,
-    removeMaintenance,editMaintenance,} = useMaintenanceStore();
+    removeMaintenance,editMaintenance,resetFilters,} = useMaintenanceStore();
 
   const {
     allInstitutions,
@@ -23,6 +23,7 @@ export default function ModifyTable() {
 const debouncedInstitution =useDebounce(institution, 500);
 
   useEffect(() => {
+    resetFilters();
     fetchAllInstitutions();
     fetchTalleres();
   }, []);
