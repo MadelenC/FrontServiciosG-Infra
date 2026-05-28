@@ -46,31 +46,7 @@ const navItems = [
       { name: "Lista de aceptados", path: "/solicitud/aceptados", pro: false, icon:<BiClipboard className="text-white"/> }, 
       { name: "Lista de rechazados", path: "/solicitud/rechazados", pro: false, icon:<BiClipboard className="text-white"/> } 
     ] 
-  },
-  {name: "Taller de Electricidad", 
-    icon: <BiCog className="text-white" />, 
-    subItems: [
-       
-      { name: "Listar de Trabajo", path: "/trabajoElec", pro: false, icon: <LuClipboardCopy className="text-white"/> },
-      { name: "Trabajos Realizados", path: "/realizadoElec", pro: false, icon: <BiFile className="text-white"/>},
-      {name: "Trabajos Cancelados", path:"/canceladoElec", pro: false,icon: <BiFile className="text-white"/>},
-      {name: "Lista de Pedidos de material", path:"/pedidosElec", pro: false,icon: <BiFile className="text-white"/>},
-      { name: "Calendario", path: "/", pro: false, icon: <LuClipboardCopy className="text-white"/> },
-    ] 
-  },
-  
-  {name: "Taller de Ser. Generales", 
-    icon: <BiCog className="text-white" />, 
-    subItems: [
-       
-      { name: "Listar de Trabajo", path: "/trabajoTaller", pro: false, icon: <LuClipboardCopy className="text-white"/> },
-      { name: "Trabajos Realizados", path: "/realizadoTaller", pro: false, icon: <BiFile className="text-white"/>},
-      {name: "Trabajos Cancelados", path:"/canceladoTaller", pro: false,icon: <BiFile className="text-white"/>},
-      {name: "Lista de Pedidos de material", path:"/pedidosTaller", pro: false,icon: <BiFile className="text-white"/>},
-      { name: "Calendario", path: "/", pro: false, icon: <LuClipboardCopy className="text-white"/> },
-    ] 
-  },
-                   
+  },               
               
 ];
 

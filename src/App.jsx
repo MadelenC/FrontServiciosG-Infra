@@ -36,16 +36,6 @@ import AcceptHome from "./pages/JobApplication/AcceptHome";
 import RechazarHome from "./pages/JobApplication/RechazarHome";
 import Profile from "./pages/profile/Profile";
 
-import ElecHome from "./pages/ElectricalWorkshop/AcepHome";
-import ListElecHome from "./pages/ElectricalWorkshop/ListHome";
-import RechElecHome from "./pages/ElectricalWorkshop/RechHome";
-import PedElecHome from "./pages/ElectricalWorkshop/PedHome";
-
-import SerGenarlHome from "./pages/TallerSerGeneral/AcepHome";
-import ListSerGenarlHome from "./pages/TallerSerGeneral/ListHome";
-import RechSerGenarlHome from "./pages/TallerSerGeneral/RechHome";
-import PedSerGenarlHome from "./pages/TallerSerGeneral/PedHome";
-
 import Home from "./pages/Home";
 import PublicRoute from "./components/Protected/PublicRoute";
 
@@ -54,8 +44,8 @@ export default function App() {
     <Router>
       <ScrollToTop />
       <ToastContainer />
-
       <Routes>
+
       <Route 
           path="/" 
           element={
@@ -63,7 +53,7 @@ export default function App() {
               <Home />
             </PublicRoute>   
           } 
-        />
+      />
        
         <Route
           path="/signin"
@@ -89,7 +79,9 @@ export default function App() {
           <Route
             path="/dashboard"
             element={
-                <Dashboard />            
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
             }
           />
 
@@ -227,76 +219,6 @@ export default function App() {
             />
           </Route>
 
-          <Route >
-            <Route
-              path="trabajoElec"
-              element={
-                <ProtectedRoute  rolesAllowed={["electricista"]}>
-                  <ListElecHome />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="realizadoElec"
-              element={
-                <ProtectedRoute  rolesAllowed={["electricista"]}>
-                  < ElecHome/>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="canceladoElec"
-              element={
-                <ProtectedRoute  rolesAllowed={["electricista"]}>
-                  < RechElecHome />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="pedidosElec"
-              element={
-                <ProtectedRoute  rolesAllowed={["electricista"]}>
-                  < PedElecHome />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
-            
-
-          <Route >
-            <Route
-              path="trabajoTaller"
-              element={
-                <ProtectedRoute  rolesAllowed={["sergeneral"]}>
-                  <ListSerGenarlHome/>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="realizadoTaller"
-              element={
-                <ProtectedRoute  rolesAllowed={["sergeneral"]}>
-                  < SerGenarlHome/>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="canceladoTaller"
-              element={
-                <ProtectedRoute  rolesAllowed={["sergeneral"]}>
-                  < RechSerGenarlHome />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="pedidosTaller"
-              element={
-                <ProtectedRoute  rolesAllowed={["sergeneral"]}>
-                  < PedSerGenarlHome />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
