@@ -1,5 +1,6 @@
 import React from "react";
 import { TableRow, TableCell } from "../../../ui/table";
+import ProtectedView from "../../../Protected/ProtectedView";
 
 export default function RechaRow({ item, index, onAction }) {
   return (
@@ -42,7 +43,7 @@ export default function RechaRow({ item, index, onAction }) {
         {item.informe || "-"}
       </TableCell>
 
-
+      
       <TableCell className="border px-3 py-2 text-center">
 
           <button
@@ -51,15 +52,16 @@ export default function RechaRow({ item, index, onAction }) {
         >
           Informe
         </button>
-
+        <ProtectedView  rolesAllowed={["encargadoserv","administradorserv"]}>
         <button
           onClick={() => onAction?.("accept", item)}
           className="px-3 py-1 rounded-md bg-green-100 text-green-700 hover:bg-green-200 text-xs font-semibold transition"
         >
           Aceptado
         </button>
-
+        </ProtectedView>
       </TableCell>
+      
 
     </TableRow>
   );

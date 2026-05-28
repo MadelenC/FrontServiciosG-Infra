@@ -72,7 +72,7 @@ export default function LoginForm() {
   } catch (err) {
 
     alert(
-      err.response?.message ||
+      err.response.data.message ||
       "Error al iniciar sesión"
     );
 

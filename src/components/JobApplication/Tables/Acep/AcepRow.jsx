@@ -1,5 +1,6 @@
 import React from "react";
 import { TableRow, TableCell } from "../../../ui/table";
+import ProtectedView from "../../../Protected/ProtectedView";
 
 export default function AcepRow({ item, index, onAction }) {
   return (
@@ -42,7 +43,7 @@ export default function AcepRow({ item, index, onAction }) {
         {item.informe || "-"}
       </TableCell>
 
-
+      <ProtectedView  rolesAllowed={["encargadoserv","administradorserv"]}>
       <TableCell className="flex items-center justify-center gap-2">
 
         <button
@@ -51,15 +52,16 @@ export default function AcepRow({ item, index, onAction }) {
         >
           Informe
         </button>
-
+        
         <button
           onClick={() => onAction?.("reject", item)}
           className="px-3 py-1 rounded-md bg-red-100 text-red-700 hover:bg-red-200 text-xs font-semibold transition"
         >
           Rechazado
         </button>
-
+        
       </TableCell>
+      </ProtectedView>
 
     </TableRow>
   );

@@ -2,6 +2,7 @@ import React from "react";
 import { TableRow, TableCell } from "../../../ui/table";
 import { FaEye, FaEdit, FaPrint } from "react-icons/fa";
 import JobReportButton from "../../../pdf-buttons/JobReportButton";
+import ProtectedView from "../../../Protected/ProtectedView";
 
 export default function ListRow({ item, index, onAction }) {
   return (
@@ -27,12 +28,13 @@ export default function ListRow({ item, index, onAction }) {
         {item.taller || "-"}
       </TableCell>
 
-
+      <ProtectedView  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
       <TableCell className="border px-3 py-2 flex gap-2 justify-center">
             <JobReportButton item={item} />
-
       </TableCell>
-
+      </ProtectedView>
+    
+        <ProtectedView  rolesAllowed={["encargadoserv","administradorserv"]}>
       <TableCell className="flex items-center justify-center gap-2">
       
               <button
@@ -50,7 +52,7 @@ export default function ListRow({ item, index, onAction }) {
               </button>
       
             </TableCell>
-
+            </ProtectedView>
     </TableRow>
   );
 }

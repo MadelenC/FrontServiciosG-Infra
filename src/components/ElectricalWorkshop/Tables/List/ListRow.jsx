@@ -1,8 +1,8 @@
 import React from "react";
 import { TableRow, TableCell } from "../../../ui/table";
 import { FaEye, FaEdit, FaPrint } from "react-icons/fa";
-import ProtectedView from "../../../Protected/ProtectedView";
-export default function ListRow({ item, index, onAction }) {
+
+export default function ListElecRow({ item, index, onAction }) {
   return (
     <TableRow className="border border-gray-200 hover:bg-gray-50 transition dark:text-gray-400">
 
@@ -43,9 +43,6 @@ export default function ListRow({ item, index, onAction }) {
           ? new Date(item.fecha).toLocaleDateString()
           : "-"}
       </TableCell>
-
-
-      <ProtectedView  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>
       <TableCell className="border px-3 py-2 flex gap-2 justify-center">
       <button
         onClick={() => onAction?.("accept", item)}
@@ -61,7 +58,6 @@ export default function ListRow({ item, index, onAction }) {
         Rechazar
       </button>
       </TableCell>
-      </ProtectedView>
     </TableRow>
   );
 }

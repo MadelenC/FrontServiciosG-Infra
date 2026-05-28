@@ -1,6 +1,6 @@
 import React from "react";
 import { TableRow, TableCell } from "../../../ui/table";
-
+import ProtectedView from "../../../Protected/ProtectedView";
 export default function PedRow({
   item,
   index,
@@ -42,7 +42,7 @@ export default function PedRow({
         </span>
       </TableCell>
 
-    
+      <ProtectedView  rolesAllowed={["encargadoserv","administradorserv","mesajeroserv"]}>
       <TableCell className="flex items-center justify-center gap-2">
 
         <button
@@ -60,7 +60,7 @@ export default function PedRow({
         </button>
 
       </TableCell>
-
+      </ProtectedView>
     </TableRow>
   );
 }

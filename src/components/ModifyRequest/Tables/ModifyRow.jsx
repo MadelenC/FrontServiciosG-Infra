@@ -2,6 +2,8 @@ import React from "react";
 import { TableRow, TableCell } from "../../ui/table";
 import { FaEye, FaEdit, FaPrint } from "react-icons/fa";
 import  MaintenanceReportButton from "../../pdf-buttons/ModifyRequestButton"
+import ProtectedView from "../../Protected/ProtectedView";
+
 
 export default function ModifyRow({ item, index, onAction }) {
   console.log(item);
@@ -33,6 +35,7 @@ export default function ModifyRow({ item, index, onAction }) {
       </TableCell>
 
     
+      <ProtectedView  rolesAllowed={["encargadoserv","administradorserv","mensajeroserv"]}>
       <TableCell className="border px-3 py-2 flex gap-2 justify-center dark:border-gray-500">
 
         <button
@@ -46,6 +49,8 @@ export default function ModifyRow({ item, index, onAction }) {
         <MaintenanceReportButton item={item} />
 
       </TableCell>
+      </ProtectedView>
+      
     </TableRow>
   );
 }

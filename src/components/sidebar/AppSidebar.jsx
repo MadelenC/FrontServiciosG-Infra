@@ -15,20 +15,20 @@ import { SiOrganicmaps } from "react-icons/si";
 import { IoCalendarNumberOutline } from "react-icons/io5";
 
 const navItems = [
+  { name: "Dashboard", path: "/dashboard", pro: false, icon: <GiHorizonRoad className="text-white" /> },
   { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", 
     subItems: 
     [{ name: " Ver Lista", path: "/usuarios", pro: false, icon:<FaListUl className="text-white " /> },] },
 
   { name: "Secciones", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Mostrar", path: "/secciones", pro: false, icon:<FaListUl className="text-white " />}] },
   { name: "Modificar Solicitud", icon: <MdReplyAll  className="text-white" />, subItems: [{ name: "Listar Solicitudes", path: "/modificar", pro: false,icon:<FaListUl className="text-white " /> }] },  
+  
   {name: "Aprobacion de Trabajo", 
     icon: <BiCog className="text-white" />, 
     subItems: [
       { name: "Listar Solicitudes de Trabajo", path: "/solicitudes", pro: false, icon: <LuClipboardCopy className="text-white"/> },
       { name: "Lista de Acepatdos", path: "/aceptados", pro: false, icon: <BiFile className="text-white"/>},
       {name: "Lista de Rechazados", path:"/rechazados", pro: false,icon: <BiFile className="text-white"/>},
-    
-
     ] 
   },
   {name: "Aprovacion de Pedidos", 
@@ -45,6 +45,29 @@ const navItems = [
       { name: "Listar", path: "/solicitud", pro: false,icon:<BiWrench className="text-white"/> },
       { name: "Lista de aceptados", path: "/solicitud/aceptados", pro: false, icon:<BiClipboard className="text-white"/> }, 
       { name: "Lista de rechazados", path: "/solicitud/rechazados", pro: false, icon:<BiClipboard className="text-white"/> } 
+    ] 
+  },
+  {name: "Taller de Electricidad", 
+    icon: <BiCog className="text-white" />, 
+    subItems: [
+       
+      { name: "Listar de Trabajo", path: "/trabajoElec", pro: false, icon: <LuClipboardCopy className="text-white"/> },
+      { name: "Trabajos Realizados", path: "/realizadoElec", pro: false, icon: <BiFile className="text-white"/>},
+      {name: "Trabajos Cancelados", path:"/canceladoElec", pro: false,icon: <BiFile className="text-white"/>},
+      {name: "Lista de Pedidos de material", path:"/pedidosElec", pro: false,icon: <BiFile className="text-white"/>},
+      { name: "Calendario", path: "/", pro: false, icon: <LuClipboardCopy className="text-white"/> },
+    ] 
+  },
+  
+  {name: "Taller de Ser. Generales", 
+    icon: <BiCog className="text-white" />, 
+    subItems: [
+       
+      { name: "Listar de Trabajo", path: "/trabajoTaller", pro: false, icon: <LuClipboardCopy className="text-white"/> },
+      { name: "Trabajos Realizados", path: "/realizadoTaller", pro: false, icon: <BiFile className="text-white"/>},
+      {name: "Trabajos Cancelados", path:"/canceladoTaller", pro: false,icon: <BiFile className="text-white"/>},
+      {name: "Lista de Pedidos de material", path:"/pedidosTaller", pro: false,icon: <BiFile className="text-white"/>},
+      { name: "Calendario", path: "/", pro: false, icon: <LuClipboardCopy className="text-white"/> },
     ] 
   },
                    

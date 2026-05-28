@@ -1,15 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import AppLayout from "./layouts/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
-import { ProtectedRoute, PublicRoute } from "./auth/PrivateRoute";
+
 import NotFound from "./pages/OtherPage/NotFound";
-
-
+import ProtectedRoute from "./components/Protected/PortectedRoute";
 
 import Videos from "./pages/UiElements/Videos";
 import Images from "./pages/UiElements/Images";
@@ -23,6 +21,7 @@ import UserHome from "./pages/UserList/UserHome";
 import SeccionesHome from "./pages/Secciones/SeccionesHome";
 
 import ModifyHome from "./pages/ModifyRequets/ModifyHome";
+
 import ListHome from "./pages/WorkApproval/ListHome";
 import AcepHome from "./pages/WorkApproval/AcepHome";
 import RechHome from "./pages/WorkApproval/RechHome";
@@ -37,7 +36,18 @@ import AcceptHome from "./pages/JobApplication/AcceptHome";
 import RechazarHome from "./pages/JobApplication/RechazarHome";
 import Profile from "./pages/profile/Profile";
 
+import ElecHome from "./pages/ElectricalWorkshop/AcepHome";
+import ListElecHome from "./pages/ElectricalWorkshop/ListHome";
+import RechElecHome from "./pages/ElectricalWorkshop/RechHome";
+import PedElecHome from "./pages/ElectricalWorkshop/PedHome";
+
+import SerGenarlHome from "./pages/TallerSerGeneral/AcepHome";
+import ListSerGenarlHome from "./pages/TallerSerGeneral/ListHome";
+import RechSerGenarlHome from "./pages/TallerSerGeneral/RechHome";
+import PedSerGenarlHome from "./pages/TallerSerGeneral/PedHome";
+
 import Home from "./pages/Home";
+import PublicRoute from "./components/Protected/PublicRoute";
 
 export default function App() {
   return (
@@ -46,52 +56,74 @@ export default function App() {
       <ToastContainer />
 
       <Routes>
-
-<Route path="/" element={<Home />} />
+      <Route 
+          path="/" 
+          element={
+            <PublicRoute> 
+              <Home />
+            </PublicRoute>   
+          } 
+        />
        
         <Route
           path="/signin"
-          element={
-            <PublicRoute>
+          element={   
+            <PublicRoute>       
               <SignIn />
-            </PublicRoute>
+            </PublicRoute>        
           }
         />
 
-        <Route path="/signup" element={<SignUp />} />
+         <Route 
+          path="/signup" 
+          element={
+            <PublicRoute>
+              <SignUp />
+            </PublicRoute>
+        } 
+          
+        />
 
-      
         <Route element={<AppLayout />}>
 
-
-      
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
+                <Dashboard />            
             }
           />
 
            <Route
             path="/profile"
             element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
+               <Profile /> 
             }
           />
        
-          <Route path="/usuarios" element={<UserHome />} />
+          <Route 
+            path="/usuarios" 
+            element={
+              <ProtectedRoute 
+                rolesAllowed={["encargadoserv","administradorserv"]}
+              >
+                <UserHome />
+              </ProtectedRoute>
+            }
+          />
 
          
-          <Route path="/secciones"  element={ <ProtectedRoute><SeccionesHome /> </ProtectedRoute>}></Route>
+          <Route 
+            path="/secciones"  
+            element={ 
+            <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv"]} >
+                <SeccionesHome /> 
+            </ProtectedRoute>}>
+          </Route>
       
           <Route
             path="/modificar"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","mensajeroserv"]}>
                 < ModifyHome />
               </ProtectedRoute>
             }
@@ -100,33 +132,25 @@ export default function App() {
           <Route >
             <Route
               path="solicitudes"
-              element={
-                <ProtectedRoute>
+              element={                
+              <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>   
                   <ListHome />
-                </ProtectedRoute>
+              </ProtectedRoute>
               }
             />
             <Route
               path="aceptados"
-              element={
-                <ProtectedRoute>
+              element={               
+               <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>
                   < AcepHome/>
                 </ProtectedRoute>
               }
             />
             <Route
               path="rechazados"
-              element={
-                <ProtectedRoute>
+              element={               
+                <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>
                   < RechHome/>
-                </ProtectedRoute>
-              }
-            />
-             <Route
-              path="reporte"
-              element={
-                <ProtectedRoute>
-                  < Reports/>
                 </ProtectedRoute>
               }
             />
@@ -136,7 +160,7 @@ export default function App() {
             <Route
               index
               element={
-                <ProtectedRoute>
+                <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","mesajeroserv"]}>
                   <PedHome />
                 </ProtectedRoute>
               }
@@ -144,7 +168,7 @@ export default function App() {
             <Route
               path="pedido"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","mesajeroserv"]}>
                   <PedHome  />
                 </ProtectedRoute>
               }
@@ -152,7 +176,7 @@ export default function App() {
             <Route
               path="aceptados"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","mesajeroserv"]}>
                   <AceptHome  />
                 </ProtectedRoute>
               }
@@ -160,7 +184,7 @@ export default function App() {
             <Route
               path="rechazados"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","mesajeroserv"]}>
                   <RechaHome />
                 </ProtectedRoute>
               }
@@ -172,7 +196,7 @@ export default function App() {
             <Route
               index
               element={
-                <ProtectedRoute>
+                <ProtectedRoute  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
                   < ListarHome />
                 </ProtectedRoute>
               }
@@ -180,7 +204,7 @@ export default function App() {
             <Route
               path="solicitud"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
                   <ListarHome  />
                 </ProtectedRoute>
               }
@@ -188,7 +212,7 @@ export default function App() {
             <Route
               path="aceptados"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
                   <AcceptHome />
                 </ProtectedRoute>
               }
@@ -196,28 +220,85 @@ export default function App() {
             <Route
               path="rechazados"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
                   <RechazarHome/>
                 </ProtectedRoute>
               }
             />
           </Route>
 
-          
+          <Route >
+            <Route
+              path="trabajoElec"
+              element={
+                <ProtectedRoute  rolesAllowed={["electricista"]}>
+                  <ListElecHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="realizadoElec"
+              element={
+                <ProtectedRoute  rolesAllowed={["electricista"]}>
+                  < ElecHome/>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="canceladoElec"
+              element={
+                <ProtectedRoute  rolesAllowed={["electricista"]}>
+                  < RechElecHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="pedidosElec"
+              element={
+                <ProtectedRoute  rolesAllowed={["electricista"]}>
+                  < PedElecHome />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+            
 
-  
-          <Route path="/alerts" element={<Alerts />} />
-          <Route path="/avatars" element={<Avatars />} />
-          <Route path="/badge" element={<Badges />} />
-          <Route path="/buttons" element={<Buttons />} />
-          <Route path="/images" element={<Images />} />
-          <Route path="/videos" element={<Videos />} />
-
+          <Route >
+            <Route
+              path="trabajoTaller"
+              element={
+                <ProtectedRoute  rolesAllowed={["sergeneral"]}>
+                  <ListSerGenarlHome/>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="realizadoTaller"
+              element={
+                <ProtectedRoute  rolesAllowed={["sergeneral"]}>
+                  < SerGenarlHome/>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="canceladoTaller"
+              element={
+                <ProtectedRoute  rolesAllowed={["sergeneral"]}>
+                  < RechSerGenarlHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="pedidosTaller"
+              element={
+                <ProtectedRoute  rolesAllowed={["sergeneral"]}>
+                  < PedSerGenarlHome />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
         </Route>
-
-
         <Route path="*" element={<NotFound />} />
-
       </Routes>
     </Router>
   );
