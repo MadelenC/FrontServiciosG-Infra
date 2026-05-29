@@ -13,68 +13,138 @@ import { BsFillFuelPumpDieselFill, BsCardHeading } from "react-icons/bs";
 import { GiHorizonRoad } from "react-icons/gi";
 import { SiOrganicmaps } from "react-icons/si";
 import { IoCalendarNumberOutline } from "react-icons/io5";
+import { hasAccess } from "../../helpers/hasAccess";
+import { useAuthStore } from "../../zustand/AuthUsers"
 
 const navItems = [
-  { name: "Dashboard", path: "/dashboard", pro: false, icon: <GiHorizonRoad className="text-white" /> },
-  { icon: <FaUsersLine className="text-white font-size" />, name: "Usuarios", 
+  { icon: <FaUsersLine className="text-white font-size" />, 
+    name: "Usuarios", 
+
+    rolesAllowed: ["administradorserv"],
+
     subItems: 
-    [{ name: " Ver Lista", path: "/usuarios", pro: false, icon:<FaListUl className="text-white " /> },] },
+    [
+      { 
+        name: " Ver Lista", 
+        path: "/usuarios", 
+        pro: false, 
+        icon:<FaListUl className="text-white " /> ,
+        rolesAllowed: ["administradorserv"],
+      },
+    ]
+  },
 
-  { name: "Secciones", icon: <BsCardHeading className="text-white" />, subItems: [{ name: "Mostrar", path: "/secciones", pro: false, icon:<FaListUl className="text-white " />}] },
-  { name: "Modificar Solicitud", icon: <MdReplyAll  className="text-white" />, subItems: [{ name: "Listar Solicitudes", path: "/modificar", pro: false,icon:<FaListUl className="text-white " /> }] },  
-  
-  {name: "Aprobacion de Trabajo", 
+  { icon: <BsCardHeading className="text-white" />, 
+    name: "Secciones",  
+    rolesAllowed: ["administradorserv",""],
+    subItems: [{ 
+      name: "Mostrar", 
+      path: "/secciones", 
+      
+      pro: false, 
+      icon:<FaListUl className="text-white " />
+    }] 
+  },
+
+  { name: "Modificar Solicitud", 
+    rolesAllowed: ["administradorserv"],
+    icon: <MdReplyAll  className="text-white" />, 
+    subItems: [
+      {
+         name: "Listar Solicitudes", 
+         path: "/modificar",
+         pro: false,
+         icon:<FaListUl className="text-white " /> 
+      }
+    ] 
+  }, 
+
+  { name: "Aprobacion de Trabajo", 
+    rolesAllowed: ["administradorserv"],
     icon: <BiCog className="text-white" />, 
     subItems: [
-      { name: "Listar Solicitudes de Trabajo", path: "/solicitudes", pro: false, icon: <LuClipboardCopy className="text-white"/> },
-      { name: "Lista de Acepatdos", path: "/aceptados", pro: false, icon: <BiFile className="text-white"/>},
-      {name: "Lista de Rechazados", path:"/rechazados", pro: false,icon: <BiFile className="text-white"/>},
+      { 
+        name: "Listar Solicitudes de Trabajo", 
+        path: "/solicitudes", 
+        pro: false, 
+        icon: <LuClipboardCopy className="text-white"/>,
+        rolesAllowed: ["administradorserv"], 
+      },
+      {
+         name: "Lista de Acepatdos", 
+         path: "/aceptados", 
+         pro: false, 
+         icon: <BiFile className="text-white"/>,
+         rolesAllowed: ["administradorserv"],
+        },
+      {
+        name: "Lista de Rechazados", 
+        path:"/rechazados", 
+        pro: false,
+        icon: <BiFile className="text-white"/>,
+        rolesAllowed: ["administradorserv"],
+      },
+      {
+        name:"Reporte", 
+        path:"/reporte", 
+        pro: false, 
+        icon: <BiFile className="text-white"/>,
+        rolesAllowed: ["administradorserv"],
+      },
     ] 
   },
-  {name: "Aprovacion de Pedidos", 
+
+  { name: "Aprovacion de Pedidos", 
+    rolesAllowed: ["administradorserv"],
     icon: <BiPackage className="text-white" />, 
     subItems: [
-      { name: "Lista de pedidos", path: "/pedido", pro: false,icon:<BiWrench className="text-white"/> },
-      { name: "Lista de aceptados", path: "/pedido/aceptados", pro: false, icon:<BiClipboard className="text-white"/> }, 
-      { name: "Lista de rechazados", path: "/pedido/rechazados", pro: false, icon:<BiClipboard className="text-white"/> } 
+      {
+         name: "Lista de pedidos", 
+         path: "/pedido", 
+         pro: false,icon:<BiWrench className="text-white"/>,
+         rolesAllowed: ["administradorserv"], 
+        },
+      { 
+        name: "Lista de aceptados", 
+        path: "/pedido/aceptados", 
+        pro: false, icon:<BiClipboard className="text-white"/>,
+        rolesAllowed: ["administradorserv"], 
+      }, 
+      { 
+        name: "Lista de rechazados", 
+        path: "/pedido/rechazados", 
+        pro: false, icon:<BiClipboard className="text-white"/>,
+        rolesAllowed: ["administradorserv"], 
+      } 
     ] 
   },
-   {name: "Solicitud de Trabajo", 
+
+  { name: "Solicitud de Trabajo", 
     icon: <BiPackage className="text-white" />, 
+    rolesAllowed: ["administradorserv","mantenimiento","encargadoserv","sergeneral"],
     subItems: [
-      { name: "Listar", path: "/solicitud", pro: false,icon:<BiWrench className="text-white"/> },
-      { name: "Lista de aceptados", path: "/solicitud/aceptados", pro: false, icon:<BiClipboard className="text-white"/> }, 
-      { name: "Lista de rechazados", path: "/solicitud/rechazados", pro: false, icon:<BiClipboard className="text-white"/> } 
+      { 
+        name: "Listar", 
+        path: "/solicitud", 
+        pro: false,
+        icon:<BiWrench className="text-white"/>, 
+         rolesAllowed: ["administradorserv","mantenimiento","sergeneral"],    
+      },
+      { 
+        name: "Lista de aceptados", 
+        path: "/solicitud/aceptados", 
+        pro: false, icon:<BiClipboard className="text-white"/>,
+        rolesAllowed: ["administradorserv","mantenimiento","sergeneral"],
+      }, 
+      { name: "Lista de rechazados", 
+        path: "/solicitud/rechazados", 
+        pro: false, icon:<BiClipboard className="text-white"/>,
+        rolesAllowed: ["administradorserv","mantenimiento","sergeneral"],
+     }
+         
     ] 
   },
-  {name: "Taller de Electricidad", 
-    icon: <BiCog className="text-white" />, 
-    subItems: [
-       
-      { name: "Listar de Trabajo", path: "/trabajoElec", pro: false, icon: <LuClipboardCopy className="text-white"/> },
-      { name: "Trabajos Realizados", path: "/realizadoElec", pro: false, icon: <BiFile className="text-white"/>},
-      {name: "Trabajos Cancelados", path:"/canceladoElec", pro: false,icon: <BiFile className="text-white"/>},
-      {name: "Lista de Pedidos de material", path:"/pedidosElec", pro: false,icon: <BiFile className="text-white"/>},
-      { name: "Calendario", path: "/", pro: false, icon: <LuClipboardCopy className="text-white"/> },
-    ] 
-  },
-  
-  {name: "Taller de Ser. Generales", 
-    icon: <BiCog className="text-white" />, 
-    subItems: [
-       
-      { name: "Listar de Trabajo", path: "/trabajoTaller", pro: false, icon: <LuClipboardCopy className="text-white"/> },
-      { name: "Trabajos Realizados", path: "/realizadoTaller", pro: false, icon: <BiFile className="text-white"/>},
-      {name: "Trabajos Cancelados", path:"/canceladoTaller", pro: false,icon: <BiFile className="text-white"/>},
-      {name: "Lista de Pedidos de material", path:"/pedidosTaller", pro: false,icon: <BiFile className="text-white"/>},
-      { name: "Calendario", path: "/", pro: false, icon: <LuClipboardCopy className="text-white"/> },
-    ] 
-  },
-                   
-              
 ];
-
-
 
 
 const othersItems = [
@@ -101,6 +171,13 @@ const othersItems = [
 ];
 
 const AppSidebar = () => {
+
+  const { user } = useAuthStore(); 
+
+  const userR = {
+    roles: [user?.tipo]
+  };
+
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
 
@@ -150,52 +227,26 @@ const AppSidebar = () => {
 
   const renderMenuItems = (items, menuType) => (
     <ul className="flex flex-col gap-4">
-      {items.map((nav, index) => (
-        <li key={nav.name}>
-          {nav.subItems ? (
-            <button
-              onClick={() => handleSubmenuToggle(index, menuType)}
-              className={`menu-item group ${
-                openSubmenu?.type === menuType && openSubmenu?.index === index
-                  ? "menu-item-active"
-                  : "menu-item-inactive"
-              } cursor-pointer ${
-                !isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"
-              }`}
-            >
-              <span
-                className={`menu-item-icon-size  ${
+      {items
+        .filter(nav =>
+          hasAccess(userR.roles, nav.rolesAllowed)
+        )
+        .map((nav, index) => (
+          <li key={nav.name}>
+            {nav.subItems ? (
+              <button
+                onClick={() => handleSubmenuToggle(index, menuType)}
+                className={`menu-item group ${
                   openSubmenu?.type === menuType && openSubmenu?.index === index
-                    ? "menu-item-icon-active"
-                    : "menu-item-icon-inactive"
+                    ? "menu-item-active"
+                    : "menu-item-inactive"
+                } cursor-pointer ${
+                  !isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"
                 }`}
               >
-                {nav.icon}
-              </span>
-              {(isExpanded || isHovered || isMobileOpen) && (
-                <span className="menu-item-text text-white">{nav.name}</span>
-              )}
-              {(isExpanded || isHovered || isMobileOpen) && (
-                <GoChevronDown
-                  className={`ml-auto w-5 h-5 text-white transition-transform duration-200 ${
-                    openSubmenu?.type === menuType && openSubmenu?.index === index
-                      ? "rotate-180"
-                      : ""
-                  }`}
-                />
-              )}
-            </button>
-          ) : (
-            nav.path && (
-              <Link
-                to={nav.path}
-                className={`menu-item group ${
-                  isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
-                } text-white`}
-              >
                 <span
-                  className={`menu-item-icon-size ${
-                    isActive(nav.path)
+                  className={`menu-item-icon-size  ${
+                    openSubmenu?.type === menuType && openSubmenu?.index === index
                       ? "menu-item-icon-active"
                       : "menu-item-icon-inactive"
                   }`}
@@ -205,70 +256,106 @@ const AppSidebar = () => {
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className="menu-item-text text-white">{nav.name}</span>
                 )}
-              </Link>
-            )
-          )}
-          {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
-            <div
-              ref={(el) => {
-                subMenuRefs.current[`${menuType}-${index}`] = el;
-              }}
-              className="overflow-hidden transition-all duration-300"
-              style={{
-                height:
-                  openSubmenu?.type === menuType && openSubmenu?.index === index
-                    ? `${subMenuHeight[`${menuType}-${index}`]}px`
-                    : "0px",
-              }}
-            >
-              <ul className="mt-2 space-y-4 ml-9  ">
-                {nav.subItems.map((subItem) => (
-                  <li key={subItem.name}>
-                    <Link
-                      to={subItem.path}
-                      className={`group flex items-center gap-2 px-3 py-2 rounded-lg text-white transition-all duration-200
-                      hover:bg-white/10 hover:translate-x-1 ${
-                        isActive(subItem.path)
-                          ? "bg-white/10 font-medium"
-                          : ""
-                      }`}
-                    >
-                     
-                      {subItem.icon && (
-                        <span className="flex items-center justify-center w-5 h-5 text-white/80 group-hover:text-white transition">
-                          {React.isValidElement(subItem.icon) ? (
-                            subItem.icon
-                          ) : (
-                            <subItem.icon className="w-4 h-4" />
+                {(isExpanded || isHovered || isMobileOpen) && (
+                  <GoChevronDown
+                    className={`ml-auto w-5 h-5 text-white transition-transform duration-200 ${
+                      openSubmenu?.type === menuType && openSubmenu?.index === index
+                        ? "rotate-180"
+                        : ""
+                    }`}
+                  />
+                )}
+              </button>
+            ) : (
+              nav.path && (
+                <Link
+                  to={nav.path}
+                  className={`menu-item group ${
+                    isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
+                  } text-white`}
+                >
+                  <span
+                    className={`menu-item-icon-size ${
+                      isActive(nav.path)
+                        ? "menu-item-icon-active"
+                        : "menu-item-icon-inactive"
+                    }`}
+                  >
+                    {nav.icon}
+                  </span>
+                  {(isExpanded || isHovered || isMobileOpen) && (
+                    <span className="menu-item-text text-white">{nav.name}</span>
+                  )}
+                </Link>
+              )
+            )}
+            {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
+              <div
+                ref={(el) => {
+                  subMenuRefs.current[`${menuType}-${index}`] = el;
+                }}
+                className="overflow-hidden transition-all duration-300"
+                style={{
+                  height:
+                    openSubmenu?.type === menuType && openSubmenu?.index === index
+                      ? `${subMenuHeight[`${menuType}-${index}`]}px`
+                      : "0px",
+                }}
+              >
+                <ul className="mt-2 space-y-4 ml-9  ">
+                  {nav.subItems
+                    .filter(subItem =>
+                      hasAccess(userR.roles, subItem.rolesAllowed)
+                    )
+                    .map((subItem) => (
+                      <li key={subItem.name}>
+                        <Link
+                          to={subItem.path}
+                          className={`group flex items-center gap-2 px-3 py-2 rounded-lg text-white transition-all duration-200
+                          hover:bg-white/10 hover:translate-x-1 ${
+                            isActive(subItem.path)
+                              ? "bg-white/10 font-medium"
+                              : ""
+                          }`}
+                        >
+                        
+                          {subItem.icon && (
+                            <span className="flex items-center justify-center w-5 h-5 text-white/80 group-hover:text-white transition">
+                              {React.isValidElement(subItem.icon) ? (
+                                subItem.icon
+                              ) : (
+                                <subItem.icon className="w-4 h-4" />
+                              )}
+                            </span>
                           )}
-                        </span>
-                      )}
 
-              
-                      <span className="text-sm leading-none">
-                        {subItem.name}
-                      </span>
- 
-                      <span className="ml-auto flex gap-1">
-                        {subItem.new && (
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-green-500/20 text-green-300">
-                            new
+                  
+                          <span className="text-sm leading-none">
+                            {subItem.name}
                           </span>
-                        )}
-                        {subItem.pro && (
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300">
-                            pro
+    
+                          <span className="ml-auto flex gap-1">
+                            {subItem.new && (
+                              <span className="text-xs px-1.5 py-0.5 rounded bg-green-500/20 text-green-300">
+                                new
+                              </span>
+                            )}
+                            {subItem.pro && (
+                              <span className="text-xs px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300">
+                                pro
+                              </span>
+                            )}
                           </span>
-                        )}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </li>
-      ))}
+                        </Link>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            )}
+          </li>
+        ))
+      }
     </ul>
   );
 
