@@ -49,18 +49,18 @@ export default function App() {
       <Route 
           path="/" 
           element={
-            <PublicRoute> 
+           
               <Home />
-            </PublicRoute>   
+              
           } 
       />
        
         <Route
           path="/signin"
           element={   
-            <PublicRoute>       
+                 
               <SignIn />
-            </PublicRoute>        
+                   
           }
         />
 
@@ -79,7 +79,7 @@ export default function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}> 
                 <Dashboard />
               </ProtectedRoute>
             }

@@ -4,7 +4,7 @@ import { persist, devtools } from "zustand/middleware";
 export const useAuthStore = create(
   devtools(
     persist(
-      (set) => ({
+      (set,get) => ({
         user: null,
         token: null,
 

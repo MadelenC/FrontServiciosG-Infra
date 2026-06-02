@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useInstitutionStore } from "../../../zustand/useInstitutionStore";
 import { useUserStore } from "../../../zustand/userStore";
 import { useEntidadStore } from "../../../zustand/useEntidadStore";
 import { VscCheck } from "react-icons/vsc";
@@ -7,6 +8,11 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 
 export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
+  const { allInstitutions, fetchAllInstitutions } = useInstitutionStore();
+
+useEffect(() => {
+  fetchAllInstitutions();
+}, []);
 
   const customStyles = {
   control: (base, state) => ({
@@ -80,6 +86,7 @@ export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
     cedula: "",
     celular: "",
     tipo: "",
+    instituciones: [],
   });
 
   const [userEntities, setUserEntities] = useState({
@@ -100,6 +107,7 @@ export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
       cedula: user.cedula || "",
       celular: user.celular || "",
       tipo: user.tipo || "",
+      instituciones: user.instituciones?.map(i => i.id) || [],
     });
 
     setUserEntities({
@@ -378,27 +386,56 @@ export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
 
 
     <div className="space-y-2">
-  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-    Sigla
-  </label>
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Sigla
+        </label>
 
-  <input
-    type="text"
-    value={userEntities.sigla || ""}
-    onChange={(e) =>
-      setUserEntities((prev) => ({
-        ...prev,
-        sigla: e.target.value,
-      }))
-    }
-    placeholder="Ingresar sigla"
-    className="border p-2 rounded text-sm  dark:bg-gray-200/40 dark:border-gray-200"
-    />
-    </div>
+        <input
+          type="text"
+          value={userEntities.sigla || ""}
+          onChange={(e) =>
+            setUserEntities((prev) => ({
+              ...prev,
+              sigla: e.target.value,
+            }))
+          }
+          placeholder="Ingresar sigla"
+          className="border p-2 rounded text-sm  dark:bg-gray-200/40 dark:border-gray-200"
+          />
+          </div>
 
-  </div>
+        </div>
 
-</div>
+      </div>
+
+      <div className="flex flex-col md:col-span-2">
+        <label className="text-sm font-bold text-gray-700">
+          Instituciones
+        </label>
+
+        <Select
+          isMulti
+          closeMenuOnSelect={false}
+          placeholder="Seleccione instituciones..."
+          value={allInstitutions
+            .filter(i => formData.instituciones.includes(i.id))
+            .map(i => ({
+              value: i.id,
+              label: i.nombre
+            }))
+          }
+          options={allInstitutions.map(i => ({
+            value: i.id,
+            label: i.nombre
+          }))}
+          onChange={(selected) => {
+            setFormData(prev => ({
+              ...prev,
+              instituciones: selected ? selected.map(s => s.value) : []
+            }));
+          }}
+        />
+      </div>
         <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
 
   

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../../zustand/AuthUsers";
 import api from "../../helpers/axiosClient";
+import { useUserStore } from "../../zustand/userStore";
+import { toast } from "react-toastify";
 
 import {
   FiMail,
@@ -21,6 +23,8 @@ export default function Profile() {
 
   const [preview, setPreview] = useState(null);
 
+  const { updateUser: updateUserStore } = useUserStore();
+
 
   const [profile, setProfile] = useState({
     nombres: user?.nombres || "",
@@ -28,14 +32,13 @@ export default function Profile() {
     celular: user?.celular || "",
   });
 
- 
   const [form, setForm] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
 
- 
+  
   useEffect(() => {
     return () => {
       if (preview) {
@@ -60,6 +63,7 @@ export default function Profile() {
     });
   };
 
+  //  SUBIR AVATAR
   const handleImage = async (e) => {
 
     const file = e.target.files[0];
@@ -101,60 +105,69 @@ export default function Profile() {
         avatar: res.data.url,
       });
 
-      alert("Foto actualizada");
+      toast.success("Foto de perfil actualizada");
 
     } catch (error) {
 
       console.log(error);
 
-      alert("Error al subir imagen");
+      toast.error("Error al subir la imagen");
     }
   };
 
  
   const handleSaveProfile = async () => {
+  setLoading(true);
 
-    setLoading(true);
+  try {
+    const result = await updateUserStore(user.id, {
+      nombres: profile.nombres,
+      apellidos: profile.apellidos,
+      celular: profile.celular,
+    });
 
-    try {
-
-      const res = await api.put(
-        "/auth/update-profile",
-        {
-          nombres: profile.nombres,
-          apellidos: profile.apellidos,
-          celular: profile.celular,
-        }
-      );
-
-      updateUser(res.data.user);
-
-      alert("Perfil actualizado");
-
-    } catch (error) {
-
-      console.log(error);
-
-      alert("Error al actualizar perfil");
-
-    } finally {
-
-      setLoading(false);
+    if (!result.ok) {
+      throw new Error(result.error);
     }
-  };
+
+  
+    updateUser({
+      nombres: profile.nombres,
+      apellidos: profile.apellidos,
+      celular: profile.celular,
+    });
+
+    toast.success("Perfil actualizado correctamente");
+
+  } catch (error) {
+    //console.error(error);
+    toast.error(
+      error?.response?.data?.message ||
+      "Error al actualizar perfil"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   //  CAMBIAR PASSWORD
  const handleChangePassword = async () => {
 
   if (form.newPassword !== form.confirmPassword) {
-    alert("Las contraseñas no coinciden");
+    toast.warning("Las contraseñas no coinciden");
     return;
   }
 
   if (form.newPassword.length < 6) {
-    alert("Mínimo 6 caracteres");
+    toast.warning("La contraseña debe tener al menos 6 caracteres");
     return;
   }
+
+   const confirmacion = window.confirm(
+    "¿Está seguro de cambiar su contraseña?"
+  );
+
+  if (!confirmacion) return;
 
   setLoading(true);
 
@@ -193,11 +206,7 @@ export default function Profile() {
   <div className="min-h-screen bg-white dark:bg-[#0b1020] text-gray-900 dark:text-white p-6">
 
     <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-6">
-
-      {/* SIDEBAR */}
       <div className="bg-white dark:bg-[#131a2e] rounded-3xl p-6 shadow-2xl border border-gray-200 dark:border-white/5">
-
-        {/* AVATAR */}
         <div className="flex flex-col items-center">
 
           <div className="relative">
@@ -327,10 +336,9 @@ export default function Profile() {
 
       </div>
 
-      {/* CONTENT */}
+      
       <div className="lg:col-span-2 space-y-6">
 
-        {/* PERFIL */}
         <div className="bg-white dark:bg-[#131a2e] rounded-3xl p-6 shadow-2xl border border-gray-200 dark:border-white/5">
 
           <h2 className="text-2xl font-bold mb-1">Información Personal</h2>

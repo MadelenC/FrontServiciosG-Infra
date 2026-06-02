@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/constants";
+import { useAuthStore } from "../zustand/AuthUsers"
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -7,7 +8,8 @@ const api = axios.create({
 
 // Interceptor: agrega token automáticamente
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = useAuthStore.getState().token;
+   console.log("🔥 TOKEN EN INTERCEPTOR:", token);
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });

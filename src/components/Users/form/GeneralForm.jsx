@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import { useUserStore } from "../../../zustand/userStore";
 import { useAuthStore } from "../../../zustand/AuthUsers"; 
+import { useInstitutionStore } from "../../../zustand/useInstitutionStore";
+import Select from "react-select";
 
 export default function GeneralForm({ onSubmit }) {
   const { users } = useUserStore();
   const { user } = useAuthStore(); 
+  const { allInstitutions,  fetchAllInstitutions,} = useInstitutionStore();
+
+  useEffect(() => { fetchAllInstitutions();}, []);
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -15,6 +20,7 @@ export default function GeneralForm({ onSubmit }) {
     password: "",
     cargo: "",
     email: "",
+    instituciones: [],
   });
 
   const [errors, setErrors] = useState({});
@@ -73,6 +79,11 @@ export default function GeneralForm({ onSubmit }) {
       setErrors(newErrors);
       return;
     }
+
+    if (formData.instituciones.length === 0) {
+    newErrors.instituciones =
+    "Seleccione al menos una institución";
+   }
 
     console.log("USER LOGUEADO:", user);
     console.log("INSERTADOR QUE SE ENVÍA:", user?.nombres);
@@ -180,7 +191,37 @@ export default function GeneralForm({ onSubmit }) {
         />
       </div>
 
-      {/* BOTÓN */}
+      <div className="flex flex-col md:col-span-3">
+        <label className="text-xs text-gray-600">
+          Instituciones
+        </label>
+
+        <Select
+          isMulti
+          closeMenuOnSelect={false}
+          placeholder="Seleccione instituciones..."
+          options={allInstitutions.map(i => ({
+            value: i.id,
+            label: i.nombre
+          }))}
+          onChange={(selected) => {
+            setFormData(prev => ({
+              ...prev,
+              instituciones: selected
+                ? selected.map(s => s.value)
+                : []
+            }));
+          }}
+        />
+
+        {errors.instituciones && (
+          <span className="text-red-500 text-xs">
+            {errors.instituciones}
+          </span>
+        )}
+      </div>
+
+     
       <div className="md:col-span-3 flex justify-center mt-2">
         <button className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition">
           Registrar

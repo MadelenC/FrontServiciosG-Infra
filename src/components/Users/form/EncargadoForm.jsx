@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUserStore } from "../../../zustand/userStore";
 import { useAuthStore } from "../../../zustand/AuthUsers"; 
+import { useInstitutionStore } from "../../../zustand/useInstitutionStore";
+import Select from "react-select";
 
 export default function EncargadoForm({ onSubmit, onClose }) {
   const { users } = useUserStore(); 
-  const { user } = useAuthStore(); 
+  const { user } = useAuthStore();
+  const { allInstitutions,  fetchAllInstitutions,} = useInstitutionStore(); 
+
+  useEffect(() => { fetchAllInstitutions();}, [])
 
   const [formData, setFormData] = useState({
     nombres: "",
@@ -14,6 +19,7 @@ export default function EncargadoForm({ onSubmit, onClose }) {
     celular: "",
     password: "",
     tipo: "encargado",
+    instituciones: [],
   });
 
   const [errors, setErrors] = useState({});
@@ -78,6 +84,11 @@ export default function EncargadoForm({ onSubmit, onClose }) {
     if (!password) err.password = "Password obligatorio";
     else if (password.length < 6)
       err.password = "Mínimo 6 caracteres";
+
+    if (formData.instituciones.length === 0) {
+    newErrors.instituciones =
+    "Seleccione al menos una institución";
+   }
 
     return err;
   };
@@ -195,6 +206,36 @@ export default function EncargadoForm({ onSubmit, onClose }) {
           className={inputStyle}
         />
       </div>
+
+      <div className="flex flex-col md:col-span-3">
+              <label className="text-xs text-gray-600">
+                Instituciones
+              </label>
+      
+              <Select
+                isMulti
+                closeMenuOnSelect={false}
+                placeholder="Seleccione instituciones..."
+                options={allInstitutions.map(i => ({
+                  value: i.id,
+                  label: i.nombre
+                }))}
+                onChange={(selected) => {
+                  setFormData(prev => ({
+                    ...prev,
+                    instituciones: selected
+                      ? selected.map(s => s.value)
+                      : []
+                  }));
+                }}
+              />
+      
+              {errors.instituciones && (
+                <span className="text-red-500 text-xs">
+                  {errors.instituciones}
+                </span>
+              )}
+            </div>
 
       <div className="flex justify-center gap-3 md:col-span-2 mt-5">
         <button
