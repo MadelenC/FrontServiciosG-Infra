@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 import {
   getMaintenances,
+  getMyInstitutionMaintenances,
   getTalleres,
   createMaintenance,
   updateMaintenance,
@@ -23,6 +24,7 @@ export const useMaintenanceStore =
     taller: "",
     institution: "",
     aprobacion: "",
+
     fetchMaintenances: async (filters = {}) => {
 
       set({
@@ -58,6 +60,57 @@ export const useMaintenanceStore =
         });
       }
     },
+
+    fetchMyInstitutionMaintenances: async (
+  filters = {}
+) => {
+
+  set({
+    loading: true,
+    error: null,
+  });
+
+  try {
+
+    const {
+      page,
+      limit,
+      search,
+      taller,
+      aprobacion,
+    } = {
+      ...get(),
+      ...filters,
+    };
+
+    const data =
+      await getMyInstitutionMaintenances({
+        page,
+        limit,
+        search,
+        taller,
+        aprobacion,
+      });
+
+    set({
+      maintenances:
+        data.maintenances || [],
+      totalPages:
+        data.totalPages || 1,
+      loading: false,
+    });
+
+  } catch (err) {
+
+    set({
+      error:
+        err.message || err,
+      loading: false,
+    });
+
+  }
+
+},
 
 fetchTalleres: async () => {
 

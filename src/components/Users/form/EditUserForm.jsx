@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 export default function EditUserForm({ user, onUpdate, onDelete, onClose }) {
   const { allInstitutions, fetchAllInstitutions } = useInstitutionStore();
 
-useEffect(() => {
+useEffect(() => { 
   fetchAllInstitutions();
 }, []);
 
@@ -85,7 +85,7 @@ useEffect(() => {
     email: "",
     cedula: "",
     celular: "",
-    tipo: "",
+    tipo_serv: "",
     instituciones: [],
   });
 
@@ -106,7 +106,7 @@ useEffect(() => {
       email: user.email || "",
       cedula: user.cedula || "",
       celular: user.celular || "",
-      tipo: user.tipo || "",
+      tipo_serv: user.tipo_serv || "",
       instituciones: user.instituciones?.map(i => i.id) || [],
     });
 
@@ -272,12 +272,13 @@ useEffect(() => {
             <label className="text-xs font-semibold text-gray-700 dark:text-gray-200">Tipo</label>
             <select
               className="border border-gray-300 rounded px-2 py-1 text-sm bg-white dark:text-gray-700 "
-              name="tipo"
-              value={formData.tipo}
+              name="tipo_serv"
+              value={formData.tipo_serv}
               onChange={handleChange}
             >
               <option value="">Seleccione</option>
 
+                <option value="ninguno">Ninguno</option>
                 <option value="administradorserv">Administrador</option>
                 <option value="encargadoserv">Encargado</option>
                 <option value="mensajeroserv">Mensajero</option>

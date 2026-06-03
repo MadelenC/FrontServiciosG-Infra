@@ -14,7 +14,16 @@ export default function RechaTable() {
   const {
     maintenances,
     fetchMaintenances,
+    fetchMyInstitutionMaintenances,
     editMaintenance,
+    setAprobacion,
+    setSearch: setStoreSearch,
+    setTaller: setStoreTaller,
+    setInstitution: setStoreInstitution,
+    totalPages,
+    limit,
+    page,
+    setPage,
   } = useMaintenanceStore();
 
   const {
@@ -28,23 +37,35 @@ export default function RechaTable() {
   const [taller, setTaller] = useState("");
   const [institution, setInstitution] = useState("");
 
-  const [page, setPage] = useState(1);
+  
 
-  const [openForm, setOpenForm] =
-    useState(false);
-
-  const [selectedItem, setSelectedItem] =
-    useState(null);
-
-  const limit = 8;
+  const [openForm, setOpenForm] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
 
+    setStoreSearch(search);
+    setStoreTaller(taller);
+    setStoreInstitution(institution);
+
+  }, [search, taller, institution]);
+
+  useEffect(() => {
+  setAprobacion("rechazado");
+  fetchInstitutions();
+}, []);
+
+useEffect(() => {
+
+  if (!user) return;
+
+  if (user.tipo_serv === "administradorserv") {
     fetchMaintenances();
+  } else {
+    fetchMyInstitutionMaintenances();
+  }
 
-    fetchInstitutions();
-
-  }, []);
+}, [page, search, taller, institution, user]);
 
   useEffect(() => {
 
@@ -52,19 +73,7 @@ export default function RechaTable() {
 
   }, [search, taller, institution]);
 
-  const filtered = maintenances.filter(
-    (item) =>
-      item.aprobacion?.toLowerCase() ===
-      "rechazado"
-  );
-
-  const totalPages =
-    Math.ceil(filtered.length / limit);
-
-  const currentData = filtered.slice(
-    (page - 1) * limit,
-    page * limit
-  );
+const currentData = maintenances;
 
   const handleAction = async (
     action,
@@ -76,9 +85,13 @@ export default function RechaTable() {
 
       await editMaintenance(item.id, {
         aprobacion: "aceptado",
-      });
+          });
 
-      fetchMaintenances();
+          if (user?.tipo_serv === "administradorserv") {
+            fetchMaintenances();
+          } else {
+            fetchMyInstitutionMaintenances();
+          }
 
     }
 
@@ -105,7 +118,11 @@ export default function RechaTable() {
       }
     );
 
-    fetchMaintenances();
+    if (user?.tipo_serv === "administradorserv") {
+      fetchMaintenances();
+    } else {
+      fetchMyInstitutionMaintenances();
+    }
 
     setOpenForm(false);
 
@@ -197,9 +214,7 @@ export default function RechaTable() {
                 <RechRow
                   key={item.id}
                   item={item}
-                  index={
-                    (page - 1) * limit + i + 1
-                  }
+                  index={(page - 1) * limit + i + 1}
                   onAction={handleAction}
                 />
 

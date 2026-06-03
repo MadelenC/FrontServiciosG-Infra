@@ -14,6 +14,7 @@ export default function ListTable({ onAction }) {
   const {
     maintenances,
     fetchMaintenances,
+    fetchMyInstitutionMaintenances,
     addMaintenance,
     editMaintenance,
 
@@ -49,8 +50,13 @@ export default function ListTable({ onAction }) {
   }, []);
 
   useEffect(() => {
+  if (user?.tipo_serv === "administradorserv") {
     fetchMaintenances();
-  }, [page, search, taller, institution]);
+  } else {
+    fetchMyInstitutionMaintenances();
+  }
+
+}, [page, search, taller, institution]);
 
   // traer TODOS los talleres e instituciones
   useEffect(() => {
@@ -66,7 +72,11 @@ export default function ListTable({ onAction }) {
         aprobacion: "rechazado",
       });
 
-      fetchMaintenances();
+      if (user?.tipo_serv === "administradorserv") {
+        fetchMaintenances();
+          } else {
+            fetchMyInstitutionMaintenances();
+          }
     }
 
     if (action === "accept") {
@@ -75,7 +85,11 @@ export default function ListTable({ onAction }) {
         aprobacion: "aceptado",
       });
 
-      fetchMaintenances();
+      if (user?.tipo_serv === "administradorserv") {
+        fetchMaintenances();
+      } else {
+        fetchMyInstitutionMaintenances();
+      }
     }
   };
 
@@ -94,6 +108,15 @@ export default function ListTable({ onAction }) {
     }
   };
 
+  const institucionesFormulario =
+  user?.tipo_serv === "administradorserv"
+    ? allInstitutions
+    : allInstitutions.filter(
+        (inst) =>
+          user?.institutions?.some(
+            (userInst) => userInst.id === inst.id
+          )
+      );
   return (
     <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-800">
 
@@ -203,11 +226,7 @@ export default function ListTable({ onAction }) {
         isOpen={openForm}
         onClose={() => setOpenForm(false)}
         onSave={handleSave}
-
-        // TODAS las instituciones
-        listaInstituciones={allInstitutions}
-
-        // TODOS los talleres
+        listaInstituciones={institucionesFormulario}
         listaTalleres={allTalleres}
       />
 

@@ -79,7 +79,7 @@ export default function UsersReportTable({
             </Text>
 
             <Text style={styles.cargo}>
-              {u.tipo || "-"}
+              {u.tipo_serv || "-"}
             </Text>
 
           </View>

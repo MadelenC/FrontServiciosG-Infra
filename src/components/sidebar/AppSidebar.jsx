@@ -128,18 +128,18 @@ const navItems = [
         path: "/solicitud", 
         pro: false,
         icon:<BiWrench className="text-white"/>, 
-         rolesAllowed: ["administradorserv","mantenimiento","sergeneral"],    
+         rolesAllowed: ["administradorserv","mantenimiento","sergeneral","encargadoserv"],    
       },
       { 
         name: "Lista de aceptados", 
         path: "/solicitud/aceptados", 
         pro: false, icon:<BiClipboard className="text-white"/>,
-        rolesAllowed: ["administradorserv","mantenimiento","sergeneral"],
+        rolesAllowed: ["administradorserv","mantenimiento","sergeneral","encargadoserv"],
       }, 
       { name: "Lista de rechazados", 
         path: "/solicitud/rechazados", 
         pro: false, icon:<BiClipboard className="text-white"/>,
-        rolesAllowed: ["administradorserv","mantenimiento","sergeneral"],
+        rolesAllowed: ["administradorserv","mantenimiento","sergeneral","encargadoserv"],
      }
          
     ] 
@@ -176,7 +176,7 @@ const AppSidebar = () => {
   const { user } = useAuthStore(); 
 
   const userR = {
-    roles: [user?.tipo]
+    roles: [user?.tipo_serv]
   };
 
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();

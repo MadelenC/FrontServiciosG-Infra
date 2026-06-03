@@ -14,6 +14,7 @@ export default function AcepTable() {
   const {
     maintenances,
     fetchMaintenances,
+    fetchMyInstitutionMaintenances,
     editMaintenance,
     page,
     limit,
@@ -60,10 +61,12 @@ export default function AcepTable() {
   }, [search, taller, institution]);
 
   useEffect(() => {
-
+  if (user?.tipo_serv === "administradorserv") {
     fetchMaintenances();
-
-  }, [page, search, taller, institution]);
+  } else {
+    fetchMyInstitutionMaintenances();
+  }
+}, [page, search, taller, institution, user]);
 
   const filtered = maintenances.filter(
     (item) =>
@@ -72,16 +75,26 @@ export default function AcepTable() {
 
   const handleAction = async (action, item) => {
 
-    // rechazar
+  
     if (action === "reject") {
 
       await editMaintenance(item.id, {
         aprobacion: "rechazado",
       });
 
+      if (user?.tipo_serv === "administradorserv") {
+
+        fetchMaintenances();
+
+      } else {
+
+        fetchMyInstitutionMaintenances();
+
+      }
+
     }
 
-    // abrir informe
+   
     if (action === "informe") {
 
       setSelectedItem(item);
@@ -92,19 +105,23 @@ export default function AcepTable() {
 
   };
 
-  // guardar informe
+ 
   const handleSaveInforme = async (data) => {
 
     await editMaintenance(selectedItem.id, {
       informe: data.tarea,
     });
 
-    fetchMaintenances();
+    if (user?.tipo_serv === "administradorserv") {
+      fetchMaintenances();
+      } else {
+        fetchMyInstitutionMaintenances();
+      }
 
-    setOpenForm(false);
+      setOpenForm(false);
 
-    setSelectedItem(null);
-  };
+      setSelectedItem(null);
+    };
 
   return (
 

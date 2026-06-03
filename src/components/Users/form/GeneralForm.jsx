@@ -16,7 +16,7 @@ export default function GeneralForm({ onSubmit }) {
     apellido: "",
     cedula: "",
     celular: "",
-    tipo: "",
+    tipo_serv: "",
     password: "",
     cargo: "",
     email: "",
@@ -95,7 +95,7 @@ export default function GeneralForm({ onSubmit }) {
       cedula,
       celular,
       email: email || undefined,
-
+      tipo_serv: formData.tipo_serv, 
       insertador:
         `${user?.nombres || ""} ${user?.apellidos || ""}`.trim() ||
         "DESCONOCIDO",
@@ -142,8 +142,8 @@ export default function GeneralForm({ onSubmit }) {
         <label className="text-xs text-gray-600">Tipo</label>
 
         <select
-          name="tipo"
-          value={formData.tipo}
+          name="tipo_serv"
+          value={formData.tipo_serv}
           onChange={handleChange}
           className={inputBase}
         >
@@ -179,7 +179,6 @@ export default function GeneralForm({ onSubmit }) {
         </select>
       </div>
 
-      {/* EMAIL */}
       <div className="flex flex-col">
         <label className="text-xs text-gray-600">Email</label>
 

@@ -59,7 +59,7 @@ export const useUserStore =
       }
 
     },
-    fetchUsersReport: async (tipo = "") => {
+    fetchUsersReport: async (tipo_serv = "") => {
 
   try {
 
@@ -68,7 +68,7 @@ export const useUserStore =
         page: 1,
         limit: 10000,
         search: "",
-        roleFilter: tipo,
+        roleFilter: tipo_serv,
       });
 
     return data.users || [];

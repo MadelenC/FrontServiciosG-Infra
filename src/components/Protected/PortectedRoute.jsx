@@ -13,7 +13,7 @@ const ProtectedRoute = ({
     return <Navigate to="/signin" replace />;
   }
   //sacamos el tipo del usuario autenticado
-  const userRoles = user?.tipo || [];
+  const userRoles = user?.tipo_serv || [];
   
   const hasAccess = requireAll
     ? rolesAllowed.every(role => userRoles.includes(role))

@@ -18,7 +18,7 @@ export default function EncargadoForm({ onSubmit, onClose }) {
     cedula: "",
     celular: "",
     password: "",
-    tipo: "encargado",
+    tipo_serv: "encargadoserv",
     instituciones: [],
   });
 

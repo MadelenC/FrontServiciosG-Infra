@@ -27,6 +27,32 @@ export const getMaintenances =
     }
 
 };
+
+export const getMyInstitutionMaintenances =
+  async (params) => {
+
+    try {
+
+      const response =
+        await api.get(
+          "/mantenimiento/my-institutions",
+          {
+            params,
+          }
+        );
+
+      return response.data;
+
+    } catch (err) {
+
+      throw (
+        err.response?.data?.message ||
+        "Error al obtener mantenimientos"
+      );
+
+    }
+
+};
 export const getTalleres = async () => {
 
   try {

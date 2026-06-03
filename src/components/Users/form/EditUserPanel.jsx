@@ -52,12 +52,7 @@ export default function EditUserPanel({ open, onClose, user }) {
     <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-5">
       <div className="w-full max-w-lg bg-white p-6 rounded-md shadow-lg relative max-h-[90vh] overflow-y-auto">
 
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-700 font-bold px-3 py-1 rounded hover:bg-gray-200"
-        >
-          X
-        </button>
+        
 
         <h2 className="text-xl font-bold mb-4">Editar Usuario</h2>
 

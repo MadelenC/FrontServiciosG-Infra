@@ -6,9 +6,9 @@ import ProtectedView from "../../Protected/ProtectedView";
 
 export default function UserRow({ user, onEdit }) {
   const badgeColor =
-    user.tipo === "Administrador"
+    user.tipo_serv === "Administrador"
       ? "success"
-      : user.tipo === "Empleado"
+      : user.tipo_serv === "Empleado"
       ? "warning"
       : "info";
 
@@ -37,7 +37,7 @@ export default function UserRow({ user, onEdit }) {
 
       <TableCell className="border border-gray-200 dark:border-gray-700 px-3 py-2 dark:text-gray-300">
         <Badge size="sm" color={badgeColor} className="px-2 py-1 text-xs">
-          {user.tipo}
+          {user.tipo_serv}
         </Badge>
       </TableCell>
 

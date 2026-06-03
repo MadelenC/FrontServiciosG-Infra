@@ -22,14 +22,17 @@ export default function InsertForm({
     if (!isOpen) return;
 
     setForm({
-      institucion_id: "",
+      institucion_id:
+        listaInstituciones.length === 1
+          ? String(listaInstituciones[0].id)
+          : "",
       taller: "",
       descripcion: "",
       responsable: "",
     });
 
     setErrors({});
-  }, [isOpen]);
+  }, [isOpen, listaInstituciones]);
 
   if (!isOpen) return null;
 
@@ -158,6 +161,7 @@ export default function InsertForm({
               name="institucion_id"
               value={form.institucion_id}
               onChange={handleChange}
+              disabled={listaInstituciones.length === 1}
               className="w-full px-4 py-2 border rounded-lg"
             >
               <option value="">Seleccione Seccion</option>
