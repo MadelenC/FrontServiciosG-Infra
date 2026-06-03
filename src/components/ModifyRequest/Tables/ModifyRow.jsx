@@ -6,7 +6,7 @@ import ProtectedView from "../../Protected/ProtectedView";
 
 
 export default function ModifyRow({ item, index, onAction }) {
-  console.log(item);
+  //console.log(item);
   return (
     <TableRow className="border border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition dark:text-gray-400">
 
