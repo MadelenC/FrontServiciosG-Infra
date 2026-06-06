@@ -1,7 +1,7 @@
 import React from "react";
-import ListRow from "./ListRow";
+import UnidRow from "./UnidRow";
 
-export default function TableList({
+export default function UnidList({
   data = [],
   onAction,
 }) {
@@ -20,8 +20,8 @@ export default function TableList({
               "Taller",
               "Aprobación",
               "Fecha Envío",
-              "Usuario",
-              "Operación"
+              "Operación",
+              "Aprobación",
             ].map((h) => (
               <th key={h} className="border px-3 py-2 text-left">
                 {h}

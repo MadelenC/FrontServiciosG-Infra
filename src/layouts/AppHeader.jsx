@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSidebar } from "../context/SidebarContext";
 import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
-import NotificationDropdown from "../components/header/NotificationDropdown";
 import UserDropdown from "../components/header/UserDropdown";
 
 const AppHeader = () => {
@@ -103,7 +102,7 @@ const AppHeader = () => {
         >
           <div className="flex items-center gap-2 2xsm:gap-3">
             <ThemeToggleButton />
-            <NotificationDropdown />
+          
           </div>
           <UserDropdown />
         </div>

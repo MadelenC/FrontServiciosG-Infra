@@ -10,7 +10,7 @@ const ProtectedRoute = ({
 
   // si el usuario no esta autenticado
   if (!user) {
-    return <Navigate to="/signin" replace />;
+    return <Navigate to="/home" replace />;
   }
   //sacamos el tipo del usuario autenticado
   const userRoles = user?.tipo_serv || [];

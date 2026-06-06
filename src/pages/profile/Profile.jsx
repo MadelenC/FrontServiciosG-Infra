@@ -332,6 +332,35 @@ export default function Profile() {
 
           </div>
 
+          <div className="bg-gray-100 dark:bg-[#1a2238] p-4 rounded-2xl border border-gray-200 dark:border-white/5">
+
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
+            Instituciones
+          </p>
+
+          <div className="mt-2 flex flex-wrap gap-2">
+
+            {user?.userInstitutions?.length > 0 ? (
+              user.userInstitutions
+                .filter(ui => ui.active)
+                .map((ui) => (
+                  <span
+                    key={ui.id}
+                    className="px-3 py-1 rounded-full text-sm font-semibold bg-cyan-100 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-400"
+                  >
+                    {ui.institution?.nombre}
+                  </span>
+                ))
+            ) : (
+              <span className="text-gray-500 text-sm">
+                Sin instituciones asignadas
+              </span>
+            )}
+
+          </div>
+
+        </div>
+
         </div>
 
       </div>
@@ -379,6 +408,8 @@ export default function Profile() {
               />
 
             </div>
+
+            
 
           </div>
 

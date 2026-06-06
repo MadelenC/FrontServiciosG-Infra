@@ -4,8 +4,8 @@ import { BiCalendar } from "react-icons/bi";
 import { useSidebar } from "../../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 import { BiSpreadsheet,BiFile,BiWrench, BiClipboard, BiCog, BiPackage} from "react-icons/bi";
-import { LuBuilding2,LuClipboardCopy } from "react-icons/lu";
-import { MdSecurityUpdate, MdDomainAdd, MdTravelExplore,MdReplyAll  } from "react-icons/md";
+import { LuClipboardCopy } from "react-icons/lu";
+import {  MdDomainAdd, MdTravelExplore,MdReplyAll  } from "react-icons/md";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { GoChevronDown } from "react-icons/go";
 import { FaUsersLine, FaUsersGear, FaMoneyBillTrendUp,FaListUl,FaFileLines,FaFilePen, FaMoneyCheckDollar, FaCashRegister, FaCarSide   } from "react-icons/fa6";
@@ -17,6 +17,13 @@ import { hasAccess } from "../../helpers/hasAccess";
 import { useAuthStore } from "../../zustand/AuthUsers"
 
 const navItems = [
+  {
+    name: "Menu",
+    rolesAllowed: ["administradorserv","mantenimiento","encargadoserv","sergeneral"],
+    path: "/dashboard",
+    pro: false,
+  },
+
   { icon: <FaUsersLine className="text-white font-size" />, 
     name: "Usuarios", 
 
@@ -123,6 +130,7 @@ const navItems = [
     icon: <BiPackage className="text-white" />, 
     rolesAllowed: ["administradorserv","mantenimiento","encargadoserv","sergeneral"],
     subItems: [
+     
       { 
         name: "Listar", 
         path: "/solicitud", 
@@ -140,36 +148,20 @@ const navItems = [
         path: "/solicitud/rechazados", 
         pro: false, icon:<BiClipboard className="text-white"/>,
         rolesAllowed: ["administradorserv","mantenimiento","sergeneral","encargadoserv"],
-     }
+     },
+      {
+         name: "Mi unidad", 
+         path: "/solicitud/miunidad", 
+         pro: false,
+         icon:<BiWrench className="text-white"/>,
+         rolesAllowed: ["administradorserv","mantenimiento","encargadoserv","sergeneral"],
+      },
          
     ] 
   },               
               
 ];
 
-
-const othersItems = [
-  {
-    icon: <LuBuilding2 className="text-white" />,
-    name: "UI Elements",
-    subItems: [
-      { name: "Alerts", path: "/alerts", pro: false },
-      { name: "Avatar", path: "/avatars", pro: false },
-      { name: "Badge", path: "/badge", pro: false },
-      { name: "Buttons", path: "/buttons", pro: false },
-      { name: "Images", path: "/images", pro: false },
-      { name: "Videos", path: "/videos", pro: false },
-    ],
-  },
-  {
-    icon: <MdSecurityUpdate className="text-white" />,
-    name: "Authentication",
-    subItems: [
-      { name: "Sign In", path: "/signin", pro: false },
-      { name: "Sign Up", path: "/signup", pro: false },
-    ],
-  },
-];
 
 const AppSidebar = () => {
 
@@ -190,8 +182,7 @@ const AppSidebar = () => {
 
   useEffect(() => {
     let submenuMatched = false;
-    ["main", "others"].forEach((menuType) => {
-      const items = menuType === "main" ? navItems : othersItems;
+["main"].forEach((menuType) => { const items = navItems;
       items.forEach((nav, index) => {
         if (nav.subItems) {
           nav.subItems.forEach((subItem) => {
@@ -438,16 +429,6 @@ const AppSidebar = () => {
                 {isExpanded || isHovered || isMobileOpen ? "Menu" : <FiMoreHorizontal className="size-6 text-white" />}
               </h2>
               {renderMenuItems(navItems, "main")}
-            </div>
-            <div>
-              <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-white/70 ${
-                  !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
-                }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? "Others" : <FiMoreHorizontal className="text-white" />}
-              </h2>
-              {renderMenuItems(othersItems, "others")}
             </div>
           </div>
         </nav>

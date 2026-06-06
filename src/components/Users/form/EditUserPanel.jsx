@@ -61,6 +61,7 @@ export default function EditUserPanel({ open, onClose, user }) {
           entidades={entidades}
           onUpdate={handleUpdate}
           onDelete={handleDelete}
+           onClose={onClose}
         />
       </div>
     </div>

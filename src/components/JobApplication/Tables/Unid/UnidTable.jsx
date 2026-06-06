@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import ListRow from "./ListRow";
+import UnidRow from "./UnidRow";
 import Pagination from "../Pagination";
 import SearchBar from "../../Search/SearchBar";
 
@@ -7,32 +8,28 @@ import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 import { useInstitutionStore } from "../../../../zustand/useInstitutionStore";
 import { useAuthStore } from "../../../../zustand/AuthUsers";
 
+
 import InsertForm from "../../Form/InsertForm";
 
-export default function ListTable({ onAction }) {
+export default function UnidTable({ onAction }) {
 
   const {
     maintenances,
-    fetchMaintenances,
     fetchMyInstitutionMaintenances,
     addMaintenance,
     editMaintenance,
-
     allTalleres,
     fetchAllTalleres,
-
     search,
     taller,
     institution,
     page,
     limit,
     totalPages,
-
     setSearch,
     setTaller,
     setInstitution,
     setPage,
-    setAprobacion,
 
   } = useMaintenanceStore();
 
@@ -42,58 +39,51 @@ export default function ListTable({ onAction }) {
   } = useInstitutionStore();
 
   const { user } = useAuthStore();
-
   const [openForm, setOpenForm] = useState(false);
 
   useEffect(() => {
-    setAprobacion("pendiente");
-  }, []);
-
-  useEffect(() => {
-  if (user?.tipo_serv === "administradorserv") {
-    fetchMaintenances();
-  } else {
     fetchMyInstitutionMaintenances();
-  }
+  }, [page, search, taller, institution, user]);
 
-}, [page, search, taller, institution]);
-
-  // traer TODOS los talleres e instituciones
   useEffect(() => {
     fetchAllTalleres();
-    fetchAllInstitutions();
   }, []);
 
   const handleAction = async (action, item) => {
-
     if (action === "reject") {
-
       await editMaintenance(item.id, {
         aprobacion: "rechazado",
       });
-
-      if (user?.tipo_serv === "administradorserv") {
-        fetchMaintenances();
-          } else {
-            fetchMyInstitutionMaintenances();
-          }
+      fetchMyInstitutionMaintenances();
     }
 
     if (action === "accept") {
-
       await editMaintenance(item.id, {
         aprobacion: "aceptado",
       });
-
-      if (user?.tipo_serv === "administradorserv") {
-        fetchMaintenances();
-      } else {
-        fetchMyInstitutionMaintenances();
-      }
+      fetchMyInstitutionMaintenances();
     }
   };
 
-  const currentData = maintenances;
+
+
+const currentData =
+  user?.institutions?.length > 0
+    ? (maintenances || []).filter(
+        (item) =>
+          user.institutions.some(
+            (inst) =>
+              inst.id ===
+              (
+                item?.institution_id ||
+                item?.institution?.id ||
+                item?.institucion?.id
+              )
+          )
+      )
+    : [];
+
+
 
   const handleSave = async (data) => {
 
@@ -104,26 +94,31 @@ export default function ListTable({ onAction }) {
     });
 
     if (result.ok) {
+
       setOpenForm(false);
+
+      fetchMyInstitutionMaintenances();
     }
   };
 
   const institucionesFormulario =
-  user?.tipo_serv === "administradorserv"
-    ? allInstitutions
-    : allInstitutions.filter(
-        (inst) =>
-          user?.institutions?.some(
-            (userInst) => userInst.id === inst.id
-          )
-      );
+    allInstitutions?.filter(
+      (inst) =>
+        user?.institutions?.some(
+          (userInst) => userInst.id === inst.id
+        )
+    ) || [];
+
   return (
+
     <div className="overflow-hidden rounded-xl border bg-white shadow-md p-4 dark:bg-gray-800">
 
       <div className="mb-2 text-sm text-gray-600">
         Tienes{" "}
-        <span className="font-bold">{currentData.length}</span>
-        pendientes
+        <span className="font-bold">
+          {currentData.length}
+        </span>{" "}
+        registros
       </div>
 
       <div className="flex items-center justify-between mb-4">
@@ -135,7 +130,18 @@ export default function ListTable({ onAction }) {
           />
         </div>
 
-      
+        <button
+          onClick={() => setOpenForm(true)}
+          className="
+            flex items-center gap-3
+            bg-gradient-to-r from-blue-600 to-blue-500
+            hover:from-blue-700 hover:to-blue-600
+            text-white px-4 py-3 rounded-lg
+            shadow-lg font-medium ml-4
+          "
+        >
+          + Insertar
+        </button>
 
       </div>
 
@@ -151,7 +157,7 @@ export default function ListTable({ onAction }) {
                 "Sección",
                 "Descripción",
                 "Taller",
-                 "Ingresó",
+                "Estado",
                 "Operación",
               ].map((h) => (
                 <th
@@ -171,23 +177,18 @@ export default function ListTable({ onAction }) {
           <tbody>
 
             {currentData.length > 0 ? (
-
               currentData.map((item, i) => (
-
-                <ListRow
+                <UnidRow
                   key={item.id}
                   item={item}
                   index={(page - 1) * limit + i + 1}
                   onAction={handleAction}
                 />
-
               ))
-
             ) : (
-
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="text-center py-4 text-gray-500"
                 >
                   No hay registros
@@ -197,21 +198,17 @@ export default function ListTable({ onAction }) {
             )}
 
           </tbody>
-
         </table>
-
       </div>
-
       <div className="flex justify-center mt-4">
-
+      {currentData.length > 0 && (
         <Pagination
-          page={page}
-          totalPages={totalPages}
+          page={page || 1}
+          totalPages={totalPages || 1}
           setPage={setPage}
         />
-
+      )}
       </div>
-
       <InsertForm
         isOpen={openForm}
         onClose={() => setOpenForm(false)}
@@ -223,3 +220,4 @@ export default function ListTable({ onAction }) {
     </div>
   );
 }
+

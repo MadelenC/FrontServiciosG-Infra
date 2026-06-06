@@ -34,6 +34,7 @@ import RechaHome from "./pages/OrderApproval/RechaHome";
 import ListarHome from "./pages/JobApplication/ListarHome";
 import AcceptHome from "./pages/JobApplication/AcceptHome";
 import RechazarHome from "./pages/JobApplication/RechazarHome";
+import UnidHome from "./pages/JobApplication/UnidHome";
 import Profile from "./pages/profile/Profile";
 
 import Home from "./pages/Home";
@@ -46,21 +47,22 @@ export default function App() {
       <ToastContainer />
       <Routes>
 
-      <Route 
+       <Route 
           path="/" 
-          element={
-           
-              <Home />
-              
-          } 
-      />
+          element={<Home />} 
+          />
+
+          <Route 
+            path="/home" 
+            element={<Home />} 
+          />
        
         <Route
           path="/signin"
           element={   
-                 
+            <PublicRoute>   
               <SignIn />
-                   
+            </PublicRoute>        
           }
         />
 
@@ -79,16 +81,18 @@ export default function App() {
           <Route
             path="/dashboard"
             element={
-              
+              <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>   
                 <Dashboard />
-            
+              </ProtectedRoute>
             }
           />
 
            <Route
             path="/profile"
             element={
+              <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>
                <Profile /> 
+              </ProtectedRoute> 
             }
           />
        
@@ -214,6 +218,14 @@ export default function App() {
               element={
                 <ProtectedRoute  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
                   <RechazarHome/>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="miunidad"
+              element={
+                <ProtectedRoute  rolesAllowed={["administradorserv"]}>
+                  <UnidHome/>
                 </ProtectedRoute>
               }
             />

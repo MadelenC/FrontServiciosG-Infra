@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useUserStore } from "../../../zustand/userStore";
 import SearchBar from "../search/SearchBar";
 import UserTable from "./UserTable";
@@ -18,6 +19,7 @@ export default function TableUser() {
     limit,
     totalPages,
     fetchUsers,
+    toggleUserInstitution,
     setPage,
     search = "",
     setSearch,
@@ -65,6 +67,62 @@ if (isInitialLoading)
       </div>
     );
 
+   const handleToggleActive = async (user) => {
+
+  if (!user.userInstitutions?.length) {
+    toast.error("El usuario no tiene institución asignada");
+    return;
+  }
+
+  const isActive =
+    user.userInstitutions.some((ui) => ui.active);
+
+  const confirmChange = window.confirm(
+    `¿Desea cambiar el estado del usuario a ${
+      isActive ? "Inactivo" : "Activo"
+    }?`
+  );
+
+  if (!confirmChange) return;
+
+  try {
+
+    toast.loading("Actualizando estado...", {
+      toastId: "toggle-user",
+    });
+
+    const result =
+      await toggleUserInstitution(user.id);
+
+    if (result?.ok) {
+
+      await fetchUsers();
+
+      toast.update("toggle-user", {
+        render: `Usuario cambiado a ${
+          isActive ? "Inactivo" : "Activo"
+        }`,
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+
+    } else {
+
+      toast.update("toggle-user", {
+        render: "No se pudo actualizar",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    }
+
+  } catch (error) {
+
+    toast.error("Error del servidor");
+  }
+};
+
   return (
     <div className="rounded-xl border border-gray-200 bg-white shadow-md p-5 dark:bg-gray-900 ">
 
@@ -107,7 +165,10 @@ if (isInitialLoading)
         </div>
       </div>
 
-      <UserTable users={currentUsers} />
+      <UserTable 
+        users={currentUsers}
+        onToggleActive={handleToggleActive}
+      />
 
     
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />

@@ -4,7 +4,7 @@ import Badge from "../../ui/badge/Badge";
 import { FaEdit } from "react-icons/fa";
 import ProtectedView from "../../Protected/ProtectedView";
 
-export default function UserRow({ user, onEdit }) {
+export default function UserRow({ user, onEdit,onToggleActive, }) {
   const badgeColor =
     user.tipo_serv === "Administrador"
       ? "success"
@@ -43,6 +43,34 @@ export default function UserRow({ user, onEdit }) {
 
       <TableCell className="border border-gray-200 dark:border-gray-700 px-3 py-2 capitalize text-gray-700 dark:text-gray-300">
         {user.cargo}
+      </TableCell>
+
+      <TableCell className="border border-gray-200 dark:border-gray-700 px-3 py-2">
+
+        <span
+          onClick={() => onToggleActive(user)}
+          className={`
+            inline-flex items-center justify-center
+            min-w-[95px]
+            px-4 py-1.5
+            rounded-full
+            text-xs font-semibold
+            cursor-pointer
+            transition-all duration-200
+            hover:scale-105
+            active:scale-95
+            hover:shadow-md
+            ${
+              user.userInstitutions?.some((ui) => ui.active)
+                ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+                : "bg-rose-100 text-rose-700 hover:bg-rose-200"
+            }
+          `}
+        >
+          {user.userInstitutions?.some((ui) => ui.active)
+            ? "Activo"
+            : "Inactivo"}
+        </span>
       </TableCell>
 
       <ProtectedView

@@ -167,7 +167,7 @@ export default function UserDropdown() {
             onClick={() => {
               logout();
               setIsOpen(false);
-              navigate("/");
+              navigate("/home");
             }}
           >
 

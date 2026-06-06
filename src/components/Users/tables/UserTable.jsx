@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import UserRow from "./UserRow";
 import EditUserPanel from "../form/EditUserPanel";
 
-export default function UserTable({ users }) {
+export default function UserTable({ users,onToggleActive, }) {
   const [selectedUser, setSelectedUser] = useState(null);
 
   return (
@@ -22,6 +22,7 @@ export default function UserTable({ users }) {
                 "Celular",
                 "Tipo",
                 "Cargo",
+                "Activo",
                 "Acciones",
               ].map((head) => (
                 <th
@@ -42,6 +43,7 @@ export default function UserTable({ users }) {
                   key={user.id}
                   user={user}
                   onEdit={(u) => setSelectedUser(u)}
+                  onToggleActive={onToggleActive}
                 />
               ))
             ) : (

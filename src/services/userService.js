@@ -55,6 +55,16 @@ export const updateUser = async (id, userData) => {
   }
 };
 
+export const toggleUserInstitution =
+  async (id) => {
+
+  const response = await api.patch(
+    `/users/toggle-active/${id}`
+  );
+
+  return response.data;
+};
+
 
 export const deleteUser = async (id) => {
   try {

@@ -107,7 +107,10 @@ useEffect(() => {
       cedula: user.cedula || "",
       celular: user.celular || "",
       tipo_serv: user.tipo_serv || "",
-      instituciones: user.instituciones?.map(i => i.id) || [],
+      instituciones:
+      user.userInstitutions?.map(
+        (ui) => ui.institution.id
+      ) || [],
     });
 
     setUserEntities({
@@ -198,7 +201,7 @@ useEffect(() => {
       >
       
         <button
-      
+          type="button"
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-700 font-bold px-3 py-1 rounded hover:bg-gray-200 dark:text-gray-400"
           aria-label="Cerrar formulario"
@@ -462,7 +465,7 @@ useEffect(() => {
   
   <button
     type="button"
-    onClick={onDelete}
+    onClick={onClose}
     className="
       group flex items-center gap-2
       bg-white dark:bg-gray-900
@@ -478,8 +481,8 @@ useEffect(() => {
       active:scale-95
     "
   >
-    <LuTrash2 className="w-4 h-4 transition-transform group-hover:rotate-6" />
-    <span>Eliminar</span>
+   
+    <span>cerrar</span>
   </button>
 
 </div>

@@ -5,6 +5,8 @@ import {
   createUser,
   updateUser as updateUserService,
   deleteUser,
+  toggleUserInstitution as toggleUserInstitutionService,
+
 } from "../services/userService";
 
 export const useUserStore =
@@ -127,6 +129,27 @@ updateUser: async (id, updatedData) => {
       error: err?.response?.data?.message || err.message || "Error al actualizar"
     };
   }
+},
+
+toggleUserInstitution: async (id) => {
+
+  try {
+
+    await toggleUserInstitutionService(id);
+
+    await get().fetchUsers();
+
+    return { ok: true };
+
+  } catch (err) {
+
+    return {
+      ok: false,
+      error: err.message,
+    };
+
+  }
+
 },
 
   deleteUser: async (id) => {
