@@ -12,27 +12,16 @@ import { loginService } from "../../services/authService";
 export default function LoginForm() {
 
   const navigate = useNavigate();
-
   const location = useLocation();
-
   const params = new URLSearchParams(location.search);
-
   const module = params.get("module");
-
-  const setUser =
-    useAuthStore((state) => state.setUser);
-
-  const setToken =
-    useAuthStore((state) => state.setToken);
-
-  const [showPassword, setShowPassword] =
-    useState(false);
-
+  const setUser =  useAuthStore((state) => state.setUser);
+  const setToken =  useAuthStore((state) => state.setToken);
+  const [showPassword, setShowPassword] =  useState(false);
   const [formData, setFormData] = useState({
     cedula: "",
     password: "",
   });
-
   const handleChange = (e) => {
 
     setFormData({
@@ -308,17 +297,17 @@ export default function LoginForm() {
               text-white/60
             ">
 
-              ¿No tienes cuenta?{" "}
+              ¿Volver a los modulos?{" "}
 
               <Link
-                to="/signup"
+                to="/"
                 className="
                   text-indigo-300
                   hover:text-white
                   transition
                 "
               >
-                Regístrate
+                click aqui
               </Link>
 
             </p>
