@@ -60,9 +60,7 @@ export default function App() {
         <Route
           path="/signin"
           element={   
-            <PublicRoute>   
-              <SignIn />
-            </PublicRoute>        
+              <SignIn />               
           }
         />
 

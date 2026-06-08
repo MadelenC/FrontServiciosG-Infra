@@ -30,6 +30,7 @@ export default function UnidTable({ onAction }) {
     setTaller,
     setInstitution,
     setPage,
+    setAprobacion,
 
   } = useMaintenanceStore();
 
@@ -41,9 +42,13 @@ export default function UnidTable({ onAction }) {
   const { user } = useAuthStore();
   const [openForm, setOpenForm] = useState(false);
 
-  useEffect(() => {
-    fetchMyInstitutionMaintenances();
-  }, [page, search, taller, institution, user]);
+ useEffect(() => {
+  setAprobacion("");
+}, []);
+
+useEffect(() => {
+  fetchMyInstitutionMaintenances();
+}, [page, search, taller, institution, user]);
 
   useEffect(() => {
     fetchAllTalleres();
