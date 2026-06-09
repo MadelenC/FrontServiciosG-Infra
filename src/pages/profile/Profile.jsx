@@ -315,22 +315,19 @@ export default function Profile() {
           </div>
 
           <div className="bg-gray-100 dark:bg-[#1a2238] p-4 rounded-2xl border border-gray-200 dark:border-white/5">
-
-            <p className="text-gray-500 dark:text-gray-400 text-sm">Estado</p>
-
-            <div className="mt-2">
-
-              <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                user?.active
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Estado</p>
+          <div className="mt-2">
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                user?.userInstitutions?.[0]?.active
                   ? "bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400"
                   : "bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400"
-              }`}>
-                {user?.active ? "Activo" : "Inactivo"}
-              </span>
-
-            </div>
-
+              }`}
+            >
+              {user?.userInstitutions?.[0]?.active ? "Activo" : "Inactivo"}
+            </span>
           </div>
+        </div>
 
           <div className="bg-gray-100 dark:bg-[#1a2238] p-4 rounded-2xl border border-gray-200 dark:border-white/5">
 

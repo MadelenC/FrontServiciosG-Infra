@@ -17,7 +17,7 @@ export const TripsProvider = ({ children }) => {
       const data = await response.json();
       setTrips(data);
     } catch (error) {
-      console.error("Error fetching trips:", error);
+      
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ export const TripsProvider = ({ children }) => {
       const savedTrip = await response.json();
       setTrips((prev) => [...prev, savedTrip]);
     } catch (error) {
-      console.error("Error agregando viaje:", error);
+      
     }
   };
 

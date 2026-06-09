@@ -32,8 +32,7 @@ export const createUser = async (userData) => {
     const response = await api.post("/users", userData);
     return response.data;
   } catch (err) {
-    console.log("CREATE USER ERROR:", err.response?.data || err);
-
+    
     throw new Error(
       err.response?.data?.message ||
       "Error al crear usuario"
@@ -46,7 +45,7 @@ export const updateUser = async (id, userData) => {
     const response = await api.put(`/users/${id}`, userData);
     return response.data;
   } catch (err) {
-    console.log("UPDATE USER ERROR:", err.response?.data || err);
+    //console.log("UPDATE USER ERROR:", err.response?.data || err);
 
     throw new Error(
       err.response?.data?.message ||
@@ -71,7 +70,7 @@ export const deleteUser = async (id) => {
     const response = await api.delete(`/users/${id}`);
     return response.data;
   } catch (err) {
-    console.log("DELETE USER ERROR:", err.response?.data || err);
+    //console.log("DELETE USER ERROR:", err.response?.data || err);
 
     throw new Error(
       err.response?.data?.message ||

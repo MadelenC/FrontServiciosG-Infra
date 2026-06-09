@@ -146,7 +146,6 @@ useEffect(() => {
       password: formData.password || undefined,
       entidades: entidadesPayload,
     });
-    console.log("RESULT UPDATE:", result);
 
       if (result?.ok === true) {
       toast.success("Usuario actualizado correctamente ✅");

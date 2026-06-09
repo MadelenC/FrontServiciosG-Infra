@@ -85,9 +85,6 @@ export default function GeneralForm({ onSubmit }) {
     "Seleccione al menos una institución";
    }
 
-    console.log("USER LOGUEADO:", user);
-    console.log("INSERTADOR QUE SE ENVÍA:", user?.nombres);
-
     onSubmit({
       ...formData,
       nombres: nombre,

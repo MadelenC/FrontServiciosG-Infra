@@ -6,16 +6,12 @@ import ProtectedView from "../../Protected/ProtectedView";
 
 
 export default function ModifyRow({ item, index, onAction }) {
-  //console.log(item);
   return (
     <TableRow className="border border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition dark:text-gray-400">
-
-     
       <TableCell className="border px-3 py-2 dark:border-gray-500">
         {index}
       </TableCell>
 
-    
       <TableCell className="border px-3 py-2 dark:border-gray-500">
         {item.id_nro || "-"}
       </TableCell>
@@ -24,12 +20,10 @@ export default function ModifyRow({ item, index, onAction }) {
         {item.institucion?.nombre }
       </TableCell>
 
-      
       <TableCell className="border px-3 py-2 dark:border-gray-500">
         {item.descripcion || "-"}
       </TableCell>
 
-     
       <TableCell className="border px-3 py-2 dark:border-gray-500">
         {item.taller || "-"}
       </TableCell>

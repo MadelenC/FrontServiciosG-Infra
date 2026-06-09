@@ -9,7 +9,7 @@ export default function AcepRow({
   onAction,
   getDescripcion, 
 }) {
-   console.log(item)
+
   return (
   
     <TableRow className="border hover:bg-gray-50 dark:text-gray-400">

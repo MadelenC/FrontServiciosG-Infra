@@ -91,13 +91,7 @@ const navItems = [
         icon: <BiFile className="text-white"/>,
         rolesAllowed: ["administradorserv"],
       },
-      {
-        name:"Reporte", 
-        path:"/reporte", 
-        pro: false, 
-        icon: <BiFile className="text-white"/>,
-        rolesAllowed: ["administradorserv"],
-      },
+     
     ] 
   },
 

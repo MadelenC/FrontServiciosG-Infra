@@ -3,8 +3,7 @@ import { useAuthStore } from "../../zustand/AuthUsers";
 
 const PublicRoute = ({ children }) => {
   const { user } = useAuthStore();
-  console.log(user);
-  
+  //console.log(user);
   return !user ? children : <Navigate to="/dashboard" replace />;
 };
 

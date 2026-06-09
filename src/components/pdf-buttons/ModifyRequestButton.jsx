@@ -11,9 +11,7 @@ export default function MaintenanceReportButton({
 }) {
 
   const handlePrint = async () => {
-
     try {
-
 
       const {
         default: MaintenanceReportPDF
