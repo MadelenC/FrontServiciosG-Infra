@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
+import SessionExpiredModal from "./components/auth/SessionExpiredModal";
 import AppLayout from "./layouts/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 
@@ -45,6 +46,7 @@ export default function App() {
     <Router>
       <ScrollToTop />
       <ToastContainer />
+      <SessionExpiredModal />
       <Routes>
 
        <Route 
@@ -79,7 +81,7 @@ export default function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>   
+              <ProtectedRoute  rolesAllowed={["administradorserv","encargadoserv","mantenimiento"]}>   
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -88,7 +90,7 @@ export default function App() {
            <Route
             path="/profile"
             element={
-              <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>
+              <ProtectedRoute  rolesAllowed={["administradorserv","encargadoserv","mantenimiento"]}>
                <Profile /> 
               </ProtectedRoute> 
             }
@@ -98,7 +100,7 @@ export default function App() {
             path="/usuarios" 
             element={
               <ProtectedRoute 
-                rolesAllowed={["encargadoserv","administradorserv"]}
+                rolesAllowed={["administradorserv"]}
               >
                 <UserHome />
               </ProtectedRoute>
@@ -109,7 +111,7 @@ export default function App() {
           <Route 
             path="/secciones"  
             element={ 
-            <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv"]} >
+            <ProtectedRoute  rolesAllowed={["administradorserv"]} >
                 <SeccionesHome /> 
             </ProtectedRoute>}>
           </Route>
@@ -117,7 +119,7 @@ export default function App() {
           <Route
             path="/modificar"
             element={
-              <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","mensajeroserv"]}>
+              <ProtectedRoute  rolesAllowed={["administradorserv"]}>
                 < ModifyHome />
               </ProtectedRoute>
             }
@@ -127,7 +129,7 @@ export default function App() {
             <Route
               path="solicitudes"
               element={                
-              <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>   
+              <ProtectedRoute  rolesAllowed={["administradorserv"]}>   
                   <ListHome />
               </ProtectedRoute>
               }
@@ -135,7 +137,7 @@ export default function App() {
             <Route
               path="aceptados"
               element={               
-               <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>
+               <ProtectedRoute  rolesAllowed={["administradorserv"]}>
                   < AcepHome/>
                 </ProtectedRoute>
               }
@@ -143,7 +145,7 @@ export default function App() {
             <Route
               path="rechazados"
               element={               
-                <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>
+                <ProtectedRoute  rolesAllowed={["administradorserv"]}>
                   < RechHome/>
                 </ProtectedRoute>
               }
@@ -154,7 +156,7 @@ export default function App() {
             <Route
               index
               element={
-                <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","mesajeroserv"]}>
+                <ProtectedRoute  rolesAllowed={["administradorserv"]}>
                   <PedHome />
                 </ProtectedRoute>
               }
@@ -162,7 +164,7 @@ export default function App() {
             <Route
               path="pedido"
               element={
-                <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","mesajeroserv"]}>
+                <ProtectedRoute  rolesAllowed={["administradorserv"]}>
                   <PedHome  />
                 </ProtectedRoute>
               }
@@ -170,7 +172,7 @@ export default function App() {
             <Route
               path="aceptados"
               element={
-                <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","mesajeroserv"]}>
+                <ProtectedRoute  rolesAllowed={["administradorserv"]}>
                   <AceptHome  />
                 </ProtectedRoute>
               }
@@ -178,7 +180,7 @@ export default function App() {
             <Route
               path="rechazados"
               element={
-                <ProtectedRoute  rolesAllowed={["encargadoserv","administradorserv","mesajeroserv"]}>
+                <ProtectedRoute  rolesAllowed={["administradorserv"]}>
                   <RechaHome />
                 </ProtectedRoute>
               }
@@ -190,7 +192,7 @@ export default function App() {
             <Route
               index
               element={
-                <ProtectedRoute  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
+                <ProtectedRoute  rolesAllowed={["administradorserv","encargadoserv","mantenimiento"]}>
                   < ListarHome />
                 </ProtectedRoute>
               }
@@ -198,7 +200,7 @@ export default function App() {
             <Route
               path="solicitud"
               element={
-                <ProtectedRoute  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
+                <ProtectedRoute  rolesAllowed={["administradorserv","encargadoserv","mantenimiento"]}>
                   <ListarHome  />
                 </ProtectedRoute>
               }
@@ -206,7 +208,7 @@ export default function App() {
             <Route
               path="aceptados"
               element={
-                <ProtectedRoute  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
+                <ProtectedRoute  rolesAllowed={["administradorserv","encargadoserv","mantenimiento"]}>
                   <AcceptHome />
                 </ProtectedRoute>
               }
@@ -214,7 +216,7 @@ export default function App() {
             <Route
               path="rechazados"
               element={
-                <ProtectedRoute  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
+                <ProtectedRoute  rolesAllowed={["administradorserv","encargadoserv","mantenimiento"]}>
                   <RechazarHome/>
                 </ProtectedRoute>
               }

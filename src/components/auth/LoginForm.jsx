@@ -15,9 +15,13 @@ export default function LoginForm() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const module = params.get("module");
-  const setUser =  useAuthStore((state) => state.setUser);
-  const setToken =  useAuthStore((state) => state.setToken);
-  const [showPassword, setShowPassword] =  useState(false);
+
+  const setSession =
+    useAuthStore((state) => state.setSession);
+
+  const [showPassword, setShowPassword] =
+    useState(false);
+
   const [formData, setFormData] = useState({
     cedula: "",
     password: "",
@@ -51,9 +55,11 @@ export default function LoginForm() {
     const res =
       await loginService(formData);
 
-    setUser(res.user);
-
-    setToken(res.token);
+    setSession({
+      user: res.user,
+      token: res.token,
+      refreshToken: res.refreshToken,
+    });
 
   
     navigate("/dashboard");

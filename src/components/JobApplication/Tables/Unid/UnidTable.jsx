@@ -43,6 +43,7 @@ export default function UnidTable({ onAction }) {
   const [openForm, setOpenForm] = useState(false);
 
  useEffect(() => {
+  setPage(1);
   setAprobacion("");
 }, []);
 
@@ -100,6 +101,7 @@ const currentData =
 
     if (result.ok) {
 
+      await fetchAllTalleres();
       setOpenForm(false);
 
       fetchMyInstitutionMaintenances();

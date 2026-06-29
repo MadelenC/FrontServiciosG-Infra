@@ -46,6 +46,7 @@ export default function AcepTable() {
 
   useEffect(() => {
 
+    setPage(1);
     setAprobacion("aceptado");
 
     fetchInstitutions();

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ListRow from "./ListRow";
 import Pagination from "../Pagination";
 import SearchBar from "../../Search/SearchBar";
-
+import ProtectedView from "../../../Protected/ProtectedView";
 import { useMaintenanceStore } from "../../../../zustand/useMaintenanceStore";
 import { useInstitutionStore } from "../../../../zustand/useInstitutionStore";
 import { useAuthStore } from "../../../../zustand/AuthUsers";
@@ -46,6 +46,7 @@ export default function ListTable({ onAction }) {
   const [openForm, setOpenForm] = useState(false);
 
   useEffect(() => {
+    setPage(1);
     setAprobacion("pendiente");
   }, []);
 
@@ -104,6 +105,7 @@ export default function ListTable({ onAction }) {
     });
 
     if (result.ok) {
+      await fetchAllTalleres();
       setOpenForm(false);
     }
   };
@@ -135,7 +137,16 @@ export default function ListTable({ onAction }) {
           />
         </div>
 
-      
+        <ProtectedView  rolesAllowed={["encargadoserv","mantenimiento"]}>
+
+        <button
+          type="button"
+          onClick={() => setOpenForm(true)}
+          className="ml-3 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+        >
+          + Insertar
+        </button>
+        </ProtectedView>
 
       </div>
 

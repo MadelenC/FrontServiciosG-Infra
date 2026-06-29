@@ -29,7 +29,7 @@ export default function ModifyRow({ item, index, onAction }) {
       </TableCell>
 
     
-      <ProtectedView  rolesAllowed={["encargadoserv","administradorserv","mensajeroserv"]}>
+      <ProtectedView  rolesAllowed={["administradorserv"]}>
       <TableCell className="border px-3 py-2 flex gap-2 justify-center dark:border-gray-500">
 
         <button

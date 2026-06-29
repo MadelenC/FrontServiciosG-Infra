@@ -43,6 +43,7 @@ export default function AcepTable() {
 
   useEffect(() => {
 
+    setPage(1);
     fetchAllInstitutions();
     fetchAllTalleres();
 

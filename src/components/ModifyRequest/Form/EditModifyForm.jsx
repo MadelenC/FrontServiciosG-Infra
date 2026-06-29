@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
+const NEW_TALLER_VALUE = "__nuevo_taller__";
+
 export default function EditMaintenanceForm({
   isOpen,
   onClose,
@@ -18,6 +20,7 @@ export default function EditMaintenanceForm({
   });
 
   const [errors, setErrors] = useState({});
+  const [nuevoTaller, setNuevoTaller] = useState("");
 
   useEffect(() => {
     if (initialData) {
@@ -27,6 +30,7 @@ export default function EditMaintenanceForm({
         descripcion: initialData.descripcion || "",
         responsable: initialData.responsable || "",
       });
+      setNuevoTaller("");
       setErrors({});
     }
   }, [initialData]);
@@ -38,7 +42,19 @@ export default function EditMaintenanceForm({
     const err = {};
 
     if (!data.institucion_id) err.institucion_id = "Seleccione institución";
-    if (!data.taller) err.taller = "Seleccione taller";
+    if (!data.taller) {
+      err.taller = "Seleccione taller";
+    } else if (data.taller === NEW_TALLER_VALUE) {
+      const tallerNuevo = nuevoTaller.trim();
+
+      if (!tallerNuevo) {
+        err.taller = "Ingrese el nuevo taller";
+      } else if (tallerNuevo.length < 3) {
+        err.taller = "Minimo 3 caracteres";
+      } else if (tallerNuevo.length > 80) {
+        err.taller = "Maximo 80 caracteres";
+      }
+    }
 
     if (!data.descripcion?.trim()) {
       err.descripcion = "Descripción obligatoria";
@@ -66,6 +82,11 @@ export default function EditMaintenanceForm({
     setErrors(validate(newForm));
   };
 
+  const handleNuevoTallerChange = (e) => {
+    setNuevoTaller(e.target.value);
+    setErrors(validate(form));
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,7 +100,15 @@ export default function EditMaintenanceForm({
     }
 
     try {
-      await onSave(form);
+      const tallerFinal =
+        form.taller === NEW_TALLER_VALUE
+          ? nuevoTaller.trim()
+          : form.taller;
+
+      await onSave({
+        ...form,
+        taller: tallerFinal,
+      });
       toast.success("Actualizado correctamente");
       onClose();
     } catch (error) {
@@ -155,7 +184,21 @@ export default function EditMaintenanceForm({
                   {t.nombre}
                 </option>
               ))}
+
+              <option value={NEW_TALLER_VALUE}>
+                Agregar nuevo taller
+              </option>
             </select>
+
+            {form.taller === NEW_TALLER_VALUE && (
+              <input
+                type="text"
+                value={nuevoTaller}
+                onChange={handleNuevoTallerChange}
+                className="w-full mt-2 px-4 py-2 border rounded-lg dark:text-gray-500"
+                placeholder="Nombre del nuevo taller"
+              />
+            )}
 
             {errors.taller && (
               <p className="text-red-500 text-sm">

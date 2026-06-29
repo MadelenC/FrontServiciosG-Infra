@@ -45,7 +45,7 @@ export default function ListRow({ item, index, onAction }) {
       </TableCell>
 
 
-      <ProtectedView  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>
+      <ProtectedView  rolesAllowed={["administradorserv"]}>
       <TableCell className="border px-3 py-2 flex gap-2 justify-center">
       <button
         onClick={() => onAction?.("accept", item)}

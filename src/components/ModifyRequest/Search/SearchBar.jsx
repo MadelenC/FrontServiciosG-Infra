@@ -18,7 +18,7 @@ export default function SearchBar({
         type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Buscar..."
+        placeholder="Buscar por descripcion..."
         className="w-full md:w-1/3 px-4 py-2 border rounded-lg "
       />
 

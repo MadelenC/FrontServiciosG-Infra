@@ -52,7 +52,7 @@ export default function RechaRow({ item, index, onAction }) {
         >
           Informe
         </button>
-        <ProtectedView  rolesAllowed={["encargadoserv","administradorserv"]}>
+        <ProtectedView  rolesAllowed={["administradorserv"]}>
         <button
           onClick={() => onAction?.("accept", item)}
           className="px-3 py-1 rounded-md bg-green-100 text-green-700 hover:bg-green-200 text-xs font-semibold transition"

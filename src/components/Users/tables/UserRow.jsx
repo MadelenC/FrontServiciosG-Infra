@@ -74,7 +74,7 @@ export default function UserRow({ user, onEdit,onToggleActive, }) {
       </TableCell>
 
       <ProtectedView
-            rolesAllowed={["encargadoserv","administradorserv"]}
+            rolesAllowed={["administradorserv"]}
           >
 
       <TableCell className="border border-gray-200 dark:border-gray-700 px-3 py-2">

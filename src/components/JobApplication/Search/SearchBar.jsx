@@ -5,7 +5,7 @@ export default function SearchBarEntitie({ search, setSearch }) {
     <div className="flex justify-start mb-4">
       <input
         type="text"
-        placeholder="Buscar por origen o destino"
+        placeholder="Buscar por Seccion"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="

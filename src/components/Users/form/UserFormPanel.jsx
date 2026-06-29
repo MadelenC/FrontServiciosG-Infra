@@ -19,7 +19,7 @@ export default function UserFormPanel({ open, onClose, formType, setFormType }) 
 
   if (!open) return null;
 
-  const panelWidth = formType ? "w-full max-w-lg" : "w-80";
+  const panelWidth = formType ? "w-full max-w-2xl" : "w-80";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center  bg-black/40 backdrop-blur-sm">
@@ -68,7 +68,9 @@ export default function UserFormPanel({ open, onClose, formType, setFormType }) 
 
         {/* Formularios */}
         {formType === "general" && <GeneralForm onSubmit={handleSubmit} />}
-        {formType === "encargado" && <EncargadoForm onSubmit={handleSubmit} />}
+        {formType === "encargado" && (
+          <EncargadoForm onSubmit={handleSubmit} onClose={onClose} />
+        )}
       </div>
     </div>
   );

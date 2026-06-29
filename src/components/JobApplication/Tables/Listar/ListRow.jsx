@@ -34,25 +34,25 @@ export default function ListRow({ item, index, onAction }) {
           : "-"}
       </TableCell>
 
-      <ProtectedView  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento"]}>
+      <ProtectedView  rolesAllowed={["administradorserv","encargadoserv","mantenimiento"]}>
       <TableCell className="border px-3 py-2 flex gap-2 justify-center">
             <JobReportButton item={item} />
       </TableCell>
       </ProtectedView>
     
-        <ProtectedView  rolesAllowed={["encargadoserv","administradorserv"]}>
+        <ProtectedView  rolesAllowed={["administradorserv"]}>
       <TableCell className="flex items-center justify-center gap-2">
       
               <button
                 onClick={() => onAction?.("accept", item)}
-                className="px-3 py-1 rounded-md bg-green-200 text-green-700 hover:bg-green-400 text-xs font-semibold"
+                className="px-3 py-1 rounded-md bg-green-100 text-green-700 hover:bg-green-300 text-xs font-semibold transition"
               >
                 Aceptado
               </button>
       
               <button
                 onClick={() => onAction?.("reject", item)}
-                className="px-3 py-1 rounded-md bg-red-200 text-red-700 hover:bg-red-400 text-xs font-semibold"
+                 className="px-3 py-1 rounded-md bg-red-100 text-red-700 hover:bg-red-200 text-xs font-semibold transition"
               >
                Rechazado
               </button>

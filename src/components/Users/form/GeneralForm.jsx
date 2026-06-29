@@ -4,6 +4,11 @@ import { useAuthStore } from "../../../zustand/AuthUsers";
 import { useInstitutionStore } from "../../../zustand/useInstitutionStore";
 import Select from "react-select";
 
+const normalizeCi = (value = "") =>
+  value.trim().replace(/\s+/g, "").toUpperCase();
+
+const ciRegex = /^[0-9A-Z-]{5,15}$/;
+
 export default function GeneralForm({ onSubmit }) {
   const { users } = useUserStore();
   const { user } = useAuthStore(); 
@@ -147,16 +152,7 @@ export default function GeneralForm({ onSubmit }) {
           <option value="">Seleccione</option>
           <option value="administradorserv">Administrador</option>
           <option value="encargadoserv">Encargado</option>
-          <option value="mensajero">mensajero</option>
-          <option value="electricista">Operario</option>
-          <option value="mgeneral">m. general</option>
-          <option value="supervisor">supervisor</option>
           <option value="mantenimiento">mantenimiento</option>
-          <option value="carpintero">carpintero</option>
-          <option value="seguridad">seguridad</option>
-          <option value="albañil">albañil</option>
-          <option value="plomero">plomero</option>
-          <option value="sergeneral">ser. generales</option>
         </select>
       </div>
 

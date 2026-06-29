@@ -62,6 +62,7 @@ const debouncedInstitution =useDebounce(institution, 500);
       await removeMaintenance(id);
     if (res?.ok) {
       fetchMaintenances();
+      fetchTalleres();
     }
   };
 
@@ -73,6 +74,7 @@ const debouncedInstitution =useDebounce(institution, 500);
       );
     if (res?.ok) {
       fetchMaintenances();
+      fetchTalleres();
       setModalEditOpen(false);
     }
    return res;
@@ -200,10 +202,7 @@ if (isInitialLoading) {
         listaInstituciones={
           allInstitutions
         }
-        listaTalleres={[
-          { id: 1, nombre: "Interno" },
-          { id: 2, nombre: "Externo" },
-        ]}
+        listaTalleres={talleres}
         onSave={handleUpdate}
         onDelete={handleDelete}
       />

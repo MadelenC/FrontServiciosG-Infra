@@ -36,6 +36,10 @@ export default function SeccionesTable() {
   const [selectedSeccion, setSelectedSeccion] = useState(null);
 
   useEffect(() => {
+    setPage(1);
+  }, []);
+
+  useEffect(() => {
   fetchAllInstitutions();
 }, []);
 

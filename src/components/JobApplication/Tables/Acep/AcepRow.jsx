@@ -43,7 +43,7 @@ export default function AcepRow({ item, index, onAction }) {
         {item.informe || "-"}
       </TableCell>
 
-      <ProtectedView  rolesAllowed={["encargadoserv","administradorserv"]}>
+      <ProtectedView  rolesAllowed={["administradorserv"]}>
       <TableCell className="flex items-center justify-center gap-2">
 
         <button

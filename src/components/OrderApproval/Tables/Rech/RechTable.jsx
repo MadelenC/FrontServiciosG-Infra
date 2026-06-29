@@ -42,6 +42,7 @@ export default function RechTable() {
 
   useEffect(() => {
 
+    setPage(1);
     fetchAllInstitutions();
     fetchAllTalleres();
 

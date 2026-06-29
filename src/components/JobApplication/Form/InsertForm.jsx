@@ -1,6 +1,19 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
+const NEW_TALLER_VALUE = "__nuevo_taller__";
+const EQUIPMENT_FIELDS = [
+  { name: "equipo", label: "Equipo" },
+  { name: "marca", label: "Marca" },
+  { name: "modelo", label: "Modelo" },
+  { name: "numero", label: "N/s" },
+  { name: "codigo", label: "Codigo" },
+  { name: "otros", label: "Otros" },
+];
+
+const isMaintenanceWorkshop = (taller) =>
+  taller?.trim().toLowerCase() === "mantenimiento";
+
 export default function InsertForm({
   isOpen,
   onClose,
@@ -11,11 +24,18 @@ export default function InsertForm({
   const [form, setForm] = useState({
     institucion_id: "",
     taller: "",
+    equipo: "",
+    marca: "",
+    modelo: "",
+    numero: "",
+    codigo: "",
+    otros: "",
     descripcion: "",
     responsable: "",
   });
 
   const [errors, setErrors] = useState({});
+  const [nuevoTaller, setNuevoTaller] = useState("");
 
   
   useEffect(() => {
@@ -27,10 +47,17 @@ export default function InsertForm({
           ? String(listaInstituciones[0].id)
           : "",
       taller: "",
+      equipo: "",
+      marca: "",
+      modelo: "",
+      numero: "",
+      codigo: "",
+      otros: "",
       descripcion: "",
       responsable: "",
     });
 
+    setNuevoTaller("");
     setErrors({});
   }, [isOpen, listaInstituciones]);
 
@@ -58,6 +85,16 @@ export default function InsertForm({
   
     if (!data.taller) {
       err.taller = "Seleccione taller";
+    } else if (data.taller === NEW_TALLER_VALUE) {
+      const tallerNuevo = nuevoTaller.trim();
+
+      if (!tallerNuevo) {
+        err.taller = "Ingrese el nuevo taller";
+      } else if (tallerNuevo.length < 3) {
+        err.taller = "Minimo 3 caracteres";
+      } else if (tallerNuevo.length > 80) {
+        err.taller = "Maximo 80 caracteres";
+      }
     } else {
       const existeTaller = listaTalleres.some(
         (t) => t.nombre === data.taller
@@ -67,6 +104,22 @@ export default function InsertForm({
       }
     }
 
+
+    if (isMaintenanceWorkshop(data.taller)) {
+      EQUIPMENT_FIELDS.forEach(({ name, label }) => {
+        const value = data[name]?.trim() || "";
+
+        if (name === "otros" && !value) {
+          return;
+        }
+
+        if (!value) {
+          err[name] = `${label} obligatorio`;
+        } else if (value.length > 80) {
+          err[name] = "Maximo 80 caracteres";
+        }
+      });
+    }
 
     const descripcion = data.descripcion?.trim() || "";
 
@@ -87,7 +140,7 @@ export default function InsertForm({
       err.responsable = "Mínimo 3 caracteres";
     } else if (responsable.length > 80) {
       err.responsable = "Máximo 80 caracteres";
-    } else if (!responsableRegex.test(responsable)) {
+    } else if (!responsableRegex.test(responsable.replace(/[.,]/g, ""))) {
       err.responsable = "Solo se permiten letras";
     }
 
@@ -105,6 +158,11 @@ export default function InsertForm({
     setErrors(validate(newForm));
   };
 
+  const handleNuevoTallerChange = (e) => {
+    setNuevoTaller(e.target.value);
+    setErrors(validate(form));
+  };
+
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -118,8 +176,20 @@ export default function InsertForm({
     }
 
     try {
+      const tallerFinal =
+        form.taller === NEW_TALLER_VALUE
+          ? nuevoTaller.trim()
+          : form.taller;
+
       await onSave({
         ...form,
+        taller: tallerFinal,
+        equipo: form.equipo.trim(),
+        marca: form.marca.trim(),
+        modelo: form.modelo.trim(),
+        numero: form.numero.trim(),
+        codigo: form.codigo.trim(),
+        otros: form.otros.trim(),
         descripcion: form.descripcion.trim(),
         responsable: form.responsable.trim(),
       });
@@ -135,7 +205,7 @@ export default function InsertForm({
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
 
-      <div className="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 relative">
+      <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl shadow-lg p-6 relative">
 
         
         <button
@@ -205,7 +275,21 @@ export default function InsertForm({
                   {t.nombre}
                 </option>
               ))}
+
+              <option value={NEW_TALLER_VALUE}>
+                Agregar nuevo taller
+              </option>
             </select>
+
+            {form.taller === NEW_TALLER_VALUE && (
+              <input
+                type="text"
+                value={nuevoTaller}
+                onChange={handleNuevoTallerChange}
+                className="w-full mt-2 px-4 py-2 border rounded-lg"
+                placeholder="Nombre del nuevo taller"
+              />
+            )}
 
             {errors.taller && (
               <p className="text-red-500 text-sm">
@@ -213,6 +297,31 @@ export default function InsertForm({
               </p>
             )}
           </div>
+
+          {isMaintenanceWorkshop(form.taller) && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {EQUIPMENT_FIELDS.map(({ name, label }) => (
+                <div key={name}>
+                  <label className="block text-sm font-medium mb-1">
+                    {label}
+                  </label>
+
+                  <input
+                    name={name}
+                    value={form[name]}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border rounded-lg"
+                  />
+
+                  {errors[name] && (
+                    <p className="text-red-500 text-sm">
+                      {errors[name]}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
 
   
           <div>

@@ -13,12 +13,12 @@ export default function SearchBar({
   return (
     <div className="flex flex-col md:flex-row gap-2 mb-4 items-center">
 
-      {/* SEARCH GLOBAL */}
+    
       <input
         type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Nombre N°..."
+        placeholder="Buscar por Seccion..."
         className="
           w-full md:w-1/3
           px-4 py-1.5

@@ -31,6 +31,9 @@ export default function TableUser() {
   const [openReport, setOpenReport] = useState(false);
   const [formType, setFormType] = useState(null);
 
+useEffect(() => {
+  setPage(1);
+}, []);
 
 useEffect(() => {
 

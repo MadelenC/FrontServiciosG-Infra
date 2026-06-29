@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useUserStore } from "../../../zustand/userStore";
-import { useAuthStore } from "../../../zustand/AuthUsers"; 
+import { useAuthStore } from "../../../zustand/AuthUsers";
 import { useInstitutionStore } from "../../../zustand/useInstitutionStore";
 import Select from "react-select";
 
-export default function EncargadoForm({ onSubmit, onClose }) {
-  const { users } = useUserStore(); 
-  const { user } = useAuthStore();
-  const { allInstitutions,  fetchAllInstitutions,} = useInstitutionStore(); 
+const normalizeCi = (value = "") =>
+  value.trim().replace(/\s+/g, "").toUpperCase();
 
-  useEffect(() => { fetchAllInstitutions();}, [])
+const ciRegex = /^[0-9A-Z-]{5,15}$/;
+
+export default function EncargadoForm({ onSubmit, onClose }) {
+  const { users } = useUserStore();
+  const { user } = useAuthStore();
+  const { allInstitutions, fetchAllInstitutions } = useInstitutionStore();
+
+  useEffect(() => {
+    fetchAllInstitutions();
+  }, [fetchAllInstitutions]);
 
   const [formData, setFormData] = useState({
     nombres: "",
@@ -24,6 +31,57 @@ export default function EncargadoForm({ onSubmit, onClose }) {
 
   const [errors, setErrors] = useState({});
 
+  const validate = (data = formData) => {
+    const err = {};
+    const nombres = data.nombres.trim();
+    const apellidos = data.apellidos.trim();
+    const cedula = normalizeCi(data.cedula);
+    const celular = data.celular.trim();
+    const email = data.email.trim();
+    const password = data.password.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!nombres) err.nombres = "Nombre obligatorio";
+    else if (nombres.length < 2) err.nombres = "Minimo 2 caracteres";
+
+    if (!apellidos) err.apellidos = "Apellido obligatorio";
+    else if (apellidos.length < 2) err.apellidos = "Minimo 2 caracteres";
+
+    if (!cedula) {
+      err.cedula = "CI obligatorio";
+    } else if (!ciRegex.test(cedula)) {
+      err.cedula = "CI invalido";
+    } else {
+      const exists = users.some(
+        (u) => normalizeCi(u.cedula) === cedula
+      );
+
+      if (exists) {
+        err.cedula = "El CI ya esta registrado";
+      }
+    }
+
+    if (!celular) err.celular = "Celular obligatorio";
+    else if (!/^[0-9]{7,12}$/.test(celular)) {
+      err.celular = "Celular invalido";
+    }
+
+    if (email && !emailRegex.test(email)) {
+      err.email = "Email invalido";
+    }
+
+    if (!password) err.password = "Password obligatorio";
+    else if (password.length < 6) {
+      err.password = "Minimo 6 caracteres";
+    }
+
+    if (data.instituciones.length === 0) {
+      err.instituciones = "Seleccione al menos una institucion";
+    }
+
+    return err;
+  };
+
   const handleChange = (e) => {
     let { name, value } = e.target;
 
@@ -36,61 +94,26 @@ export default function EncargadoForm({ onSubmit, onClose }) {
     }
 
     if (name === "cedula") {
-      value = value.replace(/[^a-zA-Z0-9\-]/g, "");
+      value = value.replace(/[^a-zA-Z0-9-]/g, "").toUpperCase();
     }
 
-    setFormData({
+    const nextForm = {
       ...formData,
       [name]: value,
-    });
+    };
+
+    setFormData(nextForm);
+    setErrors(validate(nextForm));
   };
 
-  const validate = () => {
-    const err = {};
+  const handleInstitutionsChange = (selected) => {
+    const nextForm = {
+      ...formData,
+      instituciones: selected ? selected.map((s) => s.value) : [],
+    };
 
-    const nombres = formData.nombres.trim();
-    const apellidos = formData.apellidos.trim();
-    const cedula = formData.cedula.trim();
-    const celular = formData.celular.trim();
-    const email = formData.email.trim();
-    const password = formData.password.trim();
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!nombres) err.nombres = "Nombre obligatorio";
-    if (!apellidos) err.apellidos = "Apellido obligatorio";
-
-    if (!cedula) {
-      err.cedula = "Cédula obligatoria";
-    } else if (cedula.length < 5) {
-      err.cedula = "Cédula inválida";
-    } else {
-      const exists = users.some(
-        (u) => String(u.cedula).trim() === cedula
-      );
-
-      if (exists) {
-        err.cedula = "La cédula ya está registrada";
-      }
-    }
-
-    if (!celular) err.celular = "Celular obligatorio";
-    else if (celular.length < 7) err.celular = "Celular inválido";
-
-    if (email && !emailRegex.test(email)) {
-      err.email = "Email inválido";
-    }
-
-    if (!password) err.password = "Password obligatorio";
-    else if (password.length < 6)
-      err.password = "Mínimo 6 caracteres";
-
-    if (formData.instituciones.length === 0) {
-    newErrors.instituciones =
-    "Seleccione al menos una institución";
-   }
-
-    return err;
+    setFormData(nextForm);
+    setErrors(validate(nextForm));
   };
 
   const handleSubmit = (e) => {
@@ -105,11 +128,9 @@ export default function EncargadoForm({ onSubmit, onClose }) {
       ...formData,
       nombres: formData.nombres.trim(),
       apellidos: formData.apellidos.trim(),
-      cedula: formData.cedula.trim(),
+      cedula: normalizeCi(formData.cedula),
       celular: formData.celular.trim(),
-      email: formData.email.trim(),
-
-      
+      email: formData.email.trim() || undefined,
       insertador:
         `${user?.nombres || ""} ${user?.apellidos || ""}`.trim() ||
         "DESCONOCIDO",
@@ -117,10 +138,20 @@ export default function EncargadoForm({ onSubmit, onClose }) {
   };
 
   const inputStyle =
-    "p-2 border border-gray-300 rounded-md w-full text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-200";
+    "mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100";
+
+  const fieldClass = "flex flex-col";
+
+  const ErrorText = ({ children }) =>
+    children ? (
+      <span className="mt-1 text-xs font-medium text-red-500">
+        {children}
+      </span>
+    ) : null;
 
   return (
     <form
+<<<<<<< HEAD
   className="w-full max-w-4xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-5"
   onSubmit={handleSubmit}
 >
@@ -307,5 +338,136 @@ export default function EncargadoForm({ onSubmit, onClose }) {
     </button>
   </div>
 </form>
+=======
+      className="w-full space-y-5"
+      onSubmit={handleSubmit}
+    >
+      <div className="border-b border-gray-200 pb-3">
+        <h3 className="text-center text-lg font-bold text-gray-800">
+          Registro Encargado
+        </h3>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className={fieldClass}>
+          <label className="text-sm font-semibold text-gray-700">
+            Nombres
+          </label>
+          <input
+            name="nombres"
+            value={formData.nombres}
+            onChange={handleChange}
+            className={inputStyle}
+          />
+          <ErrorText>{errors.nombres}</ErrorText>
+        </div>
+
+        <div className={fieldClass}>
+          <label className="text-sm font-semibold text-gray-700">
+            Apellidos
+          </label>
+          <input
+            name="apellidos"
+            value={formData.apellidos}
+            onChange={handleChange}
+            className={inputStyle}
+          />
+          <ErrorText>{errors.apellidos}</ErrorText>
+        </div>
+
+        <div className={fieldClass}>
+          <label className="text-sm font-semibold text-gray-700">
+            CI
+          </label>
+          <input
+            name="cedula"
+            value={formData.cedula}
+            onChange={handleChange}
+            className={inputStyle}
+            placeholder="Ej: 1234567"
+          />
+          <ErrorText>{errors.cedula}</ErrorText>
+        </div>
+
+        <div className={fieldClass}>
+          <label className="text-sm font-semibold text-gray-700">
+            Celular
+          </label>
+          <input
+            name="celular"
+            value={formData.celular}
+            onChange={handleChange}
+            className={inputStyle}
+            placeholder="Ej: 71234567"
+          />
+          <ErrorText>{errors.celular}</ErrorText>
+        </div>
+
+        <div className={fieldClass}>
+          <label className="text-sm font-semibold text-gray-700">
+            Email
+          </label>
+          <input
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className={inputStyle}
+            placeholder="Opcional"
+          />
+          <ErrorText>{errors.email}</ErrorText>
+        </div>
+
+        <div className={fieldClass}>
+          <label className="text-sm font-semibold text-gray-700">
+            Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className={inputStyle}
+          />
+          <ErrorText>{errors.password}</ErrorText>
+        </div>
+
+        <div className="flex flex-col md:col-span-2">
+          <label className="text-sm font-semibold text-gray-700">
+            Instituciones
+          </label>
+          <div className="mt-1">
+            <Select
+              isMulti
+              closeMenuOnSelect={false}
+              placeholder="Seleccione instituciones..."
+              options={allInstitutions.map((i) => ({
+                value: i.id,
+                label: i.nombre,
+              }))}
+              onChange={handleInstitutionsChange}
+            />
+          </div>
+          <ErrorText>{errors.instituciones}</ErrorText>
+        </div>
+      </div>
+
+      <div className="flex flex-col-reverse gap-3 border-t border-gray-200 pt-4 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-lg border border-gray-300 px-5 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+        >
+          Registrar
+        </button>
+      </div>
+    </form>
+>>>>>>> 4423ebd (feat: descripción de los cambios)
   );
 }

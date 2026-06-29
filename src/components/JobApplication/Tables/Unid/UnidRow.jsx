@@ -31,7 +31,7 @@ export default function UnidRow({ item, index, onAction }) {
         {item.aprobacion || "-"}
       </TableCell>
 
-      <ProtectedView  rolesAllowed={["mesajeroserv","electricista","sergeneral","mecanico","mgeneral","encargadoserv","mantenimiento","administradorserv"]}>
+      <ProtectedView  rolesAllowed={["administradorserv","encargadoserv","mantenimiento"]}>
       <TableCell className="border px-3 py-2 flex gap-2 justify-center">
             <JobReportButton item={item} />
       </TableCell>

@@ -34,6 +34,7 @@ export default function PedTable() {
 
     useEffect(() => {
 
+    setPage(1);
     fetchAllInstitutions();
     fetchAllTalleres();
 

@@ -19,7 +19,7 @@ import { useAuthStore } from "../../zustand/AuthUsers"
 const navItems = [
   {
     name: "Menu",
-    rolesAllowed: ["administradorserv","mantenimiento","encargadoserv","sergeneral"],
+    rolesAllowed: ["administradorserv","encargadoserv","mantenimiento"],
     path: "/dashboard",
     pro: false,
   },
@@ -43,7 +43,7 @@ const navItems = [
 
   { icon: <BsCardHeading className="text-white" />, 
     name: "Secciones",  
-    rolesAllowed: ["administradorserv",""],
+    rolesAllowed: ["administradorserv"],
     subItems: [{ 
       name: "Mostrar", 
       path: "/secciones", 
@@ -91,7 +91,7 @@ const navItems = [
         icon: <BiFile className="text-white"/>,
         rolesAllowed: ["administradorserv"],
       },
-     
+      
     ] 
   },
 
@@ -122,7 +122,7 @@ const navItems = [
 
   { name: "Solicitud de Trabajo", 
     icon: <BiPackage className="text-white" />, 
-    rolesAllowed: ["administradorserv","mantenimiento","encargadoserv","sergeneral"],
+    rolesAllowed: ["administradorserv","encargadoserv","mantenimiento"],
     subItems: [
      
       { 
@@ -130,25 +130,25 @@ const navItems = [
         path: "/solicitud", 
         pro: false,
         icon:<BiWrench className="text-white"/>, 
-         rolesAllowed: ["administradorserv","mantenimiento","sergeneral","encargadoserv"],    
+         rolesAllowed: ["administradorserv","encargadoserv","mantenimiento"],    
       },
       { 
         name: "Lista de aceptados", 
         path: "/solicitud/aceptados", 
         pro: false, icon:<BiClipboard className="text-white"/>,
-        rolesAllowed: ["administradorserv","mantenimiento","sergeneral","encargadoserv"],
+        rolesAllowed: ["administradorserv","encargadoserv","mantenimiento"],
       }, 
       { name: "Lista de rechazados", 
         path: "/solicitud/rechazados", 
         pro: false, icon:<BiClipboard className="text-white"/>,
-        rolesAllowed: ["administradorserv","mantenimiento","sergeneral","encargadoserv"],
+        rolesAllowed: ["administradorserv","encargadoserv","mantenimiento"],
      },
       {
          name: "Mi unidad", 
          path: "/solicitud/miunidad", 
          pro: false,
          icon:<BiWrench className="text-white"/>,
-         rolesAllowed: ["administradorserv","mantenimiento","encargadoserv","sergeneral"],
+         rolesAllowed: ["administradorserv"],
       },
          
     ] 

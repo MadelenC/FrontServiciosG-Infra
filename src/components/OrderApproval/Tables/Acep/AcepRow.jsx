@@ -40,7 +40,7 @@ export default function AcepRow({
         </span>
       </TableCell>
 
-      <ProtectedView  rolesAllowed={["encargadoserv","administradorserv","mesajeroserv"]}>
+      <ProtectedView  rolesAllowed={["administradorserv"]}>
       <TableCell className="flex items-center justify-center gap-2">
         <PedidoMaterialButton orders={[item]} />
         <button

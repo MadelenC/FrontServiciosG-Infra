@@ -81,7 +81,7 @@ export default function SearchBar({ search, setSearch, roleFilter, setRoleFilter
      
       <input
         type="text"
-        placeholder="Buscar usuario..."
+        placeholder="Buscar por nombres"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="

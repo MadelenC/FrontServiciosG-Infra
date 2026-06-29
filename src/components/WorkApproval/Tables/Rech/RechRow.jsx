@@ -42,7 +42,7 @@ export default function RechRow({ item, index, onAction }) {
         {item.informe || "-"}
       </TableCell>
 
-      <ProtectedView  rolesAllowed={["encargadoserv","administradorserv","sergeneral","mesajeroserv"]}>
+      <ProtectedView  rolesAllowed={["administradorserv"]}>
       <TableCell className="border px-3 py-2 text-center">
           <button
           onClick={() => onAction?.("informe", item)}

@@ -7,12 +7,18 @@ export const useAuthStore = create(
       (set,get) => ({
         user: null,
         token: null,
+        refreshToken: null,
 
         
         setUser: (user) => set({ user }),
 
       
         setToken: (token) => set({ token }),
+
+        setRefreshToken: (refreshToken) => set({ refreshToken }),
+
+        setSession: ({ user, token, refreshToken }) =>
+          set({ user, token, refreshToken }),
 
       
         updateUser: (data) =>
@@ -23,7 +29,12 @@ export const useAuthStore = create(
             },
           }),
 
-        logout: () => set({ user: null, token: null }),
+        logout: () =>
+          set({
+            user: null,
+            token: null,
+            refreshToken: null,
+          }),
       }),
       {
         name: "auth-storage",

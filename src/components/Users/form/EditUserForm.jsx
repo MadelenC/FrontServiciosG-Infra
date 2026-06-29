@@ -283,17 +283,7 @@ useEffect(() => {
                 <option value="ninguno">Ninguno</option>
                 <option value="administradorserv">Administrador</option>
                 <option value="encargadoserv">Encargado</option>
-                <option value="mensajeroserv">Mensajero</option>
-
-                <option value="electricista">Electricista</option>
-                <option value="sergeneral">Servicios generales</option>
-
-                <option value="supervisor">Supervisor</option>
                 <option value="mantenimiento">Mantenimiento</option>
-                <option value="carpintero">Carpintero</option>
-                <option value="albañil">Albañil</option>
-                <option value="plomero">Plomero</option>
-                <option value="seguridad">Seguridad</option>
                 </select>
           </div>
         </div>

@@ -9,8 +9,15 @@ import {
 export default function Home() {
 
   const navigate = useNavigate();
+  const principalUrl =
+    import.meta.env.VITE_PRINCIPAL_URL || "http://localhost:5173";
 
   const irLogin = (modulo) => {
+    if (modulo !== "servicios") {
+      window.location.href = `${principalUrl}/signin?module=${modulo}`;
+      return;
+    }
+
     navigate(`/signin?module=${modulo}`);
   };
 
